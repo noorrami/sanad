@@ -232,7 +232,7 @@
    ======================================================== */
 // ⚠️ لا تستخدم أي وسيط CORS خارجي (مثل corsproxy.io) — غير مستقر ويسبب أخطاء.
 // تطبيقات Google Apps Script المنشورة بصلاحية "Anyone" تدعم CORS مباشرة.
-const API_URL = "https://script.google.com/macros/s/AKfycbybLigA3SQJuWnkmNPaW_d6mGa-ZSNBkquRCQT4MvLJUuLPUNq_ujPSgj0-uLAfdkp0/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyy57bsJdxaPmiKMN1iAUyxuO80rDVVaJPmTLOTAis9oC9qX-4SzrwCXvqVR4o-OSPh/exec";
 const FETCH_TIMEOUT_MS = 20000;   // إلغاء الطلب بعد 12 ثانية بدلاً من الانتظار للأبد
 const CACHE_KEY_PREFIX = "sanad_cache_";
 
@@ -369,6 +369,7 @@ async function performSearch() {
   }
 
   try {
+    localStorage.removeItem(cacheKey);
     const url = `${API_URL}?action=search&query=${encodeURIComponent(query)}&area=${encodeURIComponent(area)}`;
     const response = await fetchWithTimeout(url);
 
