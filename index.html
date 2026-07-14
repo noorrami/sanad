@@ -232,7 +232,7 @@
    ======================================================== */
 // ⚠️ لا تستخدم أي وسيط CORS خارجي (مثل corsproxy.io) — غير مستقر ويسبب أخطاء.
 // تطبيقات Google Apps Script المنشورة بصلاحية "Anyone" تدعم CORS مباشرة.
-const API_URL = "https://script.google.com/macros/s/AKfycbw4JjqssrkUTdP0P49Rm3l2vqu1j-HqeNfA1qx77TswB2Fa48CXjOhM5NTVzI9fAWIW/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbybLigA3SQJuWnkmNPaW_d6mGa-ZSNBkquRCQT4MvLJUuLPUNq_ujPSgj0-uLAfdkp0/exec";
 const FETCH_TIMEOUT_MS = 20000;   // إلغاء الطلب بعد 12 ثانية بدلاً من الانتظار للأبد
 const CACHE_KEY_PREFIX = "sanad_cache_";
 
@@ -439,10 +439,26 @@ async function addService() {
   }
 
   try {
-    const params = new URLSearchParams({ action: 'add', name, phone, area, skill_offer: skill, skill_request: request || 'لا يوجد' });
-    const url = `${API_URL}?${params.toString()}`;
-    console.log('📤 إرسال طلب الإضافة:', url);
-    const response = await fetchWithTimeout(url);
+    // إنشاء بيانات النموذج بصيغة URLSearchParams
+    const formData = new URLSearchParams();
+    formData.append('action', 'add');
+    formData.append('name', name);
+    formData.append('phone', phone);
+    formData.append('area', area);
+    formData.append('skill_offer', skill);
+    formData.append('skill_request', request || 'لا يوجد');
+
+    console.log('📤 إرسال طلب الإضافة (POST):', API_URL);
+
+    // استخدم POST بدلاً من GET
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: formData.toString() // أرسل البيانات في جسم الطلب
+    });
+
     if (!response.ok) throw new Error(`الخادم أعاد الحالة ${response.status}`);
     const result = await response.json();
     console.log('📥 رد الخادم:', result);
@@ -451,7 +467,7 @@ async function addService() {
       msgDiv.innerHTML = '<span class="text-green-600">✅ تم التسجيل بنجاح! سيتمكن جيرانك الآن من التواصل معك</span>';
       showToast('تم تسجيل مهارتك بنجاح', 'success');
       ['addName','addPhone','addArea','addSkill','addRequest'].forEach(id => document.getElementById(id).value = '');
-      localStorage.clear();
+      localStorage.clear(); // مسح الكاش المؤقت
     } else {
       throw new Error(result.error || 'فشل التسجيل لسبب غير معروف');
     }
