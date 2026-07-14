@@ -455,7 +455,7 @@
 /* ========================================================
    الإعدادات
    ======================================================== */
-const API_URL = "https://script.google.com/macros/s/AKfycbzBYjD1YZQ4UFDsCRjy6dn3262tIv-sz1PPQy8Qd96D1rud4d3_K6yCZdYrUpG6KUP3/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwr_8QLMTahoR_86NcWe-q7Mi4gBtXKTGa9Ba4leRubvrGN2LHqFQTrRixJR5hl34SY/exec";
 const FETCH_TIMEOUT_MS = 20000;
 const CACHE_KEY_PREFIX = "sanad_cache_";
 
@@ -1328,6 +1328,11 @@ async function submitReview() {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: formData.toString()
     });
+    
+    // ✅ تحقق من حالة الاستجابة
+    if (!response.ok) {
+      throw new Error(`الخادم أعاد الحالة ${response.status}`);
+    }
     const result = await response.json();
 
     if (result.success) {
