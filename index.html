@@ -175,7 +175,33 @@
 <div class="md:mr-64">
   <header class="bg-primary dark:bg-gray-800 text-white p-4 flex items-center justify-between shadow-md sticky top-0 z-40">
     <h1 class="text-xl font-extrabold">منصة سند</h1>
-    <button id="openSidebar" class="md:hidden text-3xl leading-none">☰</button>
+    <div class="flex items-center gap-4">
+      <!-- ===== أيقونة الإشعارات (أضف هذا الكود هنا) ===== -->
+      <div class="relative">
+        <button onclick="toggleNotificationDropdown()" class="text-2xl hover:scale-110 transition relative">
+          🔔
+          <span id="notificationBadge" class="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
+        </button>
+        <!-- القائمة المنسدلة للإشعارات -->
+        <div id="notificationDropdown" class="hidden absolute left-0 top-full mt-2 w-80 max-h-96 overflow-y-auto bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 z-50">
+          <div class="p-3 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center sticky top-0 bg-white dark:bg-gray-800 rounded-t-2xl">
+            <span class="font-bold">📬 الإشعارات</span>
+            <div class="flex items-center gap-2">
+              <button onclick="markAllNotificationsRead()" class="text-xs text-primary hover:underline">تحديد الكل كمقروء</button>
+              <button onclick="fetchNotifications()" class="text-xs text-gray-500 hover:text-primary transition">🔄 تحديث</button>
+            </div>
+          </div>
+          <div id="notificationList" class="divide-y divide-gray-100 dark:divide-gray-700">
+            <div class="p-4 text-center text-gray-500 dark:text-gray-400 text-sm">لا توجد إشعارات</div>
+          </div>
+          <div class="p-2 text-center border-t border-gray-200 dark:border-gray-700">
+            <button onclick="closeNotificationDropdown()" class="text-xs text-gray-400 hover:text-gray-600">إغلاق</button>
+          </div>
+        </div>
+      </div>
+      <!-- ===== نهاية أيقونة الإشعارات ===== -->
+      <button id="openSidebar" class="md:hidden text-3xl leading-none">☰</button>
+    </div>
   </header>
 
   <main class="p-4 max-w-4xl mx-auto">
@@ -455,7 +481,7 @@
 /* ========================================================
    الإعدادات
    ======================================================== */
-const API_URL = "https://script.google.com/macros/s/AKfycbxDzHuv7XQUEkRshtX9l8KP1vYardieFKm1zZBzolcXRNWK9H_0t0_-YA3dTuZHILeV/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwy1QSNAQhoW-eOeyHzTPhtkea5fAwqpFoDVLsKz9kZWA6q-u-Epc1Lg_xd4S4MOzXd/exec";
 const FETCH_TIMEOUT_MS = 20000;
 const CACHE_KEY_PREFIX = "sanad_cache_";
 
@@ -1120,6 +1146,7 @@ async function login() {
     if (result.success) {
       localStorage.setItem('sanad_user', username);
       localStorage.setItem('sanad_logged_in', 'true');
+       localStorage.setItem('sanad_user_phone', phone || ''); // تأكد من وجود phone
       msgDiv.innerHTML = '<span class="text-green-600">✅ تم تسجيل الدخول بنجاح!</span>';
       showToast(`مرحباً ${username}`, 'success');
       updateUserDisplay();
@@ -1174,6 +1201,8 @@ async function signup() {
     if (result.success) {
       msgDiv.innerHTML = `<span class="text-green-600">✅ ${result.message}</span>`;
       showToast('تم إنشاء الحساب بنجاح!', 'success');
+      const phone = document.getElementById('signupPhone')?.value?.trim() || '';
+      localStorage.setItem('sanad_user_phone', phone);
       document.getElementById('signupUsername').value = '';
       document.getElementById('signupPassword').value = '';
       document.getElementById('signupConfirm').value = '';
@@ -1353,6 +1382,164 @@ async function submitReview() {
 
 // دالة لجلب وعرض التقييمات (ستضيفها لاحقاً)
 // async function fetchRating(providerName, providerPhone) { ... }
+/* ========================================================
+   دوال الإشعارات (أضف هذا الكود في نهاية الـ script)
+   ======================================================== */
+
+let notificationTimeout = null;
+let lastNotificationCheck = 0;
+
+// جلب الإشعارات من الخادم
+async function fetchNotifications() {
+  if (!isLoggedIn()) return;
+
+  try {
+    const userPhone = getCurrentUserPhone() || '';
+    const url = `${API_URL}?action=get_notifications&user_phone=${encodeURIComponent(userPhone)}`;
+    const response = await fetch(url);
+    const result = await response.json();
+
+    if (result.success) {
+      updateNotificationUI(result.notifications || [], result.unreadCount || 0);
+      localStorage.setItem('sanad_notifications', JSON.stringify(result.notifications));
+      localStorage.setItem('sanad_unread_count', result.unreadCount);
+    }
+  } catch (error) {
+    console.error('خطأ في جلب الإشعارات:', error);
+    const cached = localStorage.getItem('sanad_notifications');
+    const cachedCount = localStorage.getItem('sanad_unread_count') || 0;
+    if (cached) {
+      updateNotificationUI(JSON.parse(cached), parseInt(cachedCount));
+    }
+  }
+}
+
+// تحديث واجهة الإشعارات
+function updateNotificationUI(notifications, unreadCount) {
+  const badge = document.getElementById('notificationBadge');
+  const list = document.getElementById('notificationList');
+
+  if (unreadCount > 0) {
+    badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+    badge.classList.remove('hidden');
+  } else {
+    badge.classList.add('hidden');
+  }
+
+  if (!notifications || notifications.length === 0) {
+    list.innerHTML = `<div class="p-4 text-center text-gray-500 dark:text-gray-400 text-sm">📭 لا توجد إشعارات جديدة</div>`;
+    return;
+  }
+
+  list.innerHTML = notifications.slice(0, 10).map(n => {
+    const isRead = n.read;
+    const bgClass = isRead ? 'bg-white dark:bg-gray-800' : 'bg-blue-50 dark:bg-blue-900/20';
+    const borderClass = isRead ? '' : 'border-r-4 border-blue-500';
+    return `
+      <div class="${bgClass} ${borderClass} p-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition cursor-pointer ${!isRead ? 'font-bold' : ''}"
+           onclick="handleNotificationClick('${n.id}', '${n.link || '#'}')">
+        <div class="flex items-start gap-2">
+          <span class="text-lg">${n.type === 'new_service' ? '🛠️' : n.type === 'new_driver' ? '🚗' : n.type === 'new_review' ? '⭐' : '📢'}</span>
+          <div class="flex-1">
+            <p class="text-sm">${n.title}</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">${n.message}</p>
+            <p class="text-xs text-gray-400 mt-1">${formatTime(n.timestamp)}</p>
+          </div>
+          ${!isRead ? `<span class="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-1"></span>` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// تنسيق الوقت
+function formatTime(timestamp) {
+  if (!timestamp) return 'الآن';
+  try {
+    const date = new Date(timestamp);
+    return date.toLocaleString('ar', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' });
+  } catch {
+    return timestamp;
+  }
+}
+
+// التعامل مع النقر على إشعار
+function handleNotificationClick(id, link) {
+  markNotificationRead(id);
+  if (link && link !== '#') {
+    if (link.startsWith('/')) {
+      const section = link.replace('/', '').split('?')[0];
+      if (section === 'search' || section === 'profile' || section === 'add') {
+        showSection(section);
+        const queryParams = new URLSearchParams(link.split('?')[1] || '');
+        if (queryParams.has('query')) {
+          document.getElementById('searchInput').value = queryParams.get('query');
+          performSearch();
+        }
+      }
+    } else {
+      window.open(link, '_blank');
+    }
+  }
+  closeNotificationDropdown();
+}
+
+// تحديد إشعار كمقروء
+async function markNotificationRead(id) {
+  try {
+    const url = `${API_URL}?action=mark_read&id=${id}`;
+    await fetch(url);
+    fetchNotifications();
+  } catch (error) {
+    console.error('خطأ في تحديد الإشعار كمقروء:', error);
+  }
+}
+
+// تحديد الكل كمقروء
+async function markAllNotificationsRead() {
+  try {
+    const userPhone = getCurrentUserPhone() || '';
+    const url = `${API_URL}?action=mark_all_read&user_phone=${encodeURIComponent(userPhone)}`;
+    await fetch(url);
+    fetchNotifications();
+    showToast('تم تحديد جميع الإشعارات كمقروءة', 'success');
+  } catch (error) {
+    console.error('خطأ:', error);
+  }
+}
+
+// فتح/إغلاق قائمة الإشعارات
+function toggleNotificationDropdown() {
+  const dropdown = document.getElementById('notificationDropdown');
+  dropdown.classList.toggle('hidden');
+  if (!dropdown.classList.contains('hidden')) {
+    fetchNotifications();
+  }
+}
+
+function closeNotificationDropdown() {
+  document.getElementById('notificationDropdown').classList.add('hidden');
+}
+
+// جلب رقم هاتف المستخدم الحالي
+function getCurrentUserPhone() {
+  return localStorage.getItem('sanad_user_phone') || '';
+}
+
+// التحقق من الإشعارات بشكل دوري (كل 60 ثانية)
+function startNotificationPolling() {
+  setTimeout(fetchNotifications, 2000);
+  setInterval(() => {
+    if (isLoggedIn()) {
+      fetchNotifications();
+    }
+  }, 60000);
+}
+
+// استدعاء عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', function() {
+  startNotificationPolling();
+});
 </script>
 
 </body>
