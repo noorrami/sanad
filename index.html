@@ -232,7 +232,7 @@
    ======================================================== */
 // ⚠️ لا تستخدم أي وسيط CORS خارجي (مثل corsproxy.io) — غير مستقر ويسبب أخطاء.
 // تطبيقات Google Apps Script المنشورة بصلاحية "Anyone" تدعم CORS مباشرة.
-const API_URL = "https://script.google.com/macros/s/AKfycbyoOjl69Egv6bwIXkhTfegwAqSA7fvPgYEq0HTk3oaWqQ5f-XmsdAATyYteNZfmiZxp/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbybLigA3SQJuWnkmNPaW_d6mGa-ZSNBkquRCQT4MvLJUuLPUNq_ujPSgj0-uLAfdkp0/exec";
 const FETCH_TIMEOUT_MS = 20000;   // إلغاء الطلب بعد 12 ثانية بدلاً من الانتظار للأبد
 const CACHE_KEY_PREFIX = "sanad_cache_";
 
@@ -304,7 +304,8 @@ function renderSkeleton(container) {
 }
 
 function renderResults(container, data) {
-  if (!data.length) {
+  // تجاهل البيانات الفارغة أو غير الصالحة
+  if (!data || !Array.isArray(data) || data.length === 0) {
     container.innerHTML = `
       <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center fade-in">
         <div class="text-4xl mb-2">😓</div>
@@ -315,20 +316,29 @@ function renderResults(container, data) {
     return;
   }
 
-  container.innerHTML = `<div class="space-y-3">${data.map(p => {
-    const cleanPhone = (p.phone || '').replace(/\D/g, '').replace(/^0/, '');
+  // تصفية البيانات الفارغة أو غير المكتملة
+  const validData = data.filter(p => p.name && p.skill_offer);
+
+  if (validData.length === 0) {
+    container.innerHTML = `<div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg text-center">⚠️ توجد بيانات لكنها غير مكتملة. تأكد من أن جميع الحقول مملوءة.</div>`;
+    return;
+  }
+
+  container.innerHTML = `<div class="space-y-3">${validData.map(p => {
+    const name = p.name || 'غير معروف';
+    const phone = p.phone || '';
+    const area = p.area || 'غير محدد';
+    const skill = p.skill_offer || 'لم يحدد';
+    const cleanPhone = String(phone).replace(/\D/g, '').replace(/^0/, '');
     const whatsappLink = `https://wa.me/970${cleanPhone}`;
     return `
       <div class="card-hover fade-in bg-white dark:bg-gray-700 p-4 rounded-xl shadow flex flex-wrap items-center justify-between gap-3 border-r-4 border-accent">
         <div>
-          <p class="font-bold text-lg">${escapeHtml(p.name)}</p>
-          <p class="text-sm text-gray-500 dark:text-gray-300">🛠️ ${escapeHtml(p.skill_offer)}</p>
-          <p class="text-xs text-gray-400">📍 ${escapeHtml(p.area)}</p>
+          <p class="font-bold text-lg">${escapeHtml(name)}</p>
+          <p class="text-sm text-gray-500 dark:text-gray-300">🛠️ ${escapeHtml(skill)}</p>
+          <p class="text-xs text-gray-400">📍 ${escapeHtml(area)}</p>
         </div>
-        <a href="${whatsappLink}" target="_blank" rel="noopener"
-           class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-green-700 transition">
-          💬 تواصل عبر واتساب
-        </a>
+        ${cleanPhone ? `<a href="${whatsappLink}" target="_blank" rel="noopener" class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-green-700 transition">💬 تواصل عبر واتساب</a>` : ''}
       </div>`;
   }).join('')}</div>`;
 }
@@ -338,15 +348,14 @@ function escapeHtml(str) {
 }
 
 async function performSearch() {
-  localStorage.removeItem(cacheKey);
   const query = document.getElementById('searchInput').value.trim();
   const area = document.getElementById('areaSelect').value;
   const container = document.getElementById('resultsContainer');
+  const cacheKey = CACHE_KEY_PREFIX + query + '_' + area;
 
   if (!query) { showToast('الرجاء كتابة ما تبحث عنه أولاً', 'info'); return; }
 
   renderSkeleton(container);
-  const cacheKey = CACHE_KEY_PREFIX + query + '_' + area;
 
   if (!navigator.onLine) {
     const cached = localStorage.getItem(cacheKey);
