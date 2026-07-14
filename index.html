@@ -232,7 +232,7 @@
    ======================================================== */
 // ⚠️ لا تستخدم أي وسيط CORS خارجي (مثل corsproxy.io) — غير مستقر ويسبب أخطاء.
 // تطبيقات Google Apps Script المنشورة بصلاحية "Anyone" تدعم CORS مباشرة.
-const API_URL = "https://script.google.com/macros/s/AKfycbzS1J_i1khOUXkf1RctApU4uXtaBpZCEQe6f1JPX9A2I3-_5B-sYyjQvxKrAWzsnAlA/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbybLigA3SQJuWnkmNPaW_d6mGa-ZSNBkquRCQT4MvLJUuLPUNq_ujPSgj0-uLAfdkp0/exec";
 const FETCH_TIMEOUT_MS = 20000;   // إلغاء الطلب بعد 12 ثانية بدلاً من الانتظار للأبد
 const CACHE_KEY_PREFIX = "sanad_cache_";
 
@@ -338,6 +338,7 @@ function escapeHtml(str) {
 }
 
 async function performSearch() {
+  localStorage.removeItem(cacheKey);
   const query = document.getElementById('searchInput').value.trim();
   const area = document.getElementById('areaSelect').value;
   const container = document.getElementById('resultsContainer');
@@ -364,6 +365,7 @@ async function performSearch() {
 
     if (!response.ok) throw new Error(`الخادم أعاد الحالة ${response.status}`);
     const result = await response.json();
+    console.log('البيانات القادمة من الخادم:', result);
 
     if (result.success) {
       renderResults(container, result.data);
@@ -428,19 +430,24 @@ async function addService() {
   }
 
   try {
-    const params = new URLSearchParams({ action: 'add', name, phone, area, skill_offer: skill, skill_request: request });
-    const response = await fetchWithTimeout(`${API_URL}?${params.toString()}`);
+    const params = new URLSearchParams({ action: 'add', name, phone, area, skill_offer: skill, skill_request: request || 'لا يوجد' });
+    const url = `${API_URL}?${params.toString()}`;
+    console.log('📤 إرسال طلب الإضافة:', url);
+    const response = await fetchWithTimeout(url);
     if (!response.ok) throw new Error(`الخادم أعاد الحالة ${response.status}`);
     const result = await response.json();
+    console.log('📥 رد الخادم:', result);
 
     if (result.success) {
       msgDiv.innerHTML = '<span class="text-green-600">✅ تم التسجيل بنجاح! سيتمكن جيرانك الآن من التواصل معك</span>';
       showToast('تم تسجيل مهارتك بنجاح', 'success');
       ['addName','addPhone','addArea','addSkill','addRequest'].forEach(id => document.getElementById(id).value = '');
+      localStorage.clear();
     } else {
       throw new Error(result.error || 'فشل التسجيل لسبب غير معروف');
     }
   } catch (error) {
+    console.error('❌ خطأ في الإضافة:', error);
     msgDiv.innerHTML = `<span class="text-red-500">❌ ${escapeHtml(error.message)}</span>`;
     showToast('تعذّر إتمام التسجيل', 'error');
   } finally {
