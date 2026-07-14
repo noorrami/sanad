@@ -256,9 +256,12 @@
     <section id="section-driver" class="hidden">
       <h2 class="text-2xl font-bold mb-4">🚗 خدمة ديلفري - السائقين</h2>
       <p class="text-gray-600 dark:text-gray-400 mb-4">ابحث عن سائق في منطقتك لتوصيل الطلبات</p>
+
+      <!-- نموذج البحث داخل الصفحة -->
       <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md mb-4">
         <div class="flex flex-col sm:flex-row gap-3">
-          <input type="text" id="driverSearchInput" placeholder="ابحث عن سائق (اسم أو منطقة)" class="flex-1 p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+          <input type="text" id="driverSearchInput" placeholder="ابحث عن سائق (اسم أو منطقة)" 
+                class="flex-1 p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
           <select id="driverAreaSelect" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
             <option value="all">كل المناطق</option>
             <option>الشجاعية</option><option>تل الهوا</option><option>جباليا</option><option>خان يونس</option><option>رفح</option><option>بيت لاهيا</option>
@@ -266,7 +269,11 @@
           <button onclick="searchDrivers()" class="btn-accent px-6">🔎 بحث</button>
         </div>
       </div>
-      <div id="driverResults" class="mt-4 space-y-4"></div>
+
+      <!-- حاوية عرض نتائج السائقين -->
+      <div id="driverResultsContainer" class="mt-4 space-y-4"></div>
+
+      <!-- نموذج إضافة سائق جديد -->
       <div class="mt-8 bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md">
         <h3 class="text-xl font-bold mb-4">➕ إضافة سائق جديد</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -530,6 +537,40 @@ function renderResults(container, data) {
   }).join('')}</div>`;
 }
 
+function renderDriverResults(data) {
+  if (!data || !Array.isArray(data) || data.length === 0) {
+    return `
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center">
+        <div class="text-4xl mb-2">😓</div>
+        <p class="font-bold">لا يوجد سائقين بهذه المنطقة حالياً</p>
+      </div>`;
+  }
+
+  // تصفية البيانات للتأكد من أنها سائقين
+  const validData = data.filter(p => p.name && p.skill_offer && p.type === 'driver');
+  if (validData.length === 0) {
+    return `<div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg text-center">⚠️ لا يوجد سائقين مطابقين للبحث.</div>`;
+  }
+
+  return `<div class="space-y-3">${validData.map(p => {
+    const name = p.name || 'غير معروف';
+    const phone = p.phone || '';
+    const area = p.area || 'غير محدد';
+    const skill = p.skill_offer || 'لم يحدد';
+    const cleanPhone = String(phone).replace(/\D/g, '').replace(/^0/, '');
+    const whatsappLink = `https://wa.me/970${cleanPhone}`;
+    return `
+      <div class="card-hover fade-in bg-white dark:bg-gray-700 p-4 rounded-xl shadow flex flex-wrap items-center justify-between gap-3 border-r-4 border-accent">
+        <div>
+          <p class="font-bold text-lg">${escapeHtml(name)}</p>
+          <p class="text-sm text-gray-500 dark:text-gray-300">🚗 ${escapeHtml(skill)}</p>
+          <p class="text-xs text-gray-400">📍 ${escapeHtml(area)}</p>
+        </div>
+        ${cleanPhone ? `<a href="${whatsappLink}" target="_blank" rel="noopener" class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-green-700 transition">💬 تواصل عبر واتساب</a>` : ''}
+      </div>`;
+  }).join('')}</div>`;
+}
+
 async function performSearch() {
   if (!requireLogin()) return;
   const query = document.getElementById('searchInput').value.trim();
@@ -587,15 +628,58 @@ async function performSearch() {
   }
 }
 
-function searchDrivers() {
+async function searchDrivers() {
   if (!requireLogin()) return;
+  
   const query = document.getElementById('driverSearchInput').value.trim();
   const area = document.getElementById('driverAreaSelect').value;
-  document.getElementById('searchInput').value = query || 'سائق';
-  document.getElementById('areaSelect').value = area;
-  document.getElementById('typeSelect').value = 'driver';
-  showSection('search');
-  performSearch();
+  const container = document.getElementById('driverResultsContainer');
+
+  // إذا كان الحقل فارغاً، نعرض رسالة
+  if (!query) {
+    container.innerHTML = '<div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg text-center">⚠️ الرجاء كتابة اسم أو منطقة السائق</div>';
+    return;
+  }
+
+  // عرض شاشة تحميل
+  container.innerHTML = `
+    <div class="text-center p-4">
+      <span class="text-gray-500">⏳ جاري البحث عن السائقين...</span>
+    </div>
+  `;
+
+  try {
+    // إرسال طلب البحث مع type=driver
+    const url = `${API_URL}?action=search&query=${encodeURIComponent(query)}&area=${encodeURIComponent(area)}&type=driver`;
+    const response = await fetchWithTimeout(url);
+    const result = await response.json();
+
+    console.log('نتائج السائقين:', result);
+
+    if (result.success && result.data && result.data.length > 0) {
+      // عرض النتائج
+      container.innerHTML = renderDriverResults(result.data);
+    } else {
+      container.innerHTML = `
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center">
+          <div class="text-4xl mb-2">😓</div>
+          <p class="font-bold">لا يوجد سائقين بهذه المنطقة حالياً</p>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">يمكنك إضافة سائق جديد من خلال النموذج أدناه</p>
+        </div>
+      `;
+    }
+  } catch (error) {
+    console.error('خطأ في البحث عن سائقين:', error);
+    container.innerHTML = `
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center">
+        <div class="text-3xl mb-2">⚠️</div>
+        <p class="font-bold">تعذّر الاتصال بالخادم</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">${escapeHtml(error.message)}</p>
+        <button onclick="searchDrivers()" class="btn-primary mt-4">إعادة المحاولة</button>
+      </div>
+    `;
+    showToast('تعذّر إتمام البحث عن السائقين', 'error');
+  }
 }
 
 /* ========================================================
@@ -675,6 +759,7 @@ async function addService() {
 
 async function addDriver() {
   if (!requireLogin()) return;
+  
   const name = document.getElementById('driverName').value.trim();
   const phone = document.getElementById('driverPhone').value.trim();
   const area = document.getElementById('driverArea').value.trim();
@@ -690,17 +775,51 @@ async function addDriver() {
     return;
   }
 
-  document.getElementById('addName').value = name;
-  document.getElementById('addPhone').value = phone;
-  document.getElementById('addArea').value = area;
-  document.getElementById('addSkill').value = `توصيل (${vehicle})`;
-  document.getElementById('addRequest').value = 'لا يوجد';
-  document.getElementById('addType').value = 'driver';
+  // تعطيل الزر مؤقتاً
+  const addBtn = document.querySelector('#section-driver .btn-primary');
+  if (addBtn) addBtn.disabled = true;
+  msgDiv.innerHTML = '<span class="text-blue-500">⏳ جاري إضافة السائق...</span>';
 
-  showSection('add');
-  await addService();
-  ['driverName','driverPhone','driverArea','driverVehicle'].forEach(id => document.getElementById(id).value = '');
-  msgDiv.innerHTML = '';
+  try {
+    // إرسال البيانات لإضافة سائق (type=driver)
+    const formData = new URLSearchParams();
+    formData.append('action', 'add');
+    formData.append('name', name);
+    formData.append('phone', phone);
+    formData.append('area', area);
+    formData.append('skill_offer', `توصيل (${vehicle})`);
+    formData.append('skill_request', 'لا يوجد');
+    formData.append('type', 'driver');
+
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: formData.toString()
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      msgDiv.innerHTML = '<span class="text-green-600">✅ تم إضافة السائق بنجاح!</span>';
+      showToast('تم إضافة السائق بنجاح', 'success');
+      // مسح الحقول
+      ['driverName','driverPhone','driverArea','driverVehicle'].forEach(id => document.getElementById(id).value = '');
+      // إعادة البحث لعرض السائق الجديد
+      setTimeout(() => {
+        const searchInput = document.getElementById('driverSearchInput');
+        searchInput.value = name;
+        searchDrivers();
+      }, 1000);
+    } else {
+      throw new Error(result.error || 'فشل الإضافة');
+    }
+  } catch (error) {
+    console.error('❌ خطأ في إضافة السائق:', error);
+    msgDiv.innerHTML = `<span class="text-red-500">❌ ${escapeHtml(error.message)}</span>`;
+    showToast('تعذّر إتمام الإضافة', 'error');
+  } finally {
+    if (addBtn) addBtn.disabled = false;
+  }
 }
 
 /* ========================================================
