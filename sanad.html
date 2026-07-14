@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<title>سند - تبادل المهارات في غزة</title>
+
+<!-- خط عربي مريح للقراءة (Cairo) بدلاً من الخط الافتراضي -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        fontFamily: { cairo: ['Cairo', 'sans-serif'] },
+        colors: {
+          // هوية بصرية خاصة بـ"سند": تيل عميق (ثقة/هدوء) + عنبري دافئ (نشاط/تكافل)
+          primary:      '#0E5C56',
+          primaryDark:  '#0A4440',
+          primaryLight: '#17847B',
+          accent:       '#D98E2B',
+          accentDark:   '#B8721C',
+          sand:         '#FAF6EF',
+          sandDark:     '#0B1F1E'
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  * { font-family: 'Cairo', sans-serif; }
+
+  body { background-color: #FAF6EF; }
+  html.dark body { background-color: #0B1F1E; }
+
+  .sidebar { transition: transform .3s ease; transform: translateX(0); }
+  .sidebar-closed { transform: translateX(100%); }
+  @media (min-width: 768px) { .sidebar-closed { transform: translateX(0); } }
+
+  .btn-primary {
+    background-color: #0E5C56; color: #fff; padding: .85rem 1.6rem; border-radius: 9999px;
+    font-weight: 700; transition: transform .15s ease, background-color .15s ease, box-shadow .15s ease;
+    box-shadow: 0 4px 14px rgba(14,92,86,.25);
+  }
+  .btn-primary:hover { background-color: #0A4440; transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0) scale(.98); }
+
+  .btn-accent {
+    background-color: #D98E2B; color: #1e1608; padding: .85rem 1.6rem; border-radius: 9999px;
+    font-weight: 700; transition: transform .15s ease, background-color .15s ease, box-shadow .15s ease;
+    box-shadow: 0 4px 14px rgba(217,142,43,.3);
+  }
+  .btn-accent:hover { background-color: #B8721C; color: #fff; transform: translateY(-1px); }
+  .btn-accent:active { transform: translateY(0) scale(.98); }
+
+  .card-hover { transition: transform .2s ease, box-shadow .2s ease; }
+  .card-hover:hover { transform: translateY(-3px); box-shadow: 0 12px 24px rgba(14,92,86,.12); }
+
+  .fade-in { animation: fadeIn .35s ease both; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* شريحة تحميل هيكلية (Skeleton) بدل نص "جاري التحميل" الجامد */
+  .skeleton {
+    background: linear-gradient(90deg, rgba(0,0,0,.06) 25%, rgba(0,0,0,.11) 37%, rgba(0,0,0,.06) 63%);
+    background-size: 400% 100%;
+    animation: skeletonWave 1.4s ease infinite;
+    border-radius: .75rem;
+  }
+  html.dark .skeleton {
+    background: linear-gradient(90deg, rgba(255,255,255,.06) 25%, rgba(255,255,255,.12) 37%, rgba(255,255,255,.06) 63%);
+    background-size: 400% 100%;
+  }
+  @keyframes skeletonWave { 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }
+
+  /* شريحة اقتراح مهارة سريعة */
+  .chip {
+    display: inline-flex; align-items: center; padding: .4rem .9rem; border-radius: 9999px;
+    font-size: .82rem; font-weight: 600; cursor: pointer; transition: all .15s ease;
+    background: rgba(14,92,86,.08); color: #0E5C56;
+  }
+  .chip:hover { background: #0E5C56; color: #fff; }
+  html.dark .chip { background: rgba(23,132,123,.15); color: #7fd6cc; }
+  html.dark .chip:hover { background: #17847B; color: #fff; }
+
+  /* تنبيهات (Toast) */
+  #toastHost { position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%); z-index: 100;
+    display: flex; flex-direction: column; gap: .5rem; width: min(92vw, 380px); }
+  .toast {
+    padding: .8rem 1rem; border-radius: .85rem; font-weight: 700; font-size: .9rem;
+    box-shadow: 0 8px 20px rgba(0,0,0,.15); animation: fadeIn .25s ease both; text-align: center;
+  }
+  .toast-error   { background: #FDE8E8; color: #9B1C1C; }
+  .toast-success { background: #E4F6EC; color: #106A38; }
+  .toast-info    { background: #FEF3E2; color: #8A5A0C; }
+
+  /* شارة حالة الاتصال */
+  #connStatus { display:flex; align-items:center; gap:.4rem; font-size:.75rem; font-weight:700; }
+  .dot { width:.5rem; height:.5rem; border-radius:9999px; }
+  .dot-on { background:#22c55e; }
+  .dot-off { background:#ef4444; }
+
+  input:focus, select:focus, button:focus-visible {
+    outline: 2px solid #D98E2B; outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+  }
+</style>
+</head>
+<body class="font-cairo bg-sand dark:bg-sandDark text-gray-800 dark:text-gray-200 min-h-screen">
+
+<div id="toastHost"></div>
+
+<!-- الشريط الجانبي -->
+<div id="sidebar" class="sidebar fixed top-0 right-0 h-full w-64 bg-white dark:bg-gray-800 shadow-lg z-50 p-4 flex flex-col md:translate-x-0">
+  <div class="flex justify-between items-center mb-8">
+    <span class="text-2xl font-extrabold text-primary dark:text-primaryLight">سـنـد</span>
+    <button id="closeSidebar" class="md:hidden text-gray-500 text-2xl leading-none">&times;</button>
+  </div>
+
+  <nav class="flex-1 space-y-2">
+    <a href="#" onclick="showSection('home')" data-nav="home" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold">🏠 الرئيسية</a>
+    <a href="#" onclick="showSection('search')" data-nav="search" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold">🔍 ابحث عن خبير</a>
+    <a href="#" onclick="showSection('add')" data-nav="add" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold">🛠️ قدّم خدمة</a>
+  </nav>
+
+  <div id="connStatus" class="px-4 mb-3 text-gray-500 dark:text-gray-400">
+    <span class="dot dot-on" id="connDot"></span>
+    <span id="connText">متصل بالإنترنت</span>
+  </div>
+
+  <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
+    <button id="themeToggle" class="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-gray-100 dark:bg-gray-700 rounded-xl font-semibold">
+      <span id="themeIcon">🌙</span> <span>الوضع الداكن</span>
+    </button>
+  </div>
+</div>
+
+<!-- المحتوى الرئيسي -->
+<div class="md:mr-64">
+  <header class="bg-primary dark:bg-gray-800 text-white p-4 flex items-center justify-between shadow-md sticky top-0 z-40">
+    <h1 class="text-xl font-extrabold">منصة سند</h1>
+    <button id="openSidebar" class="md:hidden text-3xl leading-none">☰</button>
+  </header>
+
+  <main class="p-4 max-w-4xl mx-auto">
+
+    <!-- الرئيسية -->
+    <section id="section-home" class="fade-in">
+      <div class="text-center my-10">
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-primary dark:text-primaryLight">تبادل المهارات في حيك</h2>
+        <p class="text-gray-600 dark:text-gray-400 mt-3 max-w-md mx-auto">ربط أصحاب المهارات مع المحتاجين إليها في غزة، بسهولة وبلا وسيط</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8">
+        <div onclick="showSection('search')" class="card-hover bg-white dark:bg-gray-800 p-7 rounded-2xl shadow-md text-center cursor-pointer">
+          <div class="text-5xl mb-4">🔍</div>
+          <h3 class="text-xl font-bold mb-1">أبحث عن خبير</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">صيانة، خياطة، كهرباء، وغيرها</p>
+          <button class="btn-primary">ابحث الآن</button>
+        </div>
+        <div onclick="showSection('add')" class="card-hover bg-white dark:bg-gray-800 p-7 rounded-2xl shadow-md text-center cursor-pointer">
+          <div class="text-5xl mb-4">🛠️</div>
+          <h3 class="text-xl font-bold mb-1">أريد تقديم خدمة</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">سجّل مهارتك ليصلك جيرانك</p>
+          <button class="btn-accent">سجّل خدمتك</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- البحث -->
+    <section id="section-search" class="hidden">
+      <h2 class="text-2xl font-bold mb-4">🔍 ابحث عن خبير</h2>
+
+      <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md">
+        <div class="flex flex-col gap-3">
+          <input type="text" id="searchInput" placeholder="ماذا تبحث؟ (مثال: صيانة شمسية أو خياطة)"
+                 class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+
+          <!-- اقتراحات سريعة لتقليل الكتابة -->
+          <div class="flex flex-wrap gap-2" id="quickChips">
+            <span class="chip" onclick="quickSearch('صيانة شمسية')">صيانة شمسية</span>
+            <span class="chip" onclick="quickSearch('كهرباء')">كهرباء</span>
+            <span class="chip" onclick="quickSearch('خياطة')">خياطة</span>
+            <span class="chip" onclick="quickSearch('نجارة')">نجارة</span>
+            <span class="chip" onclick="quickSearch('سباكة')">سباكة</span>
+          </div>
+
+          <select id="areaSelect" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+            <option value="all">كل المناطق</option>
+            <option>الشجاعية</option><option>تل الهوا</option><option>جباليا</option><option>خان يونس</option><option>رفح</option>
+          </select>
+
+          <button onclick="performSearch()" class="btn-accent w-full">🔎 بحث</button>
+        </div>
+      </div>
+
+      <div id="resultsContainer" class="mt-6 space-y-4"></div>
+    </section>
+
+    <!-- إضافة خدمة -->
+    <section id="section-add" class="hidden">
+      <h2 class="text-2xl font-bold mb-4">🛠️ سجّل مهارتك</h2>
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md">
+        <div class="grid grid-cols-1 gap-4">
+          <input type="text" id="addName" placeholder="الاسم الكامل" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+          <input type="tel" id="addPhone" placeholder="رقم الهاتف (واتساب) مثال: 0599xxxxxx" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+          <input type="text" id="addArea" placeholder="المنطقة (مثال: الشجاعية)" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+          <input type="text" id="addSkill" placeholder="المهارات التي تقدمها (مثال: صيانة شمسية، إلكترونيات)" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+          <input type="text" id="addRequest" placeholder="المهارات التي تبحث عنها (اختياري)" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+          <button onclick="addService()" id="addBtn" class="btn-primary w-full">✅ إضافة إلى المنصة</button>
+          <div id="addMessage" class="text-center font-bold min-h-[1.5rem]"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+  <footer class="text-center text-sm text-gray-500 dark:text-gray-400 p-6 border-t border-gray-200 dark:border-gray-700 mt-8">
+    © 2026 منصة سند – تبادل المهارات في غزة
+  </footer>
+</div>
+
+<script>
+/* ========================================================
+   الإعدادات
+   ======================================================== */
+// ⚠️ لا تستخدم أي وسيط CORS خارجي (مثل corsproxy.io) — غير مستقر ويسبب أخطاء.
+// تطبيقات Google Apps Script المنشورة بصلاحية "Anyone" تدعم CORS مباشرة.
+const API_URL = "https://script.google.com/macros/s/AKfycbzwkyXRuu8smYkkFOwTD05c44mYZ0eaS-BIfVGdsFK08Orj0cDms0Vn_hg3_XMjVLiD/exec";
+const FETCH_TIMEOUT_MS = 12000;   // إلغاء الطلب بعد 12 ثانية بدلاً من الانتظار للأبد
+const CACHE_KEY_PREFIX = "sanad_cache_";
+
+/* ========================================================
+   أدوات مساعدة عامة
+   ======================================================== */
+function showToast(message, type = 'info') {
+  const host = document.getElementById('toastHost');
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  el.textContent = message;
+  host.appendChild(el);
+  setTimeout(() => el.remove(), 4000);
+}
+
+// fetch مع مهلة زمنية، حتى لا يتجمد الموقع عند ضعف الشبكة
+async function fetchWithTimeout(url, ms = FETCH_TIMEOUT_MS) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), ms);
+  try {
+    const res = await fetch(url, { signal: controller.signal });
+    clearTimeout(timer);
+    return res;
+  } catch (err) {
+    clearTimeout(timer);
+    if (err.name === 'AbortError') throw new Error('انتهت مهلة الاتصال، الشبكة بطيئة جداً حالياً');
+    throw err;
+  }
+}
+
+/* ========================================================
+   التنقل بين الأقسام (SPA)
+   ======================================================== */
+function showSection(id) {
+  document.querySelectorAll('[id^="section-"]').forEach(el => el.classList.add('hidden'));
+  const target = document.getElementById('section-' + id);
+  target.classList.remove('hidden');
+  target.classList.add('fade-in');
+
+  document.querySelectorAll('.nav-link').forEach(a => a.classList.remove('bg-primary', 'text-white'));
+  const active = document.querySelector(`[data-nav="${id}"]`);
+  if (active) active.classList.add('bg-primary', 'text-white');
+
+  if (window.innerWidth < 768) sidebar.classList.add('sidebar-closed');
+}
+
+function quickSearch(term) {
+  document.getElementById('searchInput').value = term;
+  performSearch();
+}
+
+/* ========================================================
+   البحث
+   ======================================================== */
+function renderSkeleton(container) {
+  container.innerHTML = `
+    <div class="space-y-3">
+      ${[1,2,3].map(() => `
+        <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow flex items-center justify-between gap-4">
+          <div class="flex-1 space-y-2">
+            <div class="skeleton h-4 w-1/3"></div>
+            <div class="skeleton h-3 w-1/2"></div>
+            <div class="skeleton h-3 w-1/4"></div>
+          </div>
+          <div class="skeleton h-9 w-28 rounded-full"></div>
+        </div>
+      `).join('')}
+    </div>`;
+}
+
+function renderResults(container, data) {
+  if (!data.length) {
+    container.innerHTML = `
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center fade-in">
+        <div class="text-4xl mb-2">😓</div>
+        <p class="font-bold">لا يوجد خبراء بهذه المهارة في منطقتك حالياً</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">سجّل مهارتك لتكون أول من يساعد الجيران</p>
+        <button onclick="showSection('add')" class="btn-accent mt-4">سجّل مهارتك</button>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = `<div class="space-y-3">${data.map(p => {
+    const cleanPhone = (p.phone || '').replace(/\D/g, '').replace(/^0/, '');
+    const whatsappLink = `https://wa.me/970${cleanPhone}`;
+    return `
+      <div class="card-hover fade-in bg-white dark:bg-gray-700 p-4 rounded-xl shadow flex flex-wrap items-center justify-between gap-3 border-r-4 border-accent">
+        <div>
+          <p class="font-bold text-lg">${escapeHtml(p.name)}</p>
+          <p class="text-sm text-gray-500 dark:text-gray-300">🛠️ ${escapeHtml(p.skill_offer)}</p>
+          <p class="text-xs text-gray-400">📍 ${escapeHtml(p.area)}</p>
+        </div>
+        <a href="${whatsappLink}" target="_blank" rel="noopener"
+           class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-green-700 transition">
+          💬 تواصل عبر واتساب
+        </a>
+      </div>`;
+  }).join('')}</div>`;
+}
+
+function escapeHtml(str) {
+  return String(str ?? '').replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+}
+
+async function performSearch() {
+  const query = document.getElementById('searchInput').value.trim();
+  const area = document.getElementById('areaSelect').value;
+  const container = document.getElementById('resultsContainer');
+
+  if (!query) { showToast('الرجاء كتابة ما تبحث عنه أولاً', 'info'); return; }
+
+  renderSkeleton(container);
+  const cacheKey = CACHE_KEY_PREFIX + query + '_' + area;
+
+  if (!navigator.onLine) {
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      renderResults(container, JSON.parse(cached));
+      showToast('لا يوجد اتصال — تُعرض آخر نتائج محفوظة', 'info');
+    } else {
+      container.innerHTML = `<div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center">لا يوجد اتصال بالإنترنت حالياً، وليست هناك نتائج محفوظة لهذا البحث.</div>`;
+    }
+    return;
+  }
+
+  try {
+    const url = `${API_URL}?action=search&query=${encodeURIComponent(query)}&area=${encodeURIComponent(area)}`;
+    const response = await fetchWithTimeout(url);
+
+    if (!response.ok) throw new Error(`الخادم أعاد الحالة ${response.status}`);
+    const result = await response.json();
+
+    if (result.success) {
+      renderResults(container, result.data);
+      localStorage.setItem(cacheKey, JSON.stringify(result.data));
+    } else {
+      throw new Error(result.error || 'خطأ غير معروف من الخادم');
+    }
+  } catch (error) {
+    // في حال الفشل، حاول عرض آخر نتيجة محفوظة كخطة بديلة
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      renderResults(container, JSON.parse(cached));
+      showToast('تعذّر الاتصال بالخادم — تُعرض آخر نتائج محفوظة', 'info');
+    } else {
+      container.innerHTML = `
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center">
+          <div class="text-3xl mb-2">⚠️</div>
+          <p class="font-bold">تعذّر الاتصال بالخادم</p>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">${escapeHtml(error.message)}</p>
+          <button onclick="performSearch()" class="btn-primary mt-4">إعادة المحاولة</button>
+        </div>`;
+    }
+    showToast('تعذّر إتمام البحث', 'error');
+  }
+}
+
+/* ========================================================
+   إضافة خدمة جديدة
+   ======================================================== */
+function validatePalestinianPhone(phone) {
+  const digits = phone.replace(/\D/g, '');
+  return /^(0)?5[0-9]{8}$/.test(digits);
+}
+
+async function addService() {
+  const name = document.getElementById('addName').value.trim();
+  const phone = document.getElementById('addPhone').value.trim();
+  const area = document.getElementById('addArea').value.trim();
+  const skill = document.getElementById('addSkill').value.trim();
+  const request = document.getElementById('addRequest').value.trim();
+  const msgDiv = document.getElementById('addMessage');
+  const btn = document.getElementById('addBtn');
+
+  if (!name || !phone || !area || !skill) {
+    msgDiv.innerHTML = '<span class="text-red-500">⚠️ جميع الحقول الأساسية مطلوبة</span>';
+    return;
+  }
+  if (!validatePalestinianPhone(phone)) {
+    msgDiv.innerHTML = '<span class="text-red-500">⚠️ الرجاء إدخال رقم هاتف فلسطيني صحيح (مثال: 0599123456)</span>';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '⏳ جاري التسجيل...';
+  msgDiv.innerHTML = '';
+
+  if (!navigator.onLine) {
+    msgDiv.innerHTML = '<span class="text-red-500">⚠️ لا يوجد اتصال بالإنترنت، حاول مرة أخرى عند توفر الشبكة</span>';
+    btn.disabled = false; btn.textContent = '✅ إضافة إلى المنصة';
+    return;
+  }
+
+  try {
+    const params = new URLSearchParams({ action: 'add', name, phone, area, skill_offer: skill, skill_request: request });
+    const response = await fetchWithTimeout(`${API_URL}?${params.toString()}`);
+    if (!response.ok) throw new Error(`الخادم أعاد الحالة ${response.status}`);
+    const result = await response.json();
+
+    if (result.success) {
+      msgDiv.innerHTML = '<span class="text-green-600">✅ تم التسجيل بنجاح! سيتمكن جيرانك الآن من التواصل معك</span>';
+      showToast('تم تسجيل مهارتك بنجاح', 'success');
+      ['addName','addPhone','addArea','addSkill','addRequest'].forEach(id => document.getElementById(id).value = '');
+    } else {
+      throw new Error(result.error || 'فشل التسجيل لسبب غير معروف');
+    }
+  } catch (error) {
+    msgDiv.innerHTML = `<span class="text-red-500">❌ ${escapeHtml(error.message)}</span>`;
+    showToast('تعذّر إتمام التسجيل', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '✅ إضافة إلى المنصة';
+  }
+}
+
+/* ========================================================
+   الشريط الجانبي + الوضع الداكن
+   ======================================================== */
+const sidebar = document.getElementById('sidebar');
+document.getElementById('openSidebar').addEventListener('click', () => sidebar.classList.toggle('sidebar-closed'));
+document.getElementById('closeSidebar').addEventListener('click', () => sidebar.classList.add('sidebar-closed'));
+window.addEventListener('resize', () => {
+  if (window.innerWidth >= 768) sidebar.classList.remove('sidebar-closed');
+  else sidebar.classList.add('sidebar-closed');
+});
+
+const themeToggle = document.getElementById('themeToggle');
+const themeIcon = document.getElementById('themeIcon');
+let darkMode = localStorage.getItem('darkMode') === 'true';
+function applyTheme() {
+  document.documentElement.classList.toggle('dark', darkMode);
+  themeIcon.textContent = darkMode ? '☀️' : '🌙';
+  localStorage.setItem('darkMode', darkMode);
+}
+applyTheme();
+themeToggle.addEventListener('click', () => { darkMode = !darkMode; applyTheme(); });
+
+/* ========================================================
+   حالة الاتصال بالإنترنت (مهم جداً في سياق انقطاع الشبكة)
+   ======================================================== */
+function updateConnStatus() {
+  const dot = document.getElementById('connDot');
+  const text = document.getElementById('connText');
+  if (navigator.onLine) {
+    dot.className = 'dot dot-on'; text.textContent = 'متصل بالإنترنت';
+  } else {
+    dot.className = 'dot dot-off'; text.textContent = 'غير متصل — تُعرض بيانات محفوظة';
+    showToast('انقطع الاتصال بالإنترنت', 'info');
+  }
+}
+window.addEventListener('online', updateConnStatus);
+window.addEventListener('offline', updateConnStatus);
+updateConnStatus();
+
+// إظهار الصفحة الرئيسية افتراضياً
+showSection('home');
+</script>
+</body>
+</html>
