@@ -419,6 +419,37 @@
     © 2026 منصة سند – تبادل المهارات في غزة
   </footer>
 </div>
+<!-- ====== هنا نافذة التقييم المنبثقة ====== -->
+<div id="reviewModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden" onclick="if(event.target===this) closeReviewModal()">
+  <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl" onclick="event.stopPropagation()">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-xl font-bold">⭐ تقييم الخدمة</h3>
+      <button onclick="closeReviewModal()" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 text-2xl">&times;</button>
+    </div>
+    <div class="space-y-4">
+      <div class="text-center">
+        <p class="text-sm text-gray-500 dark:text-gray-400">تقييم: <span id="reviewProviderName" class="font-bold text-primary"></span></p>
+        <div class="flex justify-center gap-2 my-3 text-3xl" id="starContainer">
+          <span onclick="setRating(1)" class="cursor-pointer hover:scale-110 transition" data-star="1">☆</span>
+          <span onclick="setRating(2)" class="cursor-pointer hover:scale-110 transition" data-star="2">☆</span>
+          <span onclick="setRating(3)" class="cursor-pointer hover:scale-110 transition" data-star="3">☆</span>
+          <span onclick="setRating(4)" class="cursor-pointer hover:scale-110 transition" data-star="4">☆</span>
+          <span onclick="setRating(5)" class="cursor-pointer hover:scale-110 transition" data-star="5">☆</span>
+        </div>
+        <p class="text-sm font-bold" id="ratingText">اختر تقييمك</p>
+        <input type="hidden" id="selectedRating" value="0">
+      </div>
+      <div>
+        <input type="text" id="reviewerName" placeholder="اسمك (اختياري)" class="w-full p-2 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+      </div>
+      <div>
+        <textarea id="reviewComment" rows="3" placeholder="اكتب تعليقك (اختياري)" class="w-full p-2 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white resize-none"></textarea>
+      </div>
+      <button onclick="submitReview()" class="btn-primary w-full">إرسال التقييم</button>
+      <div id="reviewMessage" class="text-center font-bold min-h-[1.5rem]"></div>
+    </div>
+  </div>
+</div>
 
 <script>
 /* ========================================================
@@ -557,6 +588,7 @@ function renderResults(container, data) {
         <button onclick="showSection('add')" class="btn-accent mt-4">سجّل مهارتك</button>
       </div>`;
     return;
+  
   }
 
   const validData = data.filter(p => p.name && p.skill_offer);
@@ -583,7 +615,64 @@ function renderResults(container, data) {
         ${cleanPhone ? `<a href="${whatsappLink}" target="_blank" rel="noopener" class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-green-700 transition">💬 تواصل عبر واتساب</a>` : ''}
       </div>`;
   }).join('')}</div>`;
+
+  // إضافة نظام النجوم ومتوسط التقييم
+  container.innerHTML = `<div class="space-y-3">${validData.map(p => {
+    const name = p.name || 'غير معروف';
+    const phone = p.phone || '';
+    const area = p.area || 'غير محدد';
+    const skill = p.skill_offer || 'لم يحدد';
+    const cleanPhone = String(phone).replace(/\D/g, '').replace(/^0/, '');
+    const whatsappLink = `https://wa.me/970${cleanPhone}`;
+    const typeLabel = p.type === 'driver' ? '🚗 سائق' : '🛠️ خبير';
+
+    // عرض متوسط التقييم (سيتم جلبها بشكل غير متزامن)
+    return `
+      <div class="card-hover fade-in bg-white dark:bg-gray-700 p-4 rounded-xl shadow flex flex-wrap items-center justify-between gap-3 border-r-4 border-accent" data-provider="${name}" data-phone="${phone}">
+        <div>
+          <p class="font-bold text-lg">${escapeHtml(name)}</p>
+          <p class="text-sm text-gray-500 dark:text-gray-300">${typeLabel} ${escapeHtml(skill)}</p>
+          <p class="text-xs text-gray-400">📍 ${escapeHtml(area)}</p>
+          <!-- نظام التقييم -->
+          <div class="flex items-center gap-2 mt-2">
+            <span class="text-sm font-bold" id="rating-${phone}">⭐ 0.0</span>
+            <span class="text-xs text-gray-400" id="rating-count-${phone}">(0 مراجعة)</span>
+            <button onclick="openReviewModal('${escapeHtml(name)}', '${phone}')" class="text-xs text-primary hover:underline">أضف تقييم</button>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          ${cleanPhone ? `<a href="${whatsappLink}" target="_blank" rel="noopener" class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-green-700 transition">💬 واتساب</a>` : ''}
+        </div>
+      </div>`;
+  }).join('')}</div>`;
+
+  // جلب التقييمات لكل مقدم خدمة
+  validData.forEach(p => {
+    fetchRating(p.name, p.phone);
+  });
 }
+
+// دالة جلب التقييمات من الخادم
+async function fetchRating(providerName, providerPhone) {
+  try {
+    const url = `${API_URL}?action=get_rating&provider_name=${encodeURIComponent(providerName)}&provider_phone=${encodeURIComponent(providerPhone)}`;
+    const response = await fetch(url);
+    const result = await response.json();
+    if (result.success) {
+      const ratingEl = document.getElementById(`rating-${providerPhone}`);
+      const countEl = document.getElementById(`rating-count-${providerPhone}`);
+      if (ratingEl) {
+        const avg = result.data.average || 0;
+        const count = result.data.count || 0;
+        ratingEl.textContent = `⭐ ${avg.toFixed(1)}`;
+        countEl.textContent = `(${count} مراجعة${count !== 1 ? 'ات' : ''})`;
+      }
+    }
+  } catch (error) {
+    console.error('خطأ في جلب التقييم:', error);
+  }
+}
+
 
 function renderDriverResults(data) {
   if (!data || !Array.isArray(data) || data.length === 0) {
@@ -836,22 +925,15 @@ function renderDriverResults(container, data) {
               </div>
             </div>
             <div class="flex items-center gap-2">
-              ${cleanPhone ? `
-                <a href="${whatsappLink}" target="_blank" rel="noopener" 
-                   class="bg-green-600 text-white px-5 py-2.5 rounded-full text-sm font-bold hover:bg-green-700 transition transform hover:scale-105 shadow-md hover:shadow-lg flex items-center gap-2">
-                  <span>💬</span> واتساب
-                </a>
-              ` : ''}
+              ${cleanPhone ? `<a href="${whatsappLink}" target="_blank" rel="noopener" class="bg-green-600 text-white px-5 py-2.5 rounded-full text-sm font-bold hover:bg-green-700 transition transform hover:scale-105 shadow-md hover:shadow-lg flex items-center gap-2"><span>💬</span> واتساب</a>` : ''}
+              <!-- زر التقييم -->
+              <button onclick="openReviewModal('${escapeHtml(name)}', '${escapeHtml(phone)}')" class="bg-yellow-500 text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-yellow-600 transition">⭐ تقييم</button>
               <span class="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">سائق</span>
             </div>
           </div>
         `;
       }).join('')}
-    </div>
-    <div class="mt-4 text-center text-sm text-gray-500">
-      ✅ تم العثور على ${validData.length} سائق${validData.length !== 1 ? 'ين' : ''}
-    </div>
-  `;
+    </div>`;
 }
 
 // دالة البحث السريع (Chips)
@@ -1185,6 +1267,88 @@ if (isLoggedIn()) {
 } else {
   showSection('login');
 }
+// ========================================================
+// دوال التقييم (أضفها في نهاية الـ script)
+// ========================================================
+
+let currentReviewProvider = { name: '', phone: '' };
+let selectedRating = 0;
+
+function openReviewModal(providerName, providerPhone) {
+  currentReviewProvider = { name: providerName, phone: providerPhone };
+  document.getElementById('reviewProviderName').textContent = providerName;
+  document.getElementById('reviewModal').classList.remove('hidden');
+  document.getElementById('selectedRating').value = 0;
+  selectedRating = 0;
+  document.getElementById('ratingText').textContent = 'اختر تقييمك';
+  document.querySelectorAll('#starContainer span').forEach(el => el.textContent = '☆');
+  document.getElementById('reviewerName').value = '';
+  document.getElementById('reviewComment').value = '';
+  document.getElementById('reviewMessage').innerHTML = '';
+}
+
+function closeReviewModal() {
+  document.getElementById('reviewModal').classList.add('hidden');
+}
+
+function setRating(value) {
+  selectedRating = value;
+  document.getElementById('selectedRating').value = value;
+  document.getElementById('ratingText').textContent = `⭐ ${value} نجوم`;
+  document.querySelectorAll('#starContainer span').forEach(el => {
+    const starVal = parseInt(el.dataset.star);
+    el.textContent = starVal <= value ? '★' : '☆';
+  });
+}
+
+async function submitReview() {
+  const rating = selectedRating;
+  const reviewerName = document.getElementById('reviewerName').value.trim() || 'مستخدم';
+  const comment = document.getElementById('reviewComment').value.trim();
+  const msgDiv = document.getElementById('reviewMessage');
+
+  if (rating === 0) {
+    msgDiv.innerHTML = '<span class="text-red-500">⚠️ الرجاء اختيار عدد النجوم</span>';
+    return;
+  }
+
+  msgDiv.innerHTML = '<span class="text-blue-500">⏳ جاري إرسال التقييم...</span>';
+
+  try {
+    const formData = new URLSearchParams();
+    formData.append('action', 'add_review');
+    formData.append('provider_name', currentReviewProvider.name);
+    formData.append('provider_phone', currentReviewProvider.phone);
+    formData.append('reviewer_name', reviewerName);
+    formData.append('rating', rating);
+    formData.append('comment', comment);
+
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: formData.toString()
+    });
+    const result = await response.json();
+
+    if (result.success) {
+      msgDiv.innerHTML = '<span class="text-green-600">✅ تم إرسال التقييم بنجاح! شكراً لك</span>';
+      showToast('تم إرسال التقييم بنجاح!', 'success');
+      setTimeout(() => closeReviewModal(), 1500);
+      // تحديث التقييم المعروض (يمكنك استدعاء دالة لجلب التقييمات الجديدة)
+      // fetchRating(currentReviewProvider.name, currentReviewProvider.phone);
+    } else {
+      throw new Error(result.message || 'فشل إرسال التقييم');
+    }
+  } catch (error) {
+    console.error('خطأ في إرسال التقييم:', error);
+    msgDiv.innerHTML = `<span class="text-red-500">❌ ${escapeHtml(error.message)}</span>`;
+    showToast('تعذّر إرسال التقييم', 'error');
+  }
+}
+
+// دالة لجلب وعرض التقييمات (ستضيفها لاحقاً)
+// async function fetchRating(providerName, providerPhone) { ... }
 </script>
+
 </body>
 </html>
