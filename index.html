@@ -253,36 +253,84 @@
     </section>
 
     <!-- صفحة ديلفري -->
+    <!-- صفحة ديلفري المحسّنة -->
     <section id="section-driver" class="hidden">
-      <h2 class="text-2xl font-bold mb-4">🚗 خدمة ديلفري - السائقين</h2>
-      <p class="text-gray-600 dark:text-gray-400 mb-4">ابحث عن سائق في منطقتك لتوصيل الطلبات</p>
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold">🚗 خدمة ديلفري - السائقين</h2>
+        <span class="text-sm bg-primary/10 text-primary px-3 py-1 rounded-full">✨ بحث ذكي</span>
+      </div>
 
-      <!-- نموذج البحث داخل الصفحة -->
-      <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md mb-4">
-        <div class="flex flex-col sm:flex-row gap-3">
-          <input type="text" id="driverSearchInput" placeholder="ابحث عن سائق (اسم أو منطقة)" 
-                class="flex-1 p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
-          <select id="driverAreaSelect" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
-            <option value="all">كل المناطق</option>
-            <option>الشجاعية</option><option>تل الهوا</option><option>جباليا</option><option>خان يونس</option><option>رفح</option><option>بيت لاهيا</option>
-          </select>
-          <button onclick="searchDrivers()" class="btn-accent px-6">🔎 بحث</button>
+      <p class="text-gray-600 dark:text-gray-400 mb-6">ابحث عن سائق في منطقتك لتوصيل الطلبات بسهولة وأمان</p>
+
+      <!-- بطاقة البحث المتقدم -->
+      <div class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 mb-6">
+        <div class="flex flex-col md:flex-row gap-4">
+          <div class="flex-1 relative">
+            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
+            <input type="text" id="driverSearchInput" 
+                  placeholder="ابحث عن سائق (اسم، منطقة، أو نوع المركبة)"
+                  class="w-full p-3 pr-10 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition">
+          </div>
+          <div class="md:w-48">
+            <select id="driverAreaSelect" 
+                    class="w-full p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition">
+              <option value="all">📍 كل المناطق</option>
+              <option>الشجاعية</option><option>تل الهوا</option><option>جباليا</option>
+              <option>خان يونس</option><option>رفح</option><option>بيت لاهيا</option>
+              <option>غزة</option>
+            </select>
+          </div>
+          <button onclick="searchDriversDirect()" 
+                  class="btn-accent px-8 py-3 flex items-center justify-center gap-2 whitespace-nowrap">
+            <span>🔎</span> بحث
+          </button>
+          <button onclick="resetDriverSearch()" 
+                  class="px-4 py-3 rounded-xl bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition font-semibold">
+            ↺
+          </button>
+        </div>
+
+        <!-- فلتر سريع (Chips) -->
+        <div class="flex flex-wrap gap-2 mt-4">
+          <span class="text-sm text-gray-500 dark:text-gray-400 ml-2">بحث سريع:</span>
+          <span class="chip" onclick="quickDriverSearch('سيارة')">🚗 سيارة</span>
+          <span class="chip" onclick="quickDriverSearch('دراجة')">🛵 دراجة</span>
+          <span class="chip" onclick="quickDriverSearch('توصيل')">📦 توصيل</span>
+          <span class="chip" onclick="quickDriverSearch('غزة')">📍 غزة</span>
         </div>
       </div>
 
-      <!-- حاوية عرض نتائج السائقين -->
-      <div id="driverResultsContainer" class="mt-4 space-y-4"></div>
+      <!-- حاوية النتائج -->
+      <div id="driverResults" class="mt-4 space-y-4">
+        <!-- ستظهر النتائج هنا -->
+        <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow text-center text-gray-500 dark:text-gray-400">
+          <div class="text-5xl mb-3">🚗</div>
+          <p class="font-semibold">ابحث عن سائق</p>
+          <p class="text-sm">اكتب اسم السائق، المنطقة، أو نوع المركبة في الأعلى</p>
+        </div>
+      </div>
 
-      <!-- نموذج إضافة سائق جديد -->
-      <div class="mt-8 bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md">
-        <h3 class="text-xl font-bold mb-4">➕ إضافة سائق جديد</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <input type="text" id="driverName" placeholder="الاسم الكامل" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
-          <input type="tel" id="driverPhone" placeholder="رقم الهاتف (واتساب)" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
-          <input type="text" id="driverArea" placeholder="المنطقة" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
-          <input type="text" id="driverVehicle" placeholder="نوع المركبة (سيارة، دراجة، إلخ)" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
-          <button onclick="addDriver()" class="btn-primary col-span-full">✅ إضافة سائق</button>
-          <div id="driverMessage" class="col-span-full text-center font-bold"></div>
+      <!-- نموذج إضافة سائق جديد (مطوّر) -->
+      <div class="mt-10 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="text-2xl">➕</span>
+          <h3 class="text-xl font-bold">إضافة سائق جديد</h3>
+          <span class="text-xs bg-accent/20 text-accentDark px-2 py-1 rounded-full">مطلوب للمنطقة</span>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input type="text" id="driverName" placeholder="الاسم الكامل" 
+                class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition">
+          <input type="tel" id="driverPhone" placeholder="رقم الهاتف (واتساب)" 
+                class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition">
+          <input type="text" id="driverArea" placeholder="المنطقة" 
+                class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition">
+          <input type="text" id="driverVehicle" placeholder="نوع المركبة (سيارة، دراجة، إلخ)" 
+                class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition">
+          <button onclick="addDriver()" 
+                  class="btn-primary col-span-full py-3 flex items-center justify-center gap-2">
+            <span>✅</span> إضافة سائق
+          </button>
+          <div id="driverMessage" class="col-span-full text-center font-bold min-h-[2rem]"></div>
         </div>
       </div>
     </section>
@@ -376,7 +424,7 @@
 /* ========================================================
    الإعدادات
    ======================================================== */
-const API_URL = "https://script.google.com/macros/s/AKfycbxCF8dWBTICNkCSihc5qOFfmxuOrzK_eoqDfBJeN7z2UqUVqCY1BCKuyR2AY8sY0wwr/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzzlVQG1oFSVrsobuGyk_9Xe52-4H6-8djxQP8lUWaI5_ColazFMOLeF_MyC4UNIpjI/exec";
 const FETCH_TIMEOUT_MS = 20000;
 const CACHE_KEY_PREFIX = "sanad_cache_";
 
@@ -629,57 +677,200 @@ async function performSearch() {
 }
 
 async function searchDrivers() {
+/* ========================================================
+   البحث عن سائقين - الإصدار المحسّن (في نفس الصفحة)
+   ======================================================== */
+
+// دالة البحث المتقدم عن سائقين (دون الانتقال لصفحة أخرى)
   if (!requireLogin()) return;
   
   const query = document.getElementById('driverSearchInput').value.trim();
   const area = document.getElementById('driverAreaSelect').value;
-  const container = document.getElementById('driverResultsContainer');
+  const container = document.getElementById('driverResults');
+  const cacheKey = CACHE_KEY_PREFIX + 'driver_' + query + '_' + area;
 
-  // إذا كان الحقل فارغاً، نعرض رسالة
+  // عرض رسالة إذا كان الحقل فارغاً
   if (!query) {
-    container.innerHTML = '<div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg text-center">⚠️ الرجاء كتابة اسم أو منطقة السائق</div>';
+    container.innerHTML = `
+      <div class="bg-yellow-50 dark:bg-yellow-900/30 p-6 rounded-2xl text-center border-r-4 border-accent">
+        <div class="text-3xl mb-2">🔍</div>
+        <p class="font-bold">الرجاء كتابة ما تبحث عنه</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400">مثال: اسم السائق، المنطقة، أو نوع المركبة</p>
+      </div>`;
     return;
   }
 
-  // عرض شاشة تحميل
-  container.innerHTML = `
-    <div class="text-center p-4">
-      <span class="text-gray-500">⏳ جاري البحث عن السائقين...</span>
-    </div>
-  `;
+  // عرض شاشة تحميل (Skeleton) أنيقة
+  renderDriverSkeleton(container);
 
-  try {
-    // إرسال طلب البحث مع type=driver
-    const url = `${API_URL}?action=search&query=${encodeURIComponent(query)}&area=${encodeURIComponent(area)}&type=driver`;
-    const response = await fetchWithTimeout(url);
-    const result = await response.json();
-
-    console.log('نتائج السائقين:', result);
-
-    if (result.success && result.data && result.data.length > 0) {
-      // عرض النتائج
-      container.innerHTML = renderDriverResults(result.data);
+  // التحقق من الاتصال
+  if (!navigator.onLine) {
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      renderDriverResults(container, JSON.parse(cached));
+      showToast('لا يوجد اتصال — تُعرض آخر نتائج محفوظة', 'info');
     } else {
       container.innerHTML = `
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center">
-          <div class="text-4xl mb-2">😓</div>
-          <p class="font-bold">لا يوجد سائقين بهذه المنطقة حالياً</p>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">يمكنك إضافة سائق جديد من خلال النموذج أدناه</p>
-        </div>
-      `;
+        <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow text-center">
+          <div class="text-4xl mb-2">📡</div>
+          <p class="font-bold">لا يوجد اتصال بالإنترنت</p>
+          <p class="text-sm text-gray-500 dark:text-gray-400">تحقق من اتصالك وحاول مرة أخرى</p>
+        </div>`;
+    }
+    return;
+  }
+
+  try {
+    // مسح الكاش القديم
+    localStorage.removeItem(cacheKey);
+    
+    // إرسال الطلب مع تحديد type=driver
+    const url = `${API_URL}?action=search&query=${encodeURIComponent(query)}&area=${encodeURIComponent(area)}&type=driver`;
+    const response = await fetchWithTimeout(url);
+
+    if (!response.ok) throw new Error(`الخادم أعاد الحالة ${response.status}`);
+    const result = await response.json();
+    console.log('🚗 نتائج السائقين:', result);
+
+    if (result.success) {
+      renderDriverResults(container, result.data);
+      localStorage.setItem(cacheKey, JSON.stringify(result.data));
+      
+      // إظهار عدد النتائج
+      const count = result.data?.length || 0;
+      showToast(`✅ تم العثور على ${count} سائق${count !== 1 ? 'ين' : ''}`, 'success');
+    } else {
+      throw new Error(result.error || 'خطأ غير معروف من الخادم');
     }
   } catch (error) {
-    console.error('خطأ في البحث عن سائقين:', error);
-    container.innerHTML = `
-      <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center">
-        <div class="text-3xl mb-2">⚠️</div>
-        <p class="font-bold">تعذّر الاتصال بالخادم</p>
-        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">${escapeHtml(error.message)}</p>
-        <button onclick="searchDrivers()" class="btn-primary mt-4">إعادة المحاولة</button>
-      </div>
-    `;
-    showToast('تعذّر إتمام البحث عن السائقين', 'error');
+    console.error('❌ خطأ في البحث عن سائقين:', error);
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      renderDriverResults(container, JSON.parse(cached));
+      showToast('تعذّر الاتصال — تُعرض آخر نتائج محفوظة', 'info');
+    } else {
+      container.innerHTML = `
+        <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow text-center">
+          <div class="text-4xl mb-2">⚠️</div>
+          <p class="font-bold text-red-600 dark:text-red-400">تعذّر الاتصال بالخادم</p>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">${escapeHtml(error.message)}</p>
+          <button onclick="searchDriversDirect()" class="btn-primary mt-4">إعادة المحاولة</button>
+        </div>`;
+    }
+    showToast('تعذّر إتمام البحث عن سائقين', 'error');
   }
+}
+
+// دالة عرض شاشة تحميل للسائقين
+function renderDriverSkeleton(container) {
+  container.innerHTML = `
+    <div class="grid grid-cols-1 gap-4">
+      ${[1, 2, 3].map(() => `
+        <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-lg flex items-center justify-between gap-4">
+          <div class="flex-1 space-y-3">
+            <div class="skeleton h-5 w-1/3"></div>
+            <div class="skeleton h-4 w-1/2"></div>
+            <div class="skeleton h-4 w-1/4"></div>
+          </div>
+          <div class="skeleton h-10 w-28 rounded-full"></div>
+        </div>
+      `).join('')}
+    </div>`;
+}
+
+// دالة عرض نتائج السائقين (بتصميم خاص)
+function renderDriverResults(container, data) {
+  if (!data || !Array.isArray(data) || data.length === 0) {
+    container.innerHTML = `
+      <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg text-center border-2 border-dashed border-gray-200 dark:border-gray-700">
+        <div class="text-6xl mb-3">🚗</div>
+        <p class="font-bold text-lg">لا يوجد سائقين مطابقين للبحث</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">جرب البحث بكلمات مختلفة أو أضف سائقاً جديداً</p>
+        <button onclick="document.getElementById('driverName').focus()" class="btn-accent mt-4">➕ إضافة سائق</button>
+      </div>`;
+    return;
+  }
+
+  // فلترة البيانات غير المكتملة
+  const validData = data.filter(p => p.name && p.skill_offer);
+  if (validData.length === 0) {
+    container.innerHTML = `
+      <div class="bg-yellow-50 dark:bg-yellow-900/30 p-6 rounded-2xl text-center">
+        <p class="font-bold text-yellow-700 dark:text-yellow-400">⚠️ توجد بيانات لكنها غير مكتملة</p>
+        <p class="text-sm text-gray-500">يُرجى التحقق من صحة البيانات في جدول السائقين</p>
+      </div>`;
+    return;
+  }
+
+  // عرض النتائج بتصميم بطاقات أنيق
+  container.innerHTML = `
+    <div class="grid grid-cols-1 gap-4">
+      ${validData.map((p, index) => {
+        const name = p.name || 'غير معروف';
+        const phone = p.phone || '';
+        const area = p.area || 'غير محدد';
+        const skill = p.skill_offer || 'لم يحدد';
+        const cleanPhone = String(phone).replace(/\D/g, '').replace(/^0/, '');
+        const whatsappLink = `https://wa.me/970${cleanPhone}`;
+        
+        // استخراج نوع المركبة من skill_offer
+        const vehicleMatch = skill.match(/\(([^)]+)\)/);
+        const vehicle = vehicleMatch ? vehicleMatch[1] : 'غير محدد';
+        
+        // أيقونة عشوائية للتنوع
+        const icons = ['🚗', '🚙', '🚐', '🛵', '🚲'];
+        const icon = icons[index % icons.length];
+        
+        return `
+          <div class="card-hover fade-in bg-white dark:bg-gray-800 p-5 rounded-xl shadow-lg border-r-4 border-accent flex flex-wrap items-center justify-between gap-4 hover:shadow-xl transition-all duration-300">
+            <div class="flex items-center gap-4">
+              <div class="text-4xl">${icon}</div>
+              <div>
+                <p class="font-bold text-lg">${escapeHtml(name)}</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                  <span>🛠️ ${escapeHtml(skill)}</span>
+                  <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
+                  <span>📍 ${escapeHtml(area)}</span>
+                </p>
+                <p class="text-xs text-gray-400 mt-1">🚗 نوع المركبة: ${escapeHtml(vehicle)}</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              ${cleanPhone ? `
+                <a href="${whatsappLink}" target="_blank" rel="noopener" 
+                   class="bg-green-600 text-white px-5 py-2.5 rounded-full text-sm font-bold hover:bg-green-700 transition transform hover:scale-105 shadow-md hover:shadow-lg flex items-center gap-2">
+                  <span>💬</span> واتساب
+                </a>
+              ` : ''}
+              <span class="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">سائق</span>
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+    <div class="mt-4 text-center text-sm text-gray-500">
+      ✅ تم العثور على ${validData.length} سائق${validData.length !== 1 ? 'ين' : ''}
+    </div>
+  `;
+}
+
+// دالة البحث السريع (Chips)
+function quickDriverSearch(term) {
+  document.getElementById('driverSearchInput').value = term;
+  searchDriversDirect();
+}
+
+// دالة إعادة تعيين البحث
+function resetDriverSearch() {
+  document.getElementById('driverSearchInput').value = '';
+  document.getElementById('driverAreaSelect').value = 'all';
+  document.getElementById('driverResults').innerHTML = `
+    <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow text-center text-gray-500 dark:text-gray-400">
+      <div class="text-5xl mb-3">🚗</div>
+      <p class="font-semibold">ابحث عن سائق</p>
+      <p class="text-sm">اكتب اسم السائق، المنطقة، أو نوع المركبة في الأعلى</p>
+    </div>`;
+  showToast('تم إعادة تعيين البحث', 'info');
 }
 
 /* ========================================================
