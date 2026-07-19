@@ -1,1402 +1,2201 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
-  <title>سند - تبادل المهارات في غزة</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<title>سند - تبادل المهارات في غزة</title>
 
-  <!-- خط Tajawal الأنيق -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
+<!-- خط Tajawal العربي الاحترافي -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
 
-  <!-- FontAwesome للأيقونات -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<!-- أيقونات Lucide -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
-  <!-- Tailwind CSS مع إعدادات مخصصة -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: { tajawal: ['Tajawal', 'sans-serif'] },
-          colors: {
-            primary: '#0E5C56',
-            primaryDark: '#0A4440',
-            primaryLight: '#17847B',
-            accent: '#D98E2B',
-            accentDark: '#B8721C',
-            surface: '#F8F9FA',
-            darkSurface: '#121212',
-          }
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        fontFamily: { cairo: ['Tajawal', 'sans-serif'], tajawal: ['Tajawal', 'sans-serif'] },
+        colors: {
+          primary:      '#0E5C56',
+          primaryDark:  '#0A4440',
+          primaryLight: '#17847B',
+          accent:       '#D98E2B',
+          accentDark:   '#B8721C',
+          sand:         '#FAF6EF',
+          sandDark:     '#0B1F1E'
         }
       }
     }
-  </script>
+  }
+</script>
 
-  <style>
-    /* إزالة التمرير العرضي نهائياً */
-    * { overflow-x: hidden; box-sizing: border-box; }
-    body { font-family: 'Tajawal', sans-serif; background: #F8F9FA; overflow-x: hidden; }
-    html.dark body { background: #121212; }
+<style>
+  * { font-family: 'Tajawal', sans-serif; }
+  .lucide { width: 1.15em; height: 1.15em; stroke-width: 2.1; vertical-align: -0.2em; flex-shrink: 0; }
 
-    /* انتقالات سلسة */
-    .page-transition { transition: opacity 0.25s ease, transform 0.25s ease; }
-    .page-enter { opacity: 0; transform: translateY(8px); }
-    .page-active { opacity: 1; transform: translateY(0); }
+  body { background-color: #FAF6EF; }
+  html.dark body { background-color: #0B1F1E; }
 
-    /* تنسيق التبويبات */
-    .tab-item {
-      transition: all 0.2s;
-      cursor: pointer;
-      border-bottom: 3px solid transparent;
-      padding: 0.5rem 1rem;
-      font-weight: 600;
-      color: #6B7280;
+  .sidebar { transition: transform .3s ease; transform: translateX(0); }
+  .sidebar-closed { transform: translateX(100%); }
+  @media (min-width: 768px) { .sidebar-closed { transform: translateX(0); } }
+
+  .btn-primary {
+    background-color: #0E5C56; color: #fff; padding: .85rem 1.6rem; border-radius: 9999px;
+    font-weight: 700; transition: all .15s ease;
+    box-shadow: 0 4px 14px rgba(14,92,86,.25);
+  }
+  .btn-primary:hover { background-color: #0A4440; transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0) scale(.98); }
+
+  .btn-accent {
+    background-color: #D98E2B; color: #1e1608; padding: .85rem 1.6rem; border-radius: 9999px;
+    font-weight: 700; transition: all .15s ease;
+    box-shadow: 0 4px 14px rgba(217,142,43,.3);
+  }
+  .btn-accent:hover { background-color: #B8721C; color: #fff; transform: translateY(-1px); }
+  .btn-accent:active { transform: translateY(0) scale(.98); }
+
+  .card-hover { transition: transform .2s ease, box-shadow .2s ease; }
+  .card-hover:hover { transform: translateY(-3px); box-shadow: 0 12px 24px rgba(14,92,86,.12); }
+
+  .fade-in { animation: fadeIn .35s ease both; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  .skeleton {
+    background: linear-gradient(90deg, rgba(0,0,0,.06) 25%, rgba(0,0,0,.11) 37%, rgba(0,0,0,.06) 63%);
+    background-size: 400% 100%;
+    animation: skeletonWave 1.4s ease infinite;
+    border-radius: .75rem;
+  }
+  html.dark .skeleton {
+    background: linear-gradient(90deg, rgba(255,255,255,.06) 25%, rgba(255,255,255,.12) 37%, rgba(255,255,255,.06) 63%);
+    background-size: 400% 100%;
+  }
+  @keyframes skeletonWave { 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }
+
+  .chip {
+    display: inline-flex; align-items: center; padding: .4rem .9rem; border-radius: 9999px;
+    font-size: .82rem; font-weight: 600; cursor: pointer; transition: all .15s ease;
+    background: rgba(14,92,86,.08); color: #0E5C56;
+  }
+  .chip:hover { background: #0E5C56; color: #fff; }
+  html.dark .chip { background: rgba(23,132,123,.15); color: #7fd6cc; }
+  html.dark .chip:hover { background: #17847B; color: #fff; }
+
+  #toastHost { position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%); z-index: 100;
+    display: flex; flex-direction: column; gap: .5rem; width: min(92vw, 380px); }
+  .toast {
+    padding: .8rem 1rem; border-radius: .85rem; font-weight: 700; font-size: .9rem;
+    box-shadow: 0 8px 20px rgba(0,0,0,.15); animation: fadeIn .25s ease both; text-align: center;
+  }
+  .toast-error   { background: #FDE8E8; color: #9B1C1C; }
+  .toast-success { background: #E4F6EC; color: #106A38; }
+  .toast-info    { background: #FEF3E2; color: #8A5A0C; }
+
+  #connStatus { display:flex; align-items:center; gap:.4rem; font-size:.75rem; font-weight:700; }
+  .dot { width:.5rem; height:.5rem; border-radius:9999px; }
+  .dot-on { background:#22c55e; }
+  .dot-off { background:#ef4444; }
+
+  input:focus, select:focus, button:focus-visible {
+    outline: 2px solid #D98E2B; outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+  }
+
+  .policy-section {
+    background: #fff;
+    border-radius: 1.5rem;
+    padding: 2rem;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+  }
+  .policy-section h3 {
+    color: #0E5C56;
+    font-weight: 800;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .policy-section ul {
+    list-style: disc;
+    padding-right: 1.5rem;
+  }
+  .policy-section li {
+    margin-bottom: 0.5rem;
+  }
+  html.dark .policy-section {
+    background: #1f2937;
+  }
+  html.dark .policy-section h3 {
+    color: #7fd6cc;
+  }
+
+  /* ===== لوحة الإحصائيات (٥ مقاييس) ===== */
+  .stats-scroller {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 82%;
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: .25rem .25rem 1rem;
+    margin: 0 -.25rem;
+  }
+  .stats-scroller::-webkit-scrollbar { display: none; }
+  .stats-scroller > .stat-card { scroll-snap-align: center; }
+  @media (min-width: 640px) {
+    .stats-scroller { grid-auto-columns: 46%; }
+  }
+  @media (min-width: 768px) {
+    .stats-scroller {
+      display: grid;
+      grid-auto-flow: initial;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      overflow: visible;
+      padding: 0;
+      margin: 0;
     }
-    .tab-item.active {
-      color: #0E5C56;
-      border-bottom-color: #0E5C56;
-    }
-    html.dark .tab-item.active {
-      color: #7fd6cc;
-      border-bottom-color: #7fd6cc;
-    }
+  }
+  .stats-dots { display: flex; justify-content: center; gap: .4rem; margin-top: -.25rem; }
+  .stats-dots span { width: .4rem; height: .4rem; border-radius: 9999px; background: rgba(14,92,86,.2); transition: all .2s ease; }
+  html.dark .stats-dots span { background: rgba(255,255,255,.2); }
+  .stats-dots span.active { width: 1.1rem; background: #0E5C56; }
+  html.dark .stats-dots span.active { background: #7fd6cc; }
+  @media (min-width: 768px) { .stats-dots { display: none; } }
 
-    /* تحسينات البطاقات */
-    .card-hover {
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .card-hover:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.08);
-    }
+  .stat-card {
+    background: linear-gradient(180deg, rgba(14,92,86,.045), transparent);
+    border: 1px solid rgba(14,92,86,.08);
+    border-radius: 1.1rem;
+  }
+  html.dark .stat-card { background: linear-gradient(180deg, rgba(127,214,204,.06), transparent); border-color: rgba(127,214,204,.12); }
 
-    /* تمرير أفقي داخل الحاوية فقط - بدون شريط تمرير مرئي */
-    .horizontal-scroll {
-      display: flex;
-      gap: 1rem;
-      overflow-x: auto;
-      scrollbar-width: none; /* Firefox */
-      -ms-overflow-style: none; /* IE */
-      padding: 0.5rem 0.25rem;
-      scroll-behavior: smooth;
-    }
-    .horizontal-scroll::-webkit-scrollbar { display: none; }
-
-    /* تنسيقات الـ skeleton */
-    .skeleton {
-      background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 37%, #e0e0e0 63%);
-      background-size: 400% 100%;
-      animation: shimmer 1.4s infinite;
-      border-radius: 0.75rem;
-    }
-    html.dark .skeleton {
-      background: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 37%, #2a2a2a 63%);
-    }
-    @keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }
-
-    /* Toast */
-    .toast-container { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%); z-index: 999; }
-    .toast {
-      padding: 0.75rem 1.5rem;
-      border-radius: 9999px;
-      font-weight: 600;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-      animation: slideUp 0.3s ease;
-    }
-    @keyframes slideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
-
-    /* نجوم التقييم */
-    .star { font-size: 1.8rem; cursor: pointer; transition: 0.15s; }
-    .star:hover { transform: scale(1.15); }
-
-    /* تنسيق نافذة الترحيب */
-    .modal-overlay { backdrop-filter: blur(4px); }
-
-    /* إخفاء أي scrollbar غير مرغوب */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 8px; }
-    html.dark ::-webkit-scrollbar-thumb { background: #4a5568; }
-  </style>
+  .nav-link { display: flex; align-items: center; gap: .65rem; }
+</style>
 </head>
-<body class="font-tajawal bg-surface dark:bg-darkSurface text-gray-800 dark:text-gray-200">
+<body class="font-cairo bg-sand dark:bg-sandDark text-gray-800 dark:text-gray-200 min-h-screen">
 
-  <!-- حاوية الإشعارات المنبثقة -->
-  <div id="toastContainer" class="toast-container flex flex-col gap-2 items-center"></div>
+<div id="toastHost"></div>
 
-  <!-- ========== الشريط العلوي (Header) ========== -->
-  <header class="sticky top-0 z-40 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <button id="menuToggle" class="text-2xl text-gray-600 dark:text-gray-300 hover:text-primary transition md:hidden">
-          <i class="fas fa-bars"></i>
+<!-- الشريط الجانبي -->
+<div id="sidebar" class="sidebar fixed top-0 right-0 h-full w-64 bg-white dark:bg-gray-800 shadow-lg z-50 p-4 flex flex-col md:translate-x-0 overflow-y-auto">
+  <div class="flex justify-between items-center mb-6">
+    <span class="text-2xl font-extrabold text-primary dark:text-primaryLight">سـنـد</span>
+    <button id="closeSidebar" class="md:hidden text-gray-500 leading-none" aria-label="إغلاق القائمة"><i data-lucide="x" class="lucide" style="width:1.4em;height:1.4em"></i></button>
+  </div>
+
+  <div id="userDisplay" class="mb-4 text-sm text-gray-600 dark:text-gray-400 hidden flex items-center gap-2">
+    <i data-lucide="user-round" class="lucide"></i> <span id="userNameDisplay">زائر</span>
+  </div>
+
+  <nav class="flex-1 space-y-1">
+    <a href="#" onclick="showSection('home')" data-nav="home" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold"><i data-lucide="home" class="lucide"></i> الرئيسية</a>
+    <a href="#" onclick="showSection('search')" data-nav="search" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold"><i data-lucide="search" class="lucide"></i> ابحث عن خبير</a>
+    <a href="#" onclick="showSection('add')" data-nav="add" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold"><i data-lucide="wrench" class="lucide"></i> قدّم خدمة</a>
+    <a href="#" onclick="showSection('driver')" data-nav="driver" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold"><i data-lucide="car" class="lucide"></i> خدمة ديلفري</a>
+    <a href="#" onclick="showSection('contact')" data-nav="contact" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold"><i data-lucide="phone" class="lucide"></i> تواصل معنا</a>
+    <a href="#" onclick="showSection('policy')" data-nav="policy" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold"><i data-lucide="scroll-text" class="lucide"></i> سياسة الاستخدام</a>
+    <!-- زر إعادة تشغيل الجولة -->
+    <a href="#" onclick="restartTour()" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold text-sm text-gray-400"><i data-lucide="refresh-cw" class="lucide"></i> إعادة الجولة الإرشادية</a>
+    <a href="#" id="logoutBtn" onclick="logout()" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-red-600 hover:text-white transition font-semibold hidden"><i data-lucide="log-out" class="lucide"></i> تسجيل خروج</a>
+  </nav>
+
+  <div id="connStatus" class="px-4 mb-3 text-gray-500 dark:text-gray-400">
+    <span class="dot dot-on" id="connDot"></span>
+    <span id="connText">متصل بالإنترنت</span>
+  </div>
+
+  <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
+    <button id="themeToggle" class="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-gray-100 dark:bg-gray-700 rounded-xl font-semibold">
+      <i id="themeIcon" data-lucide="moon" class="lucide"></i> <span id="themeLabel">الوضع الداكن</span>
+    </button>
+  </div>
+</div>
+
+<!-- المحتوى الرئيسي -->
+<div class="md:mr-64">
+  <header class="bg-primary dark:bg-gray-800 text-white p-4 flex items-center justify-between shadow-md sticky top-0 z-40">
+    <h1 class="text-xl font-extrabold">منصة سند</h1>
+    <div class="flex items-center gap-4">
+      <!-- ===== أيقونة الإشعارات (أضف هذا الكود هنا) ===== -->
+      <div class="relative">
+        <button onclick="toggleNotificationDropdown()" class="hover:scale-110 transition relative p-1" aria-label="الإشعارات">
+          <i data-lucide="bell" class="lucide" style="width:1.5em;height:1.5em"></i>
+          <span id="notificationBadge" class="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
         </button>
-        <h1 class="text-2xl font-extrabold text-primary dark:text-primaryLight">سند</h1>
-      </div>
-      <div class="flex items-center gap-4">
-        <!-- أيقونة الإشعارات -->
-        <div class="relative">
-          <button id="notifBtn" class="text-xl text-gray-600 dark:text-gray-300 hover:text-primary transition relative">
-            <i class="fas fa-bell"></i>
-            <span id="notifBadge" class="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
-          </button>
-          <!-- القائمة المنسدلة للإشعارات -->
-          <div id="notifDropdown" class="hidden absolute left-0 top-full mt-2 w-72 max-h-80 overflow-y-auto bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 z-50 p-2">
-            <div class="flex justify-between items-center p-2 border-b border-gray-200 dark:border-gray-700">
-              <span class="font-bold text-sm">📬 الإشعارات</span>
-              <div class="flex gap-2">
-                <button id="markAllReadBtn" class="text-xs text-primary hover:underline">تحديد الكل كمقروء</button>
-                <button id="refreshNotifBtn" class="text-xs text-gray-400 hover:text-gray-600"><i class="fas fa-sync-alt"></i></button>
-              </div>
-            </div>
-            <div id="notifList" class="divide-y divide-gray-100 dark:divide-gray-700">
-              <div class="p-4 text-center text-gray-400 text-sm">لا توجد إشعارات</div>
-            </div>
-            <div class="p-2 text-center border-t border-gray-200 dark:border-gray-700">
-              <button id="closeNotifBtn" class="text-xs text-gray-400 hover:text-gray-600">إغلاق</button>
+        <!-- القائمة المنسدلة للإشعارات -->
+        <div id="notificationDropdown" class="hidden absolute left-0 top-full mt-2 w-80 max-h-96 overflow-y-auto bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 z-50">
+          <div class="p-3 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center sticky top-0 bg-white dark:bg-gray-800 rounded-t-2xl">
+            <span class="font-bold flex items-center gap-2"><i data-lucide="inbox" class="lucide"></i> الإشعارات</span>
+            <div class="flex items-center gap-2">
+              <button onclick="markAllNotificationsRead()" class="text-xs text-primary hover:underline">تحديد الكل كمقروء</button>
+              <button onclick="fetchNotifications()" class="text-xs text-gray-500 hover:text-primary transition flex items-center gap-1"><i data-lucide="refresh-cw" class="lucide" style="width:.9em;height:.9em"></i> تحديث</button>
             </div>
           </div>
+          <div id="notificationList" class="divide-y divide-gray-100 dark:divide-gray-700">
+            <div class="p-4 text-center text-gray-500 dark:text-gray-400 text-sm">لا توجد إشعارات</div>
+          </div>
+          <div class="p-2 text-center border-t border-gray-200 dark:border-gray-700">
+            <button onclick="closeNotificationDropdown()" class="text-xs text-gray-400 hover:text-gray-600">إغلاق</button>
+          </div>
         </div>
-        <!-- زر الوضع الداكن/الفاتح -->
-        <button id="themeToggle" class="text-xl text-gray-600 dark:text-gray-300 hover:text-primary transition">
-          <i class="fas fa-moon" id="themeIcon"></i>
-        </button>
       </div>
+      <!-- ===== نهاية أيقونة الإشعارات ===== -->
+      <button id="openSidebar" class="md:hidden leading-none" aria-label="القائمة"><i data-lucide="menu" class="lucide" style="width:1.7em;height:1.7em"></i></button>
     </div>
   </header>
 
-  <!-- ========== التنقل العلوي (تبويبات للجوال + Sidebar للشاشات الكبيرة) ========== -->
-  <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row gap-6 py-4 relative">
-    <!-- الشريط الجانبي (يظهر على الشاشات المتوسطة والكبيرة) -->
-    <aside class="hidden md:block w-56 flex-shrink-0">
-      <div class="sticky top-20 space-y-1 bg-white dark:bg-gray-800/80 rounded-2xl p-3 shadow-sm border border-gray-200 dark:border-gray-700">
-        <button class="nav-link w-full text-right px-4 py-2.5 rounded-xl hover:bg-primary/10 dark:hover:bg-primary/20 transition font-semibold flex items-center gap-3" data-target="home">
-          <i class="fas fa-home w-5 text-primary"></i> الرئيسية
-        </button>
-        <button class="nav-link w-full text-right px-4 py-2.5 rounded-xl hover:bg-primary/10 dark:hover:bg-primary/20 transition font-semibold flex items-center gap-3" data-target="search">
-          <i class="fas fa-search w-5 text-primary"></i> ابحث عن خبير
-        </button>
-        <button class="nav-link w-full text-right px-4 py-2.5 rounded-xl hover:bg-primary/10 dark:hover:bg-primary/20 transition font-semibold flex items-center gap-3" data-target="add">
-          <i class="fas fa-tools w-5 text-primary"></i> قدّم خدمة
-        </button>
-        <button class="nav-link w-full text-right px-4 py-2.5 rounded-xl hover:bg-primary/10 dark:hover:bg-primary/20 transition font-semibold flex items-center gap-3" data-target="driver">
-          <i class="fas fa-truck w-5 text-primary"></i> خدمة ديلفري
-        </button>
-        <button class="nav-link w-full text-right px-4 py-2.5 rounded-xl hover:bg-primary/10 dark:hover:bg-primary/20 transition font-semibold flex items-center gap-3" data-target="contact">
-          <i class="fas fa-phone w-5 text-primary"></i> تواصل معنا
-        </button>
-        <button class="nav-link w-full text-right px-4 py-2.5 rounded-xl hover:bg-primary/10 dark:hover:bg-primary/20 transition font-semibold flex items-center gap-3" data-target="policy">
-          <i class="fas fa-file-alt w-5 text-primary"></i> سياسة الاستخدام
-        </button>
-        <button id="logoutBtn" class="w-full text-right px-4 py-2.5 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 transition font-semibold text-red-600 dark:text-red-400 flex items-center gap-3 hidden">
-          <i class="fas fa-sign-out-alt w-5"></i> تسجيل خروج
-        </button>
-      </div>
-    </aside>
+  <main class="p-4 max-w-4xl mx-auto">
 
-    <!-- المحتوى الرئيسي -->
-    <main class="flex-1 min-w-0">
-      <!-- تبويبات علوية للجوال (تظهر فقط في الشاشات الصغيرة) -->
-      <div class="md:hidden flex items-center gap-1 overflow-x-auto horizontal-scroll mb-4 bg-white dark:bg-gray-800/80 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-1">
-        <button class="tab-item active flex-shrink-0 text-sm" data-tab="home"><i class="fas fa-home ml-1"></i>الرئيسية</button>
-        <button class="tab-item flex-shrink-0 text-sm" data-tab="search"><i class="fas fa-search ml-1"></i>بحث</button>
-        <button class="tab-item flex-shrink-0 text-sm" data-tab="add"><i class="fas fa-tools ml-1"></i>إضافة</button>
-        <button class="tab-item flex-shrink-0 text-sm" data-tab="driver"><i class="fas fa-truck ml-1"></i>ديلفري</button>
-        <button class="tab-item flex-shrink-0 text-sm" data-tab="contact"><i class="fas fa-phone ml-1"></i>تواصل</button>
-        <button class="tab-item flex-shrink-0 text-sm" data-tab="policy"><i class="fas fa-file-alt ml-1"></i>سياسة</button>
-      </div>
-
-      <!-- ========== الأقسام (الصفحات) ========== -->
-      <div id="pageContainer" class="space-y-6">
         <!-- الصفحة الرئيسية -->
-        <section id="page-home" class="page-section">
-          <!-- الترحيب المحسن -->
-          <div class="relative bg-gradient-to-br from-primary/90 to-primaryDark/90 text-white rounded-2xl p-8 shadow-xl overflow-hidden">
-            <div class="relative z-10">
-              <h2 class="text-3xl font-extrabold">منصة <span class="text-accent">سند</span></h2>
-              <p class="text-lg mt-2 opacity-90">ربط المهارات بالاحتياجات في غزة</p>
-              <p class="text-sm mt-1 opacity-75 max-w-md">سند هي منصة مجتمعية تربط أصحاب المهارات والخبرات مع من يحتاجها في نفس الحي.</p>
-              <div class="flex flex-wrap gap-4 mt-6">
-                <button onclick="navigateTo('search')" class="bg-accent text-gray-900 px-6 py-2.5 rounded-full font-bold shadow-lg hover:shadow-xl transition transform hover:scale-105 flex items-center gap-2">
-                  <i class="fas fa-search"></i> ابحث عن خبير
-                </button>
-                <button onclick="navigateTo('add')" class="bg-white/20 backdrop-blur-sm border border-white/30 px-6 py-2.5 rounded-full font-semibold hover:bg-white/30 transition flex items-center gap-2">
-                  <i class="fas fa-plus-circle"></i> قدم خدمتك
-                </button>
-              </div>
-            </div>
-            <!-- خلفية زخرفية -->
-            <div class="absolute inset-0 opacity-10 pointer-events-none">
-              <svg viewBox="0 0 800 800" class="w-full h-full"><circle cx="100" cy="100" r="200" fill="white" /><circle cx="700" cy="600" r="300" fill="white" /><circle cx="400" cy="400" r="150" fill="white" /></svg>
-            </div>
-          </div>
-
-          <!-- إحصائيات سريعة -->
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 bg-white dark:bg-gray-800/80 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-            <div class="text-center"><div class="text-3xl font-extrabold text-primary" id="statUsers">0</div><div class="text-sm text-gray-500">مستخدم نشط</div></div>
-            <div class="text-center"><div class="text-3xl font-extrabold text-accent" id="statServices">0</div><div class="text-sm text-gray-500">خدمة مقدمة</div></div>
-            <div class="text-center"><div class="text-3xl font-extrabold text-green-600" id="statDrivers">0</div><div class="text-sm text-gray-500">سائق</div></div>
-            <div class="text-center"><div class="text-3xl font-extrabold text-blue-600" id="statReviews">0</div><div class="text-sm text-gray-500">تقييم</div></div>
-          </div>
-
-          <!-- روابط سريعة -->
-          <div class="grid grid-cols-2 gap-4">
-            <div onclick="navigateTo('search')" class="card-hover bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 text-center cursor-pointer">
-              <i class="fas fa-search text-4xl text-primary"></i>
-              <h3 class="font-bold mt-2">أبحث عن خبير</h3>
-              <p class="text-sm text-gray-500">صيانة، خياطة، كهرباء</p>
-            </div>
-            <div onclick="navigateTo('add')" class="card-hover bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 text-center cursor-pointer">
-              <i class="fas fa-tools text-4xl text-accent"></i>
-              <h3 class="font-bold mt-2">أريد تقديم خدمة</h3>
-              <p class="text-sm text-gray-500">سجل مهارتك ليصلك جيرانك</p>
-            </div>
-          </div>
-        </section>
-
-        <!-- صفحة البحث -->
-        <section id="page-search" class="page-section hidden">
-          <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-200 dark:border-gray-700">
-            <h2 class="text-2xl font-bold mb-4"><i class="fas fa-search text-primary"></i> ابحث عن خبير</h2>
-            <div class="space-y-3">
-              <!-- حقل البحث مع صوتي ومسح -->
-              <div class="relative">
-                <input type="text" id="searchInput" placeholder="ماذا تبحث؟ (مثال: صيانة شمسية)"
-                       class="w-full p-3 pr-12 pl-12 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-primary transition" />
-                <button id="voiceSearchBtn" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary text-xl">
-                  <i class="fas fa-microphone"></i>
-                </button>
-                <button id="clearSearchBtn" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500 hidden">
-                  <i class="fas fa-times-circle"></i>
-                </button>
-              </div>
-              <!-- الاقتراحات التلقائية -->
-              <div id="autocompleteList" class="hidden bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 max-h-48 overflow-y-auto"></div>
-              <!-- Chips سريعة -->
-              <div class="flex flex-wrap gap-2">
-                <span class="chip" onclick="quickSearch('صيانة شمسية')"><i class="fas fa-sun ml-1"></i>صيانة شمسية</span>
-                <span class="chip" onclick="quickSearch('كهرباء')"><i class="fas fa-bolt ml-1"></i>كهرباء</span>
-                <span class="chip" onclick="quickSearch('خياطة')"><i class="fas fa-cut ml-1"></i>خياطة</span>
-                <span class="chip" onclick="quickSearch('نجارة')"><i class="fas fa-hammer ml-1"></i>نجارة</span>
-                <span class="chip" onclick="quickSearch('سباكة')"><i class="fas fa-wrench ml-1"></i>سباكة</span>
-                <span class="chip" onclick="quickSearch('توصيل')"><i class="fas fa-truck ml-1"></i>توصيل</span>
-              </div>
-              <!-- فلاتر متقدمة -->
-              <div class="grid grid-cols-2 gap-3">
-                <select id="areaSelect" class="p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700">
-                  <option value="all">📍 كل المناطق</option>
-                  <option>الشجاعية</option><option>تل الهوا</option><option>جباليا</option>
-                  <option>خان يونس</option><option>رفح</option><option>بيت لاهيا</option>
-                </select>
-                <select id="typeSelect" class="p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700">
-                  <option value="all">👥 الجميع</option>
-                  <option value="both">🛠️ خبراء</option>
-                  <option value="driver">🚗 سائقين</option>
-                </select>
-                <select id="ratingFilter" class="p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700">
-                  <option value="0">⭐ كل التقييمات</option>
-                  <option value="4">⭐ 4+ نجوم</option>
-                  <option value="3">⭐ 3+ نجوم</option>
-                </select>
-                <select id="sortFilter" class="p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700">
-                  <option value="recent">🕐 الأحدث</option>
-                  <option value="rating">⭐ الأعلى تقييماً</option>
-                  <option value="name">🔤 أبجدياً</option>
-                </select>
-              </div>
-              <button onclick="performSearch()" class="btn-accent w-full py-3 flex items-center justify-center gap-2 text-lg">
-                <i class="fas fa-search"></i> بحث متقدم
-              </button>
-              <button onclick="clearFilters()" class="text-sm text-gray-400 hover:text-gray-600 transition text-center w-full">
-                <i class="fas fa-undo-alt"></i> مسح جميع الفلاتر
-              </button>
-            </div>
-          </div>
-          <div id="resultsContainer" class="mt-6 space-y-4"></div>
-        </section>
-
-        <!-- صفحة إضافة خدمة -->
-        <section id="page-add" class="page-section hidden">
-          <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-            <h2 class="text-2xl font-bold mb-4"><i class="fas fa-tools text-accent"></i> سجّل مهارتك</h2>
-            <div class="grid grid-cols-1 gap-4">
-              <input type="text" id="addName" placeholder="الاسم الكامل" class="p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700" />
-              <input type="tel" id="addPhone" placeholder="رقم الهاتف (واتساب) مثال: 0599xxxxxx" class="p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700" />
-              <input type="text" id="addArea" placeholder="المنطقة (مثال: الشجاعية)" class="p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700" />
-              <input type="text" id="addSkill" placeholder="المهارات التي تقدمها (مثال: صيانة شمسية، إلكترونيات)" class="p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700" />
-              <input type="text" id="addRequest" placeholder="المهارات التي تبحث عنها (اختياري)" class="p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700" />
-              <select id="addType" class="p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700">
-                <option value="both">خبير (أقدم خدمة)</option>
-                <option value="driver">سائق (ديلفري)</option>
-              </select>
-              <button onclick="addService()" id="addBtn" class="btn-primary w-full py-3 flex items-center justify-center gap-2">
-                <i class="fas fa-plus-circle"></i> إضافة إلى المنصة
-              </button>
-              <div id="addMessage" class="text-center font-bold min-h-[1.5rem]"></div>
-            </div>
-          </div>
-        </section>
-
-        <!-- صفحة ديلفري -->
-        <section id="page-driver" class="page-section hidden">
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="text-2xl font-bold"><i class="fas fa-truck text-primary"></i> خدمة ديلفري - السائقين</h2>
-            <span class="text-sm bg-primary/10 text-primary px-3 py-1 rounded-full"><i class="fas fa-star"></i> بحث ذكي</span>
-          </div>
-          <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-200 dark:border-gray-700">
-            <div class="flex flex-col md:flex-row gap-3">
-              <div class="flex-1 relative">
-                <i class="fas fa-search absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                <input type="text" id="driverSearchInput" placeholder="ابحث عن سائق (اسم، منطقة، مركبة)" class="w-full p-3 pr-10 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700" />
-              </div>
-              <select id="driverAreaSelect" class="p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 w-full md:w-48">
-                <option value="all">📍 كل المناطق</option>
-                <option>الشجاعية</option><option>تل الهوا</option><option>جباليا</option>
-                <option>خان يونس</option><option>رفح</option><option>بيت لاهيا</option><option>غزة</option>
-              </select>
-              <button onclick="searchDriversDirect()" class="btn-accent px-6 py-3 flex items-center justify-center gap-2"><i class="fas fa-search"></i> بحث</button>
-              <button onclick="resetDriverSearch()" class="px-4 py-3 rounded-xl bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition"><i class="fas fa-undo-alt"></i></button>
-            </div>
-            <div class="flex flex-wrap gap-2 mt-3">
-              <span class="chip" onclick="quickDriverSearch('سيارة')"><i class="fas fa-car ml-1"></i>سيارة</span>
-              <span class="chip" onclick="quickDriverSearch('دراجة')"><i class="fas fa-motorcycle ml-1"></i>دراجة</span>
-              <span class="chip" onclick="quickDriverSearch('توصيل')"><i class="fas fa-box ml-1"></i>توصيل</span>
-              <span class="chip" onclick="quickDriverSearch('غزة')"><i class="fas fa-map-pin ml-1"></i>غزة</span>
-            </div>
-          </div>
-          <div id="driverResults" class="mt-6 space-y-4">
-            <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-sm text-center text-gray-500 dark:text-gray-400">
-              <i class="fas fa-truck text-5xl mb-3 block"></i>
-              <p class="font-semibold">ابحث عن سائق</p>
-              <p class="text-sm">اكتب اسم السائق، المنطقة، أو نوع المركبة</p>
-            </div>
-          </div>
-
-          <!-- إضافة سائق -->
-          <div class="mt-8 bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-            <h3 class="text-xl font-bold mb-4"><i class="fas fa-plus-circle text-accent"></i> إضافة سائق جديد</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <input type="text" id="driverName" placeholder="الاسم الكامل" class="p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700" />
-              <input type="tel" id="driverPhone" placeholder="رقم الهاتف (واتساب)" class="p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700" />
-              <input type="text" id="driverArea" placeholder="المنطقة" class="p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700" />
-              <input type="text" id="driverVehicle" placeholder="نوع المركبة (سيارة، دراجة، إلخ)" class="p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700" />
-              <button onclick="addDriver()" class="btn-primary col-span-full py-3 flex items-center justify-center gap-2"><i class="fas fa-plus"></i> إضافة سائق</button>
-              <div id="driverMessage" class="col-span-full text-center font-bold min-h-[2rem]"></div>
-            </div>
-          </div>
-        </section>
-
-        <!-- صفحة تواصل معنا -->
-        <section id="page-contact" class="page-section hidden">
-          <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-sm border border-gray-200 dark:border-gray-700 text-center">
-            <i class="fas fa-phone-alt text-5xl text-primary mb-4"></i>
-            <h2 class="text-2xl font-bold mb-2">📞 تواصل معنا</h2>
-            <p class="text-gray-600 dark:text-gray-300 mb-4">للتواصل والدعم، يمكنك مراسلتنا عبر واتساب:</p>
-            <a href="https://wa.me/970567715743" target="_blank" class="inline-flex items-center gap-2 bg-green-600 text-white px-8 py-4 rounded-full text-xl font-bold hover:bg-green-700 transition shadow-lg hover:shadow-xl">
-              <i class="fab fa-whatsapp"></i> 0567715743
-            </a>
-            <p class="text-sm text-gray-400 mt-4">نحن هنا لمساعدتك في أي استفسار</p>
-          </div>
-        </section>
-
-        <!-- صفحة سياسة الاستخدام -->
-        <section id="page-policy" class="page-section hidden">
-          <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-sm border border-gray-200 dark:border-gray-700">
-            <h2 class="text-2xl font-bold mb-4"><i class="fas fa-file-alt text-primary"></i> سياسة الاستخدام</h2>
-            <div class="space-y-4 text-gray-700 dark:text-gray-300">
-              <div><h3 class="font-bold text-primary">🎯 رؤيتنا</h3><p>منصة "سند" هي منصة مجتمعية تهدف إلى تعزيز التكافل وتبادل المهارات بين أبناء غزة.</p></div>
-              <div><h3 class="font-bold text-primary">📋 القواعد الأساسية</h3><ul class="list-disc pr-6"><li><strong>الصدق والأمانة:</strong> تقديم معلومات صحيحة.</li><li><strong>الاحترام المتبادل:</strong> التعامل بأدب.</li><li><strong>عدم الاحتيال:</strong> يمنع انتحال الشخصية.</li><li><strong>خصوصية البيانات:</strong> نحافظ على سرية معلوماتك.</li></ul></div>
-              <div><h3 class="font-bold text-primary">⚖️ سياسة مكافحة الاحتيال</h3><ul class="list-disc pr-6"><li>سيتم حظر المخالف فوراً.</li><li>الإبلاغ عبر واتساب 0567715743.</li><li>نوصي بإجراء المعاملات وجهاً لوجه.</li></ul></div>
-              <div class="p-4 bg-yellow-50 dark:bg-yellow-900/30 rounded-xl border-r-4 border-accent"><p class="font-bold">⚠️ تنبيه هام:</p><p>منصة "سند" هي مجرد وسيط للتواصل، ولا تتحمل مسؤولية الخلافات بين المستخدمين.</p></div>
-            </div>
-          </div>
-        </section>
-
-        <!-- صفحة تسجيل الدخول (تظهر كاملة بدون تبويب) -->
-        <section id="page-login" class="page-section">
-          <div class="max-w-md mx-auto mt-8">
-            <div id="loginForm">
-              <h2 class="text-3xl font-extrabold text-center text-primary dark:text-primaryLight mb-6"><i class="fas fa-lock"></i> تسجيل الدخول</h2>
-              <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg border border-gray-200 dark:border-gray-700">
-                <div class="space-y-4">
-                  <input type="text" id="loginUsername" placeholder="اسم المستخدم" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-center text-lg" />
-                  <input type="password" id="loginPassword" placeholder="كلمة المرور" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-center text-lg" />
-                  <button onclick="login()" class="btn-primary w-full py-3 text-lg flex items-center justify-center gap-2"><i class="fas fa-sign-in-alt"></i> دخول</button>
-                  <div id="loginMessage" class="text-center font-bold min-h-[2rem]"></div>
-                  <p class="text-center text-sm">ليس لديك حساب؟ <a href="#" onclick="toggleSignupForm()" class="text-primary font-bold">إنشاء حساب جديد</a></p>
-                </div>
-              </div>
-            </div>
-            <div id="signupForm" class="hidden">
-              <h2 class="text-3xl font-extrabold text-center text-primary dark:text-primaryLight mb-6"><i class="fas fa-user-plus"></i> إنشاء حساب جديد</h2>
-              <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg border border-gray-200 dark:border-gray-700">
-                <div class="space-y-4">
-                  <input type="text" id="signupUsername" placeholder="اسم المستخدم (3 أحرف على الأقل)" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-center text-lg" />
-                  <input type="password" id="signupPassword" placeholder="كلمة المرور (4 أحرف على الأقل)" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-center text-lg" />
-                  <input type="password" id="signupConfirm" placeholder="تأكيد كلمة المرور" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-center text-lg" />
-                  <button onclick="signup()" class="btn-accent w-full py-3 text-lg flex items-center justify-center gap-2"><i class="fas fa-user-check"></i> إنشاء حساب</button>
-                  <div id="signupMessage" class="text-center font-bold min-h-[2rem]"></div>
-                  <p class="text-center text-sm">لديك حساب بالفعل؟ <a href="#" onclick="toggleSignupForm()" class="text-primary font-bold">تسجيل الدخول</a></p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
-    </main>
-  </div>
-
-  <!-- ========== نافذة التقييم المنبثقة ========== -->
-  <div id="reviewModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden modal-overlay" onclick="if(event.target===this) closeReviewModal()">
-    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl" onclick="event.stopPropagation()">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-xl font-bold"><i class="fas fa-star text-accent"></i> تقييم الخدمة</h3>
-        <button onclick="closeReviewModal()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
-      </div>
-      <div class="space-y-4">
-        <div class="text-center">
-          <p class="text-sm text-gray-500">تقييم: <span id="reviewProviderName" class="font-bold text-primary"></span></p>
-          <div class="flex justify-center gap-2 my-3 text-4xl" id="starContainer">
-            <span onclick="setRating(1)" class="star" data-star="1">☆</span>
-            <span onclick="setRating(2)" class="star" data-star="2">☆</span>
-            <span onclick="setRating(3)" class="star" data-star="3">☆</span>
-            <span onclick="setRating(4)" class="star" data-star="4">☆</span>
-            <span onclick="setRating(5)" class="star" data-star="5">☆</span>
-          </div>
-          <p class="text-sm font-bold" id="ratingText">اختر تقييمك</p>
-          <input type="hidden" id="selectedRating" value="0">
+        <!-- قسم الترحيب المحسن -->
+    <section class="relative bg-gradient-to-br from-primary/90 to-primaryDark/90 text-white py-20 px-4">
+      <div class="max-w-4xl mx-auto text-center relative z-10">
+        <h1 class="text-4xl sm:text-5xl font-extrabold mb-4 animate-fadeInDown">
+          منصة <span class="text-accent">سند</span>
+        </h1>
+        <p class="text-xl sm:text-2xl font-light mb-6 opacity-90">
+          ربط المهارات بالاحتياجات في غزة
+        </p>
+        <p class="text-lg mb-8 max-w-2xl mx-auto opacity-80">
+          سند هي منصة مجتمعية تربط أصحاب المهارات والخبرات مع من يحتاجها في نفس الحي
+        </p>
+        <div class="flex flex-wrap justify-center gap-4">
+          <a href="#" onclick="showSection('search')" 
+            class="btn-accent px-8 py-4 text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
+            🔍 ابحث عن خبير
+          </a>
+          <a href="#" onclick="showSection('add')" 
+            class="bg-white/20 backdrop-blur-sm text-white border-2 border-white/50 px-8 py-4 rounded-full text-lg font-semibold hover:bg-white/30 transition-all duration-300">
+            🛠️ قدم خدمتك
+          </a>
         </div>
-        <input type="text" id="reviewerName" placeholder="اسمك (اختياري)" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700" />
-        <textarea id="reviewComment" rows="3" placeholder="اكتب تعليقك (اختياري)" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 resize-none"></textarea>
-        <button onclick="submitReview()" class="btn-primary w-full py-2 flex items-center justify-center gap-2"><i class="fas fa-paper-plane"></i> إرسال التقييم</button>
-        <div id="reviewMessage" class="text-center font-bold min-h-[1.5rem]"></div>
       </div>
-    </div>
-  </div>
+      <!-- خلفية مزخرفة -->
+      <div class="absolute inset-0 opacity-10">
+        <svg class="w-full h-full" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="100" cy="100" r="200" fill="white" />
+          <circle cx="700" cy="600" r="300" fill="white" />
+          <circle cx="400" cy="400" r="150" fill="white" />
+        </svg>
+      </div>
+    </section>
 
-  <!-- ========== نافذة الترحيب ========== -->
-  <div id="welcomeModal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 hidden modal-overlay">
-    <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl transform transition-all duration-300 scale-95" id="welcomeContent">
-      <div class="text-center">
-        <div class="text-6xl mb-4">👋</div>
-        <h2 class="text-2xl font-bold mb-2">مرحباً بك في <span class="text-primary">سند</span></h2>
-        <p class="text-gray-600 dark:text-gray-300 mb-6">منصة تبادل المهارات بين جيرانك في غزة. ابدأ باستكشاف الخدمات أو قدم مهارتك.</p>
+    <!-- إحصائيات سريعة (٥ مقاييس) -->
+    <section class="bg-white dark:bg-gray-800 py-10 shadow-inner">
+      <div class="max-w-5xl mx-auto px-2">
+        <div class="stats-scroller" id="statsScroller">
+          <div class="stat-card p-5 text-center">
+            <i data-lucide="users" class="lucide text-primary mb-2" style="width:1.6em;height:1.6em"></i>
+            <div class="text-3xl font-extrabold text-primary" id="statUsers" aria-live="polite">—</div>
+            <div class="text-sm text-gray-500 dark:text-gray-400">مستخدم نشط</div>
+          </div>
+          <div class="stat-card p-5 text-center">
+            <i data-lucide="hand-heart" class="lucide text-accent mb-2" style="width:1.6em;height:1.6em"></i>
+            <div class="text-3xl font-extrabold text-accent" id="statServices" aria-live="polite">—</div>
+            <div class="text-sm text-gray-500 dark:text-gray-400">خدمة مقدمة</div>
+          </div>
+          <div class="stat-card p-5 text-center">
+            <i data-lucide="car" class="lucide text-green-600 mb-2" style="width:1.6em;height:1.6em"></i>
+            <div class="text-3xl font-extrabold text-green-600" id="statDrivers" aria-live="polite">—</div>
+            <div class="text-sm text-gray-500 dark:text-gray-400">سائق</div>
+          </div>
+          <div class="stat-card p-5 text-center">
+            <i data-lucide="star" class="lucide text-blue-600 mb-2" style="width:1.6em;height:1.6em"></i>
+            <div class="text-3xl font-extrabold text-blue-600" id="statReviews" aria-live="polite">—</div>
+            <div class="text-sm text-gray-500 dark:text-gray-400">تقييم</div>
+          </div>
+          <div class="stat-card p-5 text-center">
+            <i data-lucide="sparkles" class="lucide text-amber-500 mb-2" style="width:1.6em;height:1.6em"></i>
+            <div class="text-3xl font-extrabold text-amber-500" id="statAvgRating" aria-live="polite">—</div>
+            <div class="text-sm text-gray-500 dark:text-gray-400">متوسط التقييم</div>
+          </div>
+        </div>
+        <div class="stats-dots" id="statsDots"></div>
+      </div>
+    </section>
+
+    <!-- صفحة البحث -->
+    <section id="section-search" class="hidden">
+      <h2 class="text-2xl font-bold mb-4">🔍 ابحث عن خبير</h2>
+      <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md">
         <div class="flex flex-col gap-3">
-          <button onclick="closeWelcome()" class="btn-primary w-full flex items-center justify-center gap-2"><i class="fas fa-rocket"></i> ابدأ الآن</button>
-          <button onclick="startTour()" class="text-sm text-primary hover:underline">خذني في جولة</button>
+          
+          <!-- ====== حقل البحث المحسن ====== -->
+          <div class="relative">
+            <input type="text" id="searchInput" placeholder="ماذا تبحث؟ (مثال: صيانة شمسية أو خياطة)"
+                  class="w-full p-3 pr-12 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary transition">
+            <!-- زر البحث الصوتي -->
+            <button onclick="startVoiceSearch()" 
+                    class="absolute left-2 top-1/2 -translate-y-1/2 p-2 text-gray-400 hover:text-primary transition">
+              🎤
+            </button>
+            <!-- زر مسح النص -->
+            <button onclick="clearSearch()" 
+                    class="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-red-500 transition hidden" id="clearSearchBtn">
+              ✕
+            </button>
+          </div>
+          
+          <!-- ====== الاقتراحات التلقائية (Autocomplete) ====== -->
+          <div id="autocompleteList" class="hidden absolute left-0 right-0 top-full mt-1 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 z-50 max-h-48 overflow-y-auto"></div>
+          
+          <!-- ====== الفلاتر السريعة (Chips) ====== -->
+          <div class="flex flex-wrap gap-2">
+            <span class="chip" onclick="quickSearch('صيانة شمسية')">☀️ صيانة شمسية</span>
+            <span class="chip" onclick="quickSearch('كهرباء')">⚡ كهرباء</span>
+            <span class="chip" onclick="quickSearch('خياطة')">🧵 خياطة</span>
+            <span class="chip" onclick="quickSearch('نجارة')">🪚 نجارة</span>
+            <span class="chip" onclick="quickSearch('سباكة')">🔧 سباكة</span>
+            <span class="chip" onclick="quickSearch('توصيل')">🚗 توصيل</span>
+          </div>
+          
+          <!-- ====== الفلاتر المتقدمة ====== -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <!-- المنطقة -->
+            <select id="areaSelect" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+              <option value="all">📍 كل المناطق</option>
+              <option>الشجاعية</option>
+              <option>تل الهوا</option>
+              <option>جباليا</option>
+              <option>خان يونس</option>
+              <option>رفح</option>
+              <option>بيت لاهيا</option>
+            </select>
+            
+            <!-- النوع -->
+            <select id="typeSelect" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+              <option value="all">👥 الجميع</option>
+              <option value="both">🛠️ خبراء</option>
+              <option value="driver">🚗 سائقين</option>
+            </select>
+            
+            <!-- ====== فلتر التقييم (جديد) ====== -->
+            <select id="ratingFilter" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+              <option value="0">⭐ كل التقييمات</option>
+              <option value="4">⭐ 4 نجوم فأكثر</option>
+              <option value="3">⭐ 3 نجوم فأكثر</option>
+              <option value="2">⭐ 2 نجوم فأكثر</option>
+            </select>
+            
+            <!-- ====== فلتر الترتيب (جديد) ====== -->
+            <select id="sortFilter" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+              <option value="recent">🕐 الأحدث</option>
+              <option value="rating">⭐ الأعلى تقييماً</option>
+              <option value="name">🔤 أبجدياً</option>
+            </select>
+          </div>
+          
+          <!-- ====== زر البحث المحسن ====== -->
+          <button onclick="performSearch()" class="btn-accent w-full py-3 flex items-center justify-center gap-2">
+            <span>🔎</span> بحث متقدم
+          </button>
+          
+          <!-- ====== زر مسح الفلاتر ====== -->
+          <button onclick="clearFilters()" class="text-sm text-gray-400 hover:text-gray-600 transition text-center">
+            🧹 مسح جميع الفلاتر
+          </button>
         </div>
-        <div class="mt-4 text-xs text-gray-400">
-          <input type="checkbox" id="dontShowAgain" class="ml-2"> <label for="dontShowAgain">لا تظهر مرة أخرى</label>
+      </div>
+      <div id="resultsContainer" class="mt-6 space-y-4"></div>
+    </section>
+
+    <!-- صفحة إضافة خدمة -->
+    <section id="section-add" class="hidden">
+      <h2 class="text-2xl font-bold mb-4">🛠️ سجّل مهارتك</h2>
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md">
+        <div class="grid grid-cols-1 gap-4">
+          <input type="text" id="addName" placeholder="الاسم الكامل" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+          <input type="tel" id="addPhone" placeholder="رقم الهاتف (واتساب) مثال: 0599xxxxxx" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+          <input type="text" id="addArea" placeholder="المنطقة (مثال: الشجاعية)" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+          <input type="text" id="addSkill" placeholder="المهارات التي تقدمها (مثال: صيانة شمسية، إلكترونيات)" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+          <input type="text" id="addRequest" placeholder="المهارات التي تبحث عنها (اختياري)" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+          <select id="addType" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+            <option value="both">خبير (أقدم خدمة)</option>
+            <option value="driver">سائق (ديلفري)</option>
+          </select>
+          <button onclick="addService()" id="addBtn" class="btn-primary w-full">✅ إضافة إلى المنصة</button>
+          <div id="addMessage" class="text-center font-bold min-h-[1.5rem]"></div>
         </div>
+      </div>
+    </section>
+
+    <!-- صفحة ديلفري -->
+    <!-- صفحة ديلفري المحسّنة -->
+    <section id="section-driver" class="hidden">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold">🚗 خدمة ديلفري - السائقين</h2>
+        <span class="text-sm bg-primary/10 text-primary px-3 py-1 rounded-full">✨ بحث ذكي</span>
+      </div>
+
+      <p class="text-gray-600 dark:text-gray-400 mb-6">ابحث عن سائق في منطقتك لتوصيل الطلبات بسهولة وأمان</p>
+
+      <!-- بطاقة البحث المتقدم -->
+      <div class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 mb-6">
+        <div class="flex flex-col md:flex-row gap-4">
+          <div class="flex-1 relative">
+            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
+            <input type="text" id="driverSearchInput" 
+                  placeholder="ابحث عن سائق (اسم، منطقة، أو نوع المركبة)"
+                  class="w-full p-3 pr-10 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition">
+          </div>
+          <div class="md:w-48">
+            <select id="driverAreaSelect" 
+                    class="w-full p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition">
+              <option value="all">📍 كل المناطق</option>
+              <option>الشجاعية</option><option>تل الهوا</option><option>جباليا</option>
+              <option>خان يونس</option><option>رفح</option><option>بيت لاهيا</option>
+              <option>غزة</option>
+            </select>
+          </div>
+          <button onclick="searchDriversDirect()" 
+                  class="btn-accent px-8 py-3 flex items-center justify-center gap-2 whitespace-nowrap">
+            <span>🔎</span> بحث
+          </button>
+          <button onclick="resetDriverSearch()" 
+                  class="px-4 py-3 rounded-xl bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition font-semibold">
+            ↺
+          </button>
+        </div>
+
+        <!-- فلتر سريع (Chips) -->
+        <div class="flex flex-wrap gap-2 mt-4">
+          <span class="text-sm text-gray-500 dark:text-gray-400 ml-2">بحث سريع:</span>
+          <span class="chip" onclick="quickDriverSearch('سيارة')">🚗 سيارة</span>
+          <span class="chip" onclick="quickDriverSearch('دراجة')">🛵 دراجة</span>
+          <span class="chip" onclick="quickDriverSearch('توصيل')">📦 توصيل</span>
+          <span class="chip" onclick="quickDriverSearch('غزة')">📍 غزة</span>
+        </div>
+      </div>
+
+      <!-- حاوية النتائج -->
+      <div id="driverResults" class="mt-4 space-y-4">
+        <!-- ستظهر النتائج هنا -->
+        <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow text-center text-gray-500 dark:text-gray-400">
+          <div class="text-5xl mb-3">🚗</div>
+          <p class="font-semibold">ابحث عن سائق</p>
+          <p class="text-sm">اكتب اسم السائق، المنطقة، أو نوع المركبة في الأعلى</p>
+        </div>
+      </div>
+
+      <!-- نموذج إضافة سائق جديد (مطوّر) -->
+      <div class="mt-10 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="text-2xl">➕</span>
+          <h3 class="text-xl font-bold">إضافة سائق جديد</h3>
+          <span class="text-xs bg-accent/20 text-accentDark px-2 py-1 rounded-full">مطلوب للمنطقة</span>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input type="text" id="driverName" placeholder="الاسم الكامل" 
+                class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition">
+          <input type="tel" id="driverPhone" placeholder="رقم الهاتف (واتساب)" 
+                class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition">
+          <input type="text" id="driverArea" placeholder="المنطقة" 
+                class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition">
+          <input type="text" id="driverVehicle" placeholder="نوع المركبة (سيارة، دراجة، إلخ)" 
+                class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition">
+          <button onclick="addDriver()" 
+                  class="btn-primary col-span-full py-3 flex items-center justify-center gap-2">
+            <span>✅</span> إضافة سائق
+          </button>
+          <div id="driverMessage" class="col-span-full text-center font-bold min-h-[2rem]"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- صفحة تسجيل الدخول والتسجيل -->
+    <section id="section-login" class="fade-in">
+      <div class="max-w-md mx-auto mt-10">
+        <!-- نموذج تسجيل الدخول -->
+        <div id="loginForm">
+          <h2 class="text-3xl font-extrabold text-center text-primary dark:text-primaryLight mb-6">🔐 تسجيل الدخول</h2>
+          <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg">
+            <div class="grid grid-cols-1 gap-4">
+              <input type="text" id="loginUsername" placeholder="اسم المستخدم" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white text-center text-lg">
+              <input type="password" id="loginPassword" placeholder="كلمة المرور" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white text-center text-lg">
+              <button onclick="login()" class="btn-primary w-full py-3 text-lg">🚪 دخول</button>
+              <div id="loginMessage" class="text-center font-bold min-h-[2rem]"></div>
+              <p class="text-center text-sm mt-2">
+                ليس لديك حساب؟ <a href="#" onclick="toggleSignupForm()" class="text-primary font-bold">إنشاء حساب جديد</a>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- نموذج التسجيل -->
+        <div id="signupForm" class="hidden">
+          <h2 class="text-3xl font-extrabold text-center text-primary dark:text-primaryLight mb-6">📝 إنشاء حساب جديد</h2>
+          <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg">
+            <div class="grid grid-cols-1 gap-4">
+              <input type="text" id="signupUsername" placeholder="اسم المستخدم (3 أحرف على الأقل)" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white text-center text-lg">
+              <input type="password" id="signupPassword" placeholder="كلمة المرور (4 أحرف على الأقل)" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white text-center text-lg">
+              <input type="password" id="signupConfirm" placeholder="تأكيد كلمة المرور" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white text-center text-lg">
+              <button onclick="signup()" class="btn-accent w-full py-3 text-lg">📝 إنشاء حساب</button>
+              <div id="signupMessage" class="text-center font-bold min-h-[2rem]"></div>
+              <p class="text-center text-sm mt-2">
+                لديك حساب بالفعل؟ <a href="#" onclick="toggleSignupForm()" class="text-primary font-bold">تسجيل الدخول</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- صفحة تواصل معنا -->
+    <section id="section-contact" class="hidden">
+      <h2 class="text-2xl font-bold mb-4">📞 تواصل معنا</h2>
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md text-center">
+        <p class="text-lg mb-4">للتواصل والدعم، يمكنك مراسلتنا عبر واتساب:</p>
+        <a href="https://wa.me/970567715743" target="_blank" class="inline-block bg-green-600 text-white px-8 py-4 rounded-full text-xl font-bold hover:bg-green-700 transition">
+          💬 واتساب: 0567715743
+        </a>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-4">نحن هنا لمساعدتك في أي استفسار</p>
+      </div>
+    </section>
+
+    <!-- صفحة سياسة الاستخدام -->
+    <section id="section-policy" class="hidden">
+      <h2 class="text-2xl font-bold mb-4">📜 سياسة الاستخدام</h2>
+      <div class="policy-section">
+        <h3>🎯 رؤيتنا</h3>
+        <p>منصة "سند" هي منصة مجتمعية تهدف إلى تعزيز التكافل وتبادل المهارات بين أبناء غزة، من خلال ربط أصحاب المهارات بالمحتاجين إليها.</p>
+        <h3>📋 القواعد الأساسية</h3>
+        <ul>
+          <li><strong>الصدق والأمانة:</strong> يجب على جميع المستخدمين تقديم معلومات صحيحة عن مهاراتهم واحتياجاتهم.</li>
+          <li><strong>الاحترام المتبادل:</strong> التعامل باحترام وأدب بين جميع الأطراف.</li>
+          <li><strong>عدم الاحتيال:</strong> يمنع منعاً باتاً انتحال شخصية الآخرين أو تقديم خدمات وهمية.</li>
+          <li><strong>خصوصية البيانات:</strong> نحن نحافظ على سرية معلوماتك ولا نشاركها مع أطراف خارجية.</li>
+        </ul>
+        <h3>⚖️ سياسة مكافحة الاحتيال</h3>
+        <ul>
+          <li>في حالة اكتشاف أي حالة احتيال أو نصب، سيتم حظر المستخدم المخالف فوراً.</li>
+          <li>يمكن للمستخدمين الإبلاغ عن أي نشاط مشبوه عبر واتساب (0567715743).</li>
+          <li>نوصي بإجراء المعاملات وجهاً لوجه في مكان عام آمن.</li>
+        </ul>
+        <h3>📞 التواصل والإبلاغ</h3>
+        <p>لأي استفسار أو بلاغ، يرجى التواصل معنا عبر واتساب: <strong>0567715743</strong></p>
+        <div class="mt-6 p-4 bg-yellow-50 dark:bg-yellow-900/30 rounded-xl border-r-4 border-accent">
+          <p class="font-bold">⚠️ تنبيه هام:</p>
+          <p>منصة "سند" هي مجرد وسيط للتواصل، ولا تتحمل أي مسؤولية عن جودة الخدمات المقدمة أو أي خلافات تنشأ بين المستخدمين.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="text-center text-sm text-gray-500 dark:text-gray-400 p-6 border-t border-gray-200 dark:border-gray-700 mt-8">
+    © 2026 منصة سند – تبادل المهارات في غزة
+  </footer>
+</div>
+<!-- ====== هنا نافذة التقييم المنبثقة ====== -->
+<div id="reviewModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden" onclick="if(event.target===this) closeReviewModal()">
+  <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl" onclick="event.stopPropagation()">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-xl font-bold">⭐ تقييم الخدمة</h3>
+      <button onclick="closeReviewModal()" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 text-2xl">&times;</button>
+    </div>
+    <div class="space-y-4">
+      <div class="text-center">
+        <p class="text-sm text-gray-500 dark:text-gray-400">تقييم: <span id="reviewProviderName" class="font-bold text-primary"></span></p>
+        <div class="flex justify-center gap-2 my-3 text-3xl" id="starContainer">
+          <span onclick="setRating(1)" class="cursor-pointer hover:scale-110 transition" data-star="1">☆</span>
+          <span onclick="setRating(2)" class="cursor-pointer hover:scale-110 transition" data-star="2">☆</span>
+          <span onclick="setRating(3)" class="cursor-pointer hover:scale-110 transition" data-star="3">☆</span>
+          <span onclick="setRating(4)" class="cursor-pointer hover:scale-110 transition" data-star="4">☆</span>
+          <span onclick="setRating(5)" class="cursor-pointer hover:scale-110 transition" data-star="5">☆</span>
+        </div>
+        <p class="text-sm font-bold" id="ratingText">اختر تقييمك</p>
+        <input type="hidden" id="selectedRating" value="0">
+      </div>
+      <div>
+        <input type="text" id="reviewerName" placeholder="اسمك (اختياري)" class="w-full p-2 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+      </div>
+      <div>
+        <textarea id="reviewComment" rows="3" placeholder="اكتب تعليقك (اختياري)" class="w-full p-2 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white resize-none"></textarea>
+      </div>
+      <button onclick="submitReview()" class="btn-primary w-full">إرسال التقييم</button>
+      <div id="reviewMessage" class="text-center font-bold min-h-[1.5rem]"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== هنا أضف نافذة الترحيب ====== -->
+<div id="welcomeModal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 hidden">
+  <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl transform transition-all duration-300 scale-95" id="welcomeContent">
+    <div class="text-center">
+      <div class="text-6xl mb-4">👋</div>
+      <h2 class="text-2xl font-bold mb-2">مرحباً بك في <span class="text-primary">سند</span></h2>
+      <p class="text-gray-600 dark:text-gray-300 mb-6">
+        منصة تبادل المهارات بين جيرانك في غزة. ابدأ باستكشاف الخدمات أو قدم مهارتك.
+      </p>
+      <div class="flex flex-col gap-3">
+        <button onclick="closeWelcome()" class="btn-primary w-full">ابدأ الآن</button>
+        <button onclick="startTour()" class="text-sm text-primary hover:underline">خذني في جولة</button>
+      </div>
+      <div class="mt-4 text-xs text-gray-400">
+        <input type="checkbox" id="dontShowAgain" class="ml-2">
+        <label for="dontShowAgain">لا تظهر مرة أخرى</label>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- ========== كود JavaScript ========== -->
-  <script>
-    // ===== التهيئة والإعدادات =====
-    const API_URL = "https://script.google.com/macros/s/AKfycbwgKzOhcDSCxUztMZRV9b7iUZ7ZBxu9jz7ZGkqH9wrATYG6O4JZ3K6_gD9G4P2zKPV5/exec";
-    const FETCH_TIMEOUT = 15000;
-    const CACHE_KEY_PREFIX = "sanad_cache_";
 
-    // ===== دوال مساعدة =====
-    function showToast(msg, type = 'info') {
-      const container = document.getElementById('toastContainer');
-      const toast = document.createElement('div');
-      toast.className = `toast ${type === 'error' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300' : type === 'success' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'}`;
-      toast.textContent = msg;
-      container.appendChild(toast);
-      setTimeout(() => { toast.remove(); }, 4000);
-    }
+<script>
+/* ========================================================
+   الإعدادات
+   ======================================================== */
+const API_URL = "https://script.google.com/macros/s/AKfycbycbxzZAffez5GORn5HwHtAc9_rlHZkoF-Cn0bBekmPdFAJlPR3QDs-srMBCXvK7jCF/exec";
+const FETCH_TIMEOUT_MS = 20000;
+const CACHE_KEY_PREFIX = "sanad_cache_";
 
-    function escapeHtml(str) { return String(str ?? '').replace(/[&<>"']/g, s => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[s])); }
+/* ========================================================
+   أدوات مساعدة عامة
+   ======================================================== */
+function showToast(message, type = 'info') {
+  const host = document.getElementById('toastHost');
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  el.textContent = message;
+  host.appendChild(el);
+  setTimeout(() => el.remove(), 4000);
+}
 
-    function getCurrentUser() { return localStorage.getItem('sanad_user') || 'زائر'; }
-    function isLoggedIn() { return localStorage.getItem('sanad_logged_in') === 'true'; }
-    function getCurrentUserPhone() { return localStorage.getItem('sanad_user_phone') || ''; }
+async function fetchWithTimeout(url, ms = FETCH_TIMEOUT_MS) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), ms);
+  try {
+    const res = await fetch(url, { signal: controller.signal });
+    clearTimeout(timer);
+    return res;
+  } catch (err) {
+    clearTimeout(timer);
+    if (err.name === 'AbortError') throw new Error('انتهت مهلة الاتصال، الشبكة بطيئة جداً حالياً');
+    throw err;
+  }
+}
 
-    // ===== التنقل =====
-    function navigateTo(page) {
-      // إخفاء الكل
-      document.querySelectorAll('.page-section').forEach(el => el.classList.add('hidden'));
-      // إظهار المطلوب
-      const target = document.getElementById('page-' + page);
-      if (target) target.classList.remove('hidden');
+function escapeHtml(str) {
+  return String(str ?? '').replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+}
 
-      // تحديث التبويبات
-      document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
-      document.querySelector(`.tab-item[data-tab="${page}"]`)?.classList.add('active');
+/* ========================================================
+   إدارة حالة تسجيل الدخول
+   ======================================================== */
+function isLoggedIn() {
+  return localStorage.getItem('sanad_logged_in') === 'true';
+}
 
-      // تحديث الروابط الجانبية
-      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('bg-primary/10'));
-      document.querySelector(`.nav-link[data-target="${page}"]`)?.classList.add('bg-primary/10');
+function getCurrentUser() {
+  return localStorage.getItem('sanad_user') || 'زائر';
+}
 
-      // إغلاق القائمة الجانبية في الجوال
-      if (window.innerWidth < 768) {
-        document.querySelector('.md\\:block')?.classList.add('hidden');
-      }
-    }
+function requireLogin() {
+  if (!isLoggedIn()) {
+    showSection('login');
+    return false;
+  }
+  return true;
+}
 
-    // ===== التبويبات والروابط =====
-    document.querySelectorAll('.tab-item').forEach(btn => {
-      btn.addEventListener('click', function() {
-        const page = this.dataset.tab;
-        if (page === 'login') return;
-        if (!isLoggedIn()) { showToast('الرجاء تسجيل الدخول أولاً', 'error'); return; }
-        navigateTo(page);
-      });
-    });
-    document.querySelectorAll('.nav-link').forEach(btn => {
-      btn.addEventListener('click', function() {
-        const page = this.dataset.target;
-        if (page === 'login') return;
-        if (!isLoggedIn()) { showToast('الرجاء تسجيل الدخول أولاً', 'error'); return; }
-        navigateTo(page);
-      });
-    });
+/* ========================================================
+   التنقل بين الأقسام
+   ======================================================== */
+function showSection(id) {
+  if (id === 'login') {
+    document.querySelectorAll('[id^="section-"]').forEach(el => el.classList.add('hidden'));
+    document.getElementById('section-login').classList.remove('hidden');
+    document.getElementById('section-login').classList.add('fade-in');
+    document.querySelectorAll('.nav-link').forEach(a => a.classList.remove('bg-primary', 'text-white'));
+    const active = document.querySelector(`[data-nav="login"]`);
+    if (active) active.classList.add('bg-primary', 'text-white');
+    if (window.innerWidth < 768) sidebar.classList.add('sidebar-closed');
+    return;
+  }
 
-    // ===== الوضع الداكن =====
-    let darkMode = localStorage.getItem('darkMode') === 'true';
-    const themeIcon = document.getElementById('themeIcon');
-    function applyTheme() {
-      document.documentElement.classList.toggle('dark', darkMode);
-      themeIcon.className = darkMode ? 'fas fa-sun' : 'fas fa-moon';
-      localStorage.setItem('darkMode', darkMode);
-    }
-    document.getElementById('themeToggle').addEventListener('click', function() {
-      darkMode = !darkMode;
-      applyTheme();
-    });
-    applyTheme(); // تطبيق الوضع المبدئي
+  if (!isLoggedIn()) {
+    showSection('login');
+    showToast('الرجاء تسجيل الدخول أولاً', 'info');
+    return;
+  }
 
-    // ===== القائمة الجانبية في الجوال =====
-    document.getElementById('menuToggle').addEventListener('click', function() {
-      const aside = document.querySelector('aside');
-      aside.classList.toggle('hidden');
-    });
+  document.querySelectorAll('[id^="section-"]').forEach(el => el.classList.add('hidden'));
+  const target = document.getElementById('section-' + id);
+  if (target) {
+    target.classList.remove('hidden');
+    target.classList.add('fade-in');
+  }
 
-    // ===== الإشعارات =====
-    const notifBtn = document.getElementById('notifBtn');
-    const notifDropdown = document.getElementById('notifDropdown');
-    notifBtn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      notifDropdown.classList.toggle('hidden');
-      if (!notifDropdown.classList.contains('hidden')) fetchNotifications();
-    });
-    document.addEventListener('click', function(e) {
-      if (!notifDropdown.contains(e.target) && e.target !== notifBtn) notifDropdown.classList.add('hidden');
-    });
-    document.getElementById('closeNotifBtn').addEventListener('click', function() { notifDropdown.classList.add('hidden'); });
-    document.getElementById('refreshNotifBtn').addEventListener('click', fetchNotifications);
-    document.getElementById('markAllReadBtn').addEventListener('click', markAllNotificationsRead);
+  document.querySelectorAll('.nav-link').forEach(a => a.classList.remove('bg-primary', 'text-white'));
+  const active = document.querySelector(`[data-nav="${id}"]`);
+  if (active) active.classList.add('bg-primary', 'text-white');
 
-    // ===== دوال الإشعارات =====
-    async function fetchNotifications() {
-      if (!isLoggedIn()) return;
-      try {
-        const phone = getCurrentUserPhone();
-        const url = `${API_URL}?action=get_notifications&user_phone=${encodeURIComponent(phone)}`;
-        const res = await fetch(url);
-        const data = await res.json();
-        if (data.success) {
-          updateNotifUI(data.notifications || [], data.unreadCount || 0);
-        }
-      } catch (e) { console.error('جلب الإشعارات:', e); }
-    }
+  if (window.innerWidth < 768) sidebar.classList.add('sidebar-closed');
+}
 
-    function updateNotifUI(list, unread) {
-      const badge = document.getElementById('notifBadge');
-      const container = document.getElementById('notifList');
-      if (unread > 0) { badge.textContent = unread > 99 ? '99+' : unread; badge.classList.remove('hidden'); } else badge.classList.add('hidden');
-      if (!list || list.length === 0) { container.innerHTML = '<div class="p-4 text-center text-gray-400 text-sm">📭 لا توجد إشعارات</div>'; return; }
-      container.innerHTML = list.slice(0, 10).map(n => `
-        <div class="p-3 flex items-start gap-2 ${n.read ? '' : 'bg-blue-50 dark:bg-blue-900/20'} cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700" onclick="handleNotifClick('${n.id}','${n.link||'#'}')">
-          <span class="text-lg">${n.type==='new_service'?'🛠️':n.type==='new_driver'?'🚗':n.type==='new_review'?'⭐':'📢'}</span>
-          <div class="flex-1"><p class="text-sm font-semibold">${n.title}</p><p class="text-xs text-gray-500">${n.message}</p><p class="text-[10px] text-gray-400">${new Date(n.timestamp).toLocaleString('ar')}</p></div>
-          ${!n.read ? '<span class="w-2 h-2 bg-blue-500 rounded-full mt-1"></span>' : ''}
+function clearSearch() {
+  const input = document.getElementById('searchInput');
+  input.value = '';
+  document.getElementById('clearSearchBtn').classList.add('hidden');
+  input.focus();
+}
+
+function clearFilters() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('areaSelect').value = 'all';
+  document.getElementById('typeSelect').value = 'all';
+  const ratingFilter = document.getElementById('ratingFilter');
+  const sortFilter = document.getElementById('sortFilter');
+  if (ratingFilter) ratingFilter.value = '0';
+  if (sortFilter) sortFilter.value = 'recent';
+  document.getElementById('clearSearchBtn').classList.add('hidden');
+  document.getElementById('resultsContainer').innerHTML = '';
+  showToast('تم مسح جميع الفلاتر', 'info');
+}
+
+function quickSearch(term) {
+  if (!requireLogin()) return;
+  document.getElementById('searchInput').value = term;
+  document.getElementById('typeSelect').value = 'all';
+  performSearch();
+}
+
+function toggleSignupForm() {
+  const loginForm = document.getElementById('loginForm');
+  const signupForm = document.getElementById('signupForm');
+  loginForm.classList.toggle('hidden');
+  signupForm.classList.toggle('hidden');
+  document.getElementById('loginMessage').innerHTML = '';
+  document.getElementById('signupMessage').innerHTML = '';
+}
+
+/* ========================================================
+   البحث
+   ======================================================== */
+function renderSkeleton(container) {
+  container.innerHTML = `
+    <div class="space-y-3">
+      ${[1,2,3].map(() => `
+        <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow flex items-center justify-between gap-4">
+          <div class="flex-1 space-y-2">
+            <div class="skeleton h-4 w-1/3"></div>
+            <div class="skeleton h-3 w-1/2"></div>
+            <div class="skeleton h-3 w-1/4"></div>
+          </div>
+          <div class="skeleton h-9 w-28 rounded-full"></div>
         </div>
-      `).join('');
-    }
+      `).join('')}
+    </div>`;
+}
 
-    async function handleNotifClick(id, link) {
-      await markNotificationRead(id);
-      if (link && link !== '#') {
-        if (link.startsWith('/search')) navigateTo('search');
-        else if (link.startsWith('/profile')) showToast('سيتم التوجيه للملف الشخصي قريباً', 'info');
-        else window.open(link, '_blank');
-      }
-      notifDropdown.classList.add('hidden');
-    }
+function renderResults(container, data) {
+  // حالة عدم وجود بيانات
+  if (!data || !Array.isArray(data) || data.length === 0) {
+    container.innerHTML = `
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center fade-in">
+        <div class="text-4xl mb-2">😓</div>
+        <p class="font-bold">لا يوجد خبراء بهذه المهارة في منطقتك حالياً</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">سجّل مهارتك لتكون أول من يساعد الجيران</p>
+        <button onclick="showSection('add')" class="btn-accent mt-4">سجّل مهارتك</button>
+      </div>`;
+    return;
+  }
 
-    async function markNotificationRead(id) {
-      try { await fetch(`${API_URL}?action=mark_read&id=${id}`); fetchNotifications(); } catch(e) {}
-    }
-    async function markAllNotificationsRead() {
-      try {
-        const phone = getCurrentUserPhone();
-        await fetch(`${API_URL}?action=mark_all_read&user_phone=${encodeURIComponent(phone)}`);
-        fetchNotifications();
-        showToast('تم تحديد الكل كمقروء', 'success');
-      } catch(e) {}
-    }
+  // تصفية البيانات غير المكتملة
+  const validData = data.filter(p => p.name && p.skill_offer);
+  if (validData.length === 0) {
+    container.innerHTML = `<div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg text-center">⚠️ توجد بيانات لكنها غير مكتملة.</div>`;
+    return;
+  }
 
-    // ===== دوال التقييم =====
-    let currentReviewProvider = { name: '', phone: '' };
-    let selectedRating = 0;
+  // عرض البطاقات مع نظام التقييم (بدون تكرار)
+  container.innerHTML = `<div class="space-y-3">${validData.map(p => {
+    const name = p.name || 'غير معروف';
+    const phone = p.phone || '';
+    const area = p.area || 'غير محدد';
+    const skill = p.skill_offer || 'لم يحدد';
+    const cleanPhone = String(phone).replace(/\D/g, '').replace(/^0/, '');
+    const whatsappLink = `https://wa.me/970${cleanPhone}`;
+    const typeLabel = p.type === 'driver' ? '🚗 سائق' : '🛠️ خبير';
 
-    function openReviewModal(name, phone) {
-      currentReviewProvider = { name, phone };
-      document.getElementById('reviewProviderName').textContent = name;
-      document.getElementById('reviewModal').classList.remove('hidden');
-      document.getElementById('selectedRating').value = 0; selectedRating = 0;
-      document.getElementById('ratingText').textContent = 'اختر تقييمك';
-      document.querySelectorAll('#starContainer .star').forEach(el => el.textContent = '☆');
-      document.getElementById('reviewerName').value = '';
-      document.getElementById('reviewComment').value = '';
-      document.getElementById('reviewMessage').innerHTML = '';
-    }
-
-    function closeReviewModal() { document.getElementById('reviewModal').classList.add('hidden'); }
-
-    function setRating(val) {
-      selectedRating = val;
-      document.getElementById('selectedRating').value = val;
-      document.getElementById('ratingText').textContent = `⭐ ${val} نجوم`;
-      document.querySelectorAll('#starContainer .star').forEach(el => {
-        el.textContent = parseInt(el.dataset.star) <= val ? '★' : '☆';
-      });
-    }
-
-    async function submitReview() {
-      const rating = selectedRating;
-      const reviewer = document.getElementById('reviewerName').value.trim() || 'مستخدم';
-      const comment = document.getElementById('reviewComment').value.trim();
-      const msg = document.getElementById('reviewMessage');
-      if (rating === 0) { msg.innerHTML = '<span class="text-red-500">⚠️ اختر عدد النجوم</span>'; return; }
-      msg.innerHTML = '<span class="text-blue-500">⏳ جاري...</span>';
-      try {
-        const fd = new URLSearchParams();
-        fd.append('action', 'add_review');
-        fd.append('provider_name', currentReviewProvider.name);
-        fd.append('provider_phone', currentReviewProvider.phone);
-        fd.append('reviewer_name', reviewer);
-        fd.append('rating', rating);
-        fd.append('comment', comment);
-        const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: fd.toString() });
-        const data = await res.json();
-        if (data.success) {
-          msg.innerHTML = '<span class="text-green-600">✅ تم الإرسال! شكراً</span>';
-          showToast('تم إرسال التقييم', 'success');
-          setTimeout(closeReviewModal, 1500);
-          fetchRating(currentReviewProvider.name, currentReviewProvider.phone);
-        } else throw new Error(data.message || 'فشل');
-      } catch (e) { msg.innerHTML = `<span class="text-red-500">❌ ${e.message}</span>`; showToast('فشل الإرسال', 'error'); }
-    }
-
-    // ===== دوال التقييم وعرض النجوم =====
-    async function fetchRating(name, phone) {
-      try {
-        const url = `${API_URL}?action=get_rating&provider_name=${encodeURIComponent(name)}&provider_phone=${encodeURIComponent(phone)}`;
-        const res = await fetch(url);
-        const data = await res.json();
-        if (data.success && data.data) {
-          const avg = data.data.average || 0;
-          const count = data.data.count || 0;
-          const el = document.getElementById(`rating-${phone}`);
-          const cnt = document.getElementById(`rating-count-${phone}`);
-          if (el) el.textContent = `⭐ ${avg.toFixed(1)}`;
-          if (cnt) cnt.textContent = `(${count} مراجعة${count!==1?'ات':''})`;
-        }
-      } catch(e) {}
-    }
-
-    function generateStars(rating) {
-      const full = Math.floor(rating);
-      const half = rating % 1 >= 0.5 ? 1 : 0;
-      const empty = 5 - full - half;
-      return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(empty);
-    }
-
-    // ===== دوال البحث والنتائج =====
-    function renderSkeleton(container) {
-      container.innerHTML = Array(3).fill(0).map(() => `
-        <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm flex items-center justify-between gap-4">
-          <div class="flex-1 space-y-2"><div class="skeleton h-4 w-1/3"></div><div class="skeleton h-3 w-1/2"></div><div class="skeleton h-3 w-1/4"></div></div>
-          <div class="skeleton h-9 w-24 rounded-full"></div>
+    return `
+      <div class="card-hover fade-in bg-white dark:bg-gray-700 p-4 rounded-xl shadow flex flex-wrap items-center justify-between gap-3 border-r-4 border-accent" 
+           data-provider="${escapeHtml(name)}" data-phone="${phone}">
+        <div>
+          <p class="font-bold text-lg">${escapeHtml(name)}</p>
+          <p class="text-sm text-gray-500 dark:text-gray-300">${typeLabel} ${escapeHtml(skill)}</p>
+          <p class="text-xs text-gray-400">📍 ${escapeHtml(area)}</p>
+          <!-- نظام التقييم الجديد -->
+          <div class="flex items-center gap-2 mt-2">
+            <span class="text-sm font-bold" id="rating-${phone}">⭐ 0.0</span>
+            <span class="text-xs text-gray-400" id="rating-count-${phone}">(0 مراجعة)</span>
+            <button onclick="openReviewModal('${escapeHtml(name)}', '${phone}')" 
+                    class="text-xs text-primary hover:underline">أضف تقييم</button>
+          </div>
         </div>
-      `).join('');
-    }
+        <div class="flex items-center gap-2">
+          ${cleanPhone ? `<a href="${whatsappLink}" target="_blank" rel="noopener" class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-green-700 transition">💬 واتساب</a>` : ''}
+        </div>
+      </div>`;
+  }).join('')}</div>`;
 
-    function renderResults(container, data) {
-      if (!data || !data.length) {
-        container.innerHTML = `<div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-sm text-center"><i class="fas fa-frown text-4xl text-gray-400 mb-3"></i><p class="font-bold">لا توجد نتائج</p><p class="text-sm text-gray-400">جرب البحث بكلمات أخرى</p></div>`;
-        return;
+  // جلب التقييمات لكل مقدم خدمة (خارجي)
+  validData.forEach(p => {
+    fetchRating(p.name, p.phone);
+  });
+}
+
+// دالة جلب التقييمات من الخادم
+// دالة جلب التقييمات من الخادم
+async function fetchRating(providerName, providerPhone) {
+  try {
+    const url = `${API_URL}?action=get_rating&provider_name=${encodeURIComponent(providerName)}&provider_phone=${encodeURIComponent(providerPhone)}`;
+    const response = await fetch(url);
+    const result = await response.json();
+    
+    if (result.success) {
+      const ratingEl = document.getElementById(`rating-${providerPhone}`);
+      const countEl = document.getElementById(`rating-count-${providerPhone}`);
+      
+      if (ratingEl) {
+        const avg = result.data?.average || 0;
+        const count = result.data?.count || 0;
+        ratingEl.textContent = `⭐ ${avg.toFixed(1)}`;
+        countEl.textContent = `(${count} مراجعة${count !== 1 ? 'ات' : ''})`;
       }
-      const valid = data.filter(p => p.name && p.skill_offer);
-      if (!valid.length) { container.innerHTML = '<div class="bg-yellow-100 dark:bg-yellow-900/30 p-4 rounded-xl text-center">⚠️ بيانات غير مكتملة</div>'; return; }
+    }
+  } catch (error) {
+    console.error('خطأ في جلب التقييم:', error);
+  }
+}
 
-      container.innerHTML = `<div class="space-y-4">${valid.map(p => {
-        const name = p.name, phone = p.phone, area = p.area || 'غير محدد', skill = p.skill_offer;
-        const cleanPhone = String(phone).replace(/\D/g,'').replace(/^0/,'');
-        const whatsapp = `https://wa.me/970${cleanPhone}`;
-        const typeLabel = p.type === 'driver' ? '🚗 سائق' : '🛠️ خبير';
+// دالة توليد النجوم بناءً على التقييم
+function generateStars(rating) {
+  const full = Math.floor(rating);
+  const half = rating % 1 >= 0.5 ? 1 : 0;
+  const empty = 5 - full - half;
+  return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(empty);
+}
+
+
+async function performSearch() {
+  if (!requireLogin()) return;
+  const query = document.getElementById('searchInput').value.trim();
+  const area = document.getElementById('areaSelect').value;
+  const type = document.getElementById('typeSelect').value;
+  const container = document.getElementById('resultsContainer');
+  const cacheKey = CACHE_KEY_PREFIX + query + '_' + area + '_' + type;
+
+  if (!query) { showToast('الرجاء كتابة ما تبحث عنه أولاً', 'info'); return; }
+
+  renderSkeleton(container);
+
+  if (!navigator.onLine) {
+    const cached = await getFromIndexedDB(cacheKey);
+    if (cached) {
+      renderResults(container, JSON.parse(cached));
+      showToast('لا يوجد اتصال — تُعرض آخر نتائج محفوظة', 'info');
+    } else {
+      container.innerHTML = `<div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center">لا يوجد اتصال بالإنترنت حالياً، وليست هناك نتائج محفوظة لهذا البحث.</div>`;
+    }
+    return;
+  }
+
+  try {
+    localStorage.removeItem(cacheKey);
+    const url = `${API_URL}?action=search&query=${encodeURIComponent(query)}&area=${encodeURIComponent(area)}&type=${encodeURIComponent(type)}`;
+    const response = await fetchWithTimeout(url);
+
+    if (!response.ok) throw new Error(`الخادم أعاد الحالة ${response.status}`);
+    const result = await response.json();
+    console.log('البيانات القادمة من الخادم:', result);
+
+    if (result.success) {
+      renderResults(container, result.data);
+      await saveToIndexedDB(cacheKey, result.data);
+    } else {
+      throw new Error(result.error || 'خطأ غير معروف من الخادم');
+    }
+  } catch (error) {
+    console.error('خطأ في البحث:', error);
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      renderResults(container, JSON.parse(cached));
+      showToast('تعذّر الاتصال بالخادم — تُعرض آخر نتائج محفوظة', 'info');
+    } else {
+      container.innerHTML = `
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center">
+          <div class="text-3xl mb-2">⚠️</div>
+          <p class="font-bold">تعذّر الاتصال بالخادم</p>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">${escapeHtml(error.message)}</p>
+          <button onclick="performSearch()" class="btn-primary mt-4">إعادة المحاولة</button>
+        </div>`;
+    }
+    showToast('تعذّر إتمام البحث', 'error');
+  }
+}
+
+async function searchDriversDirect() {
+/* ========================================================
+   البحث عن سائقين - الإصدار المحسّن (في نفس الصفحة)
+   ======================================================== */
+
+// دالة البحث المتقدم عن سائقين (دون الانتقال لصفحة أخرى)
+  if (!requireLogin()) return;
+  
+  const query = document.getElementById('driverSearchInput').value.trim();
+  const area = document.getElementById('driverAreaSelect').value;
+  const container = document.getElementById('driverResults');
+  const cacheKey = CACHE_KEY_PREFIX + 'driver_' + query + '_' + area;
+
+  // عرض رسالة إذا كان الحقل فارغاً
+  if (!query) {
+    container.innerHTML = `
+      <div class="bg-yellow-50 dark:bg-yellow-900/30 p-6 rounded-2xl text-center border-r-4 border-accent">
+        <div class="text-3xl mb-2">🔍</div>
+        <p class="font-bold">الرجاء كتابة ما تبحث عنه</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400">مثال: اسم السائق، المنطقة، أو نوع المركبة</p>
+      </div>`;
+    return;
+  }
+
+  // عرض شاشة تحميل (Skeleton) أنيقة
+  renderDriverSkeleton(container);
+
+  // التحقق من الاتصال
+  if (!navigator.onLine) {
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      renderDriverResults(container, JSON.parse(cached));
+      showToast('لا يوجد اتصال — تُعرض آخر نتائج محفوظة', 'info');
+    } else {
+      container.innerHTML = `
+        <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow text-center">
+          <div class="text-4xl mb-2">📡</div>
+          <p class="font-bold">لا يوجد اتصال بالإنترنت</p>
+          <p class="text-sm text-gray-500 dark:text-gray-400">تحقق من اتصالك وحاول مرة أخرى</p>
+        </div>`;
+    }
+    return;
+  }
+
+  try {
+    // مسح الكاش القديم
+    localStorage.removeItem(cacheKey);
+    
+    // إرسال الطلب مع تحديد type=driver
+    const url = `${API_URL}?action=search&query=${encodeURIComponent(query)}&area=${encodeURIComponent(area)}&type=driver`;
+    const response = await fetchWithTimeout(url);
+
+    if (!response.ok) throw new Error(`الخادم أعاد الحالة ${response.status}`);
+    const result = await response.json();
+    console.log('🚗 نتائج السائقين:', result);
+
+    if (result.success) {
+      renderDriverResults(container, result.data);
+      localStorage.setItem(cacheKey, JSON.stringify(result.data));
+      
+      // إظهار عدد النتائج
+      const count = result.data?.length || 0;
+      showToast(`✅ تم العثور على ${count} سائق${count !== 1 ? 'ين' : ''}`, 'success');
+    } else {
+      throw new Error(result.error || 'خطأ غير معروف من الخادم');
+    }
+  } catch (error) {
+    console.error('❌ خطأ في البحث عن سائقين:', error);
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      renderDriverResults(container, JSON.parse(cached));
+      showToast('تعذّر الاتصال — تُعرض آخر نتائج محفوظة', 'info');
+    } else {
+      container.innerHTML = `
+        <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow text-center">
+          <div class="text-4xl mb-2">⚠️</div>
+          <p class="font-bold text-red-600 dark:text-red-400">تعذّر الاتصال بالخادم</p>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">${escapeHtml(error.message)}</p>
+          <button onclick="searchDriversDirect()" class="btn-primary mt-4">إعادة المحاولة</button>
+        </div>`;
+    }
+    showToast('تعذّر إتمام البحث عن سائقين', 'error');
+  }
+}
+
+// دالة عرض شاشة تحميل للسائقين
+function renderDriverSkeleton(container) {
+  container.innerHTML = `
+    <div class="grid grid-cols-1 gap-4">
+      ${[1, 2, 3].map(() => `
+        <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-lg flex items-center justify-between gap-4">
+          <div class="flex-1 space-y-3">
+            <div class="skeleton h-5 w-1/3"></div>
+            <div class="skeleton h-4 w-1/2"></div>
+            <div class="skeleton h-4 w-1/4"></div>
+          </div>
+          <div class="skeleton h-10 w-28 rounded-full"></div>
+        </div>
+      `).join('')}
+    </div>`;
+}
+
+// دالة عرض نتائج السائقين (بتصميم خاص)
+function renderDriverResults(container, data) {
+  if (!data || !Array.isArray(data) || data.length === 0) {
+    container.innerHTML = `
+      <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg text-center border-2 border-dashed border-gray-200 dark:border-gray-700">
+        <div class="text-6xl mb-3">🚗</div>
+        <p class="font-bold text-lg">لا يوجد سائقين مطابقين للبحث</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">جرب البحث بكلمات مختلفة أو أضف سائقاً جديداً</p>
+        <button onclick="document.getElementById('driverName').focus()" class="btn-accent mt-4">➕ إضافة سائق</button>
+      </div>`;
+    return;
+  }
+
+  // فلترة البيانات غير المكتملة
+  const validData = data.filter(p => p.name && p.skill_offer);
+  if (validData.length === 0) {
+    container.innerHTML = `
+      <div class="bg-yellow-50 dark:bg-yellow-900/30 p-6 rounded-2xl text-center">
+        <p class="font-bold text-yellow-700 dark:text-yellow-400">⚠️ توجد بيانات لكنها غير مكتملة</p>
+        <p class="text-sm text-gray-500">يُرجى التحقق من صحة البيانات في جدول السائقين</p>
+      </div>`;
+    return;
+  }
+
+  // عرض النتائج بتصميم بطاقات أنيق
+  container.innerHTML = `
+    <div class="grid grid-cols-1 gap-4">
+      ${validData.map((p, index) => {
+        const name = p.name || 'غير معروف';
+        const phone = p.phone || '';
+        const area = p.area || 'غير محدد';
+        const skill = p.skill_offer || 'لم يحدد';
+        const cleanPhone = String(phone).replace(/\D/g, '').replace(/^0/, '');
+        const whatsappLink = `https://wa.me/970${cleanPhone}`;
+        
+        // استخراج نوع المركبة من skill_offer
+        const vehicleMatch = skill.match(/\(([^)]+)\)/);
+        const vehicle = vehicleMatch ? vehicleMatch[1] : 'غير محدد';
+        
+        // أيقونة عشوائية للتنوع
+        const icons = ['🚗', '🚙', '🚐', '🛵', '🚲'];
+        const icon = icons[index % icons.length];
+        
         return `
-          <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border-r-4 border-accent flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <p class="font-bold text-lg">${escapeHtml(name)}</p>
-              <p class="text-sm text-gray-500 dark:text-gray-300">${typeLabel} ${escapeHtml(skill)}</p>
-              <p class="text-xs text-gray-400"><i class="fas fa-map-pin ml-1"></i>${escapeHtml(area)}</p>
-              <div class="flex items-center gap-2 mt-1">
-                <span class="text-sm font-bold" id="rating-${phone}">⭐ 0.0</span>
-                <span class="text-xs text-gray-400" id="rating-count-${phone}">(0)</span>
-                <button onclick="openReviewModal('${escapeHtml(name)}','${phone}')" class="text-xs text-primary hover:underline"><i class="fas fa-star"></i> تقييم</button>
+          <div class="card-hover fade-in bg-white dark:bg-gray-800 p-5 rounded-xl shadow-lg border-r-4 border-accent flex flex-wrap items-center justify-between gap-4 hover:shadow-xl transition-all duration-300">
+            <div class="flex items-center gap-4">
+              <div class="text-4xl">${icon}</div>
+              <div>
+                <p class="font-bold text-lg">${escapeHtml(name)}</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                  <span>🛠️ ${escapeHtml(skill)}</span>
+                  <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
+                  <span>📍 ${escapeHtml(area)}</span>
+                </p>
+                <p class="text-xs text-gray-400 mt-1">🚗 نوع المركبة: ${escapeHtml(vehicle)}</p>
               </div>
             </div>
             <div class="flex items-center gap-2">
-              ${cleanPhone ? `<a href="${whatsapp}" target="_blank" class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-green-700 transition"><i class="fab fa-whatsapp"></i> واتساب</a>` : ''}
+              ${cleanPhone ? `<a href="${whatsappLink}" target="_blank" rel="noopener" class="bg-green-600 text-white px-5 py-2.5 rounded-full text-sm font-bold hover:bg-green-700 transition transform hover:scale-105 shadow-md hover:shadow-lg flex items-center gap-2"><span>💬</span> واتساب</a>` : ''}
+              <!-- زر التقييم -->
+              <button onclick="openReviewModal('${escapeHtml(name)}', '${escapeHtml(phone)}')" class="bg-yellow-500 text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-yellow-600 transition">⭐ تقييم</button>
+              <span class="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">سائق</span>
             </div>
           </div>
         `;
-      }).join('')}</div>`;
+      }).join('')}
+    </div>`;
+}
 
-      valid.forEach(p => fetchRating(p.name, p.phone));
+// دالة البحث السريع (Chips)
+function quickDriverSearch(term) {
+  document.getElementById('driverSearchInput').value = term;
+  searchDriversDirect();
+}
+
+// دالة إعادة تعيين البحث
+function resetDriverSearch() {
+  document.getElementById('driverSearchInput').value = '';
+  document.getElementById('driverAreaSelect').value = 'all';
+  document.getElementById('driverResults').innerHTML = `
+    <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow text-center text-gray-500 dark:text-gray-400">
+      <div class="text-5xl mb-3">🚗</div>
+      <p class="font-semibold">ابحث عن سائق</p>
+      <p class="text-sm">اكتب اسم السائق، المنطقة، أو نوع المركبة في الأعلى</p>
+    </div>`;
+  showToast('تم إعادة تعيين البحث', 'info');
+}
+
+/* ========================================================
+   إضافة خدمة جديدة
+   ======================================================== */
+function validatePalestinianPhone(phone) {
+  const digits = phone.replace(/\D/g, '');
+  return /^(0)?5[0-9]{8}$/.test(digits);
+}
+
+async function addService() {
+  if (!requireLogin()) return;
+  const name = document.getElementById('addName').value.trim();
+  const phone = document.getElementById('addPhone').value.trim();
+  const area = document.getElementById('addArea').value.trim();
+  const skill = document.getElementById('addSkill').value.trim();
+  const request = document.getElementById('addRequest').value.trim();
+  const type = document.getElementById('addType').value;
+  const msgDiv = document.getElementById('addMessage');
+  const btn = document.getElementById('addBtn');
+
+  if (!name || !phone || !area || !skill) {
+    msgDiv.innerHTML = '<span class="text-red-500">⚠️ جميع الحقول الأساسية مطلوبة</span>';
+    return;
+  }
+  if (!validatePalestinianPhone(phone)) {
+    msgDiv.innerHTML = '<span class="text-red-500">⚠️ الرجاء إدخال رقم هاتف فلسطيني صحيح (مثال: 0599123456)</span>';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '⏳ جاري التسجيل...';
+  msgDiv.innerHTML = '';
+
+  if (!navigator.onLine) {
+    msgDiv.innerHTML = '<span class="text-red-500">⚠️ لا يوجد اتصال بالإنترنت، حاول مرة أخرى عند توفر الشبكة</span>';
+    btn.disabled = false; btn.textContent = '✅ إضافة إلى المنصة';
+    return;
+  }
+
+  try {
+    const formData = new URLSearchParams();
+    formData.append('action', 'add');
+    formData.append('name', name);
+    formData.append('phone', phone);
+    formData.append('area', area);
+    formData.append('skill_offer', skill);
+    formData.append('skill_request', request || 'لا يوجد');
+    formData.append('type', type);
+
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: formData.toString()
+    });
+
+    if (!response.ok) throw new Error(`الخادم أعاد الحالة ${response.status}`);
+    const result = await response.json();
+
+    if (result.success) {
+      msgDiv.innerHTML = '<span class="text-green-600">✅ تم التسجيل بنجاح! سيتمكن جيرانك الآن من التواصل معك</span>';
+      showToast('تم تسجيل مهارتك بنجاح', 'success');
+      ['addName','addPhone','addArea','addSkill','addRequest'].forEach(id => document.getElementById(id).value = '');
+      localStorage.clear();
+    } else {
+      throw new Error(result.error || 'فشل التسجيل لسبب غير معروف');
     }
+  } catch (error) {
+    console.error('❌ خطأ في الإضافة:', error);
+    msgDiv.innerHTML = `<span class="text-red-500">❌ ${escapeHtml(error.message)}</span>`;
+    showToast('تعذّر إتمام التسجيل', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '✅ إضافة إلى المنصة';
+  }
+}
 
-    // دالة جلب التقييمات (موجودة أعلاه)
+async function addDriver() {
+  if (!requireLogin()) return;
+  
+  const name = document.getElementById('driverName').value.trim();
+  const phone = document.getElementById('driverPhone').value.trim();
+  const area = document.getElementById('driverArea').value.trim();
+  const vehicle = document.getElementById('driverVehicle').value.trim();
+  const msgDiv = document.getElementById('driverMessage');
 
-    // ===== دوال البحث الأساسية =====
-    async function performSearch() {
-      if (!isLoggedIn()) { showToast('الرجاء تسجيل الدخول', 'error'); return; }
-      const query = document.getElementById('searchInput').value.trim();
-      const area = document.getElementById('areaSelect').value;
-      const type = document.getElementById('typeSelect').value;
-      const rating = document.getElementById('ratingFilter')?.value || '0';
-      const sort = document.getElementById('sortFilter')?.value || 'recent';
-      const container = document.getElementById('resultsContainer');
-      if (!query) { showToast('اكتب ما تبحث عنه', 'info'); return; }
-      renderSkeleton(container);
+  if (!name || !phone || !area || !vehicle) {
+    msgDiv.innerHTML = '<span class="text-red-500">⚠️ جميع الحقول مطلوبة</span>';
+    return;
+  }
+  if (!validatePalestinianPhone(phone)) {
+    msgDiv.innerHTML = '<span class="text-red-500">⚠️ رقم هاتف غير صحيح</span>';
+    return;
+  }
 
-      try {
-        const url = `${API_URL}?action=search&query=${encodeURIComponent(query)}&area=${encodeURIComponent(area)}&type=${encodeURIComponent(type)}&rating=${rating}&sort=${sort}`;
-        const res = await fetchWithTimeout(url);
-        const data = await res.json();
-        if (data.success) renderResults(container, data.data || []);
-        else throw new Error(data.error || 'خطأ');
-      } catch(e) {
-        container.innerHTML = `<div class="bg-red-50 dark:bg-red-900/20 p-6 rounded-2xl text-center"><i class="fas fa-exclamation-triangle text-red-500 text-3xl"></i><p class="font-bold mt-2">${e.message}</p><button onclick="performSearch()" class="btn-primary mt-4">إعادة المحاولة</button></div>`;
-        showToast('تعذر البحث', 'error');
-      }
+  // تعطيل الزر مؤقتاً
+  const addBtn = document.querySelector('#section-driver .btn-primary');
+  if (addBtn) addBtn.disabled = true;
+  msgDiv.innerHTML = '<span class="text-blue-500">⏳ جاري إضافة السائق...</span>';
+
+  try {
+    // إرسال البيانات لإضافة سائق (type=driver)
+    const formData = new URLSearchParams();
+    formData.append('action', 'add');
+    formData.append('name', name);
+    formData.append('phone', phone);
+    formData.append('area', area);
+    formData.append('skill_offer', `توصيل (${vehicle})`);
+    formData.append('skill_request', 'لا يوجد');
+    formData.append('type', 'driver');
+
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: formData.toString()
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      msgDiv.innerHTML = '<span class="text-green-600">✅ تم إضافة السائق بنجاح!</span>';
+      showToast('تم إضافة السائق بنجاح', 'success');
+      // مسح الحقول
+      ['driverName','driverPhone','driverArea','driverVehicle'].forEach(id => document.getElementById(id).value = '');
+      // إعادة البحث لعرض السائق الجديد
+      setTimeout(() => {
+        showSection('driver');
+        const searchInput = document.getElementById('driverSearchInput');
+        searchInput.value = name;
+        searchDriversDirect();
+      }, 1000);
+    } else {
+      throw new Error(result.error || 'فشل الإضافة');
     }
+  } catch (error) {
+    console.error('❌ خطأ في إضافة السائق:', error);
+    msgDiv.innerHTML = `<span class="text-red-500">❌ ${escapeHtml(error.message)}</span>`;
+    showToast('تعذّر إتمام الإضافة', 'error');
+  } finally {
+    if (addBtn) addBtn.disabled = false;
+  }
+}
 
-    function quickSearch(term) {
-      document.getElementById('searchInput').value = term;
-      performSearch();
+/* ========================================================
+   تسجيل الدخول والتسجيل والخروج
+   ======================================================== */
+async function login() {
+  const username = document.getElementById('loginUsername').value.trim();
+  const password = document.getElementById('loginPassword').value.trim();
+  const msgDiv = document.getElementById('loginMessage');
+
+  if (!username || !password) {
+    msgDiv.innerHTML = '<span class="text-red-500">⚠️ الرجاء إدخال اسم المستخدم وكلمة المرور</span>';
+    return;
+  }
+
+  const loginBtn = document.querySelector('#loginForm .btn-primary');
+  if (loginBtn) loginBtn.disabled = true;
+  msgDiv.innerHTML = '<span class="text-blue-500">⏳ جاري التحقق...</span>';
+
+  try {
+    const url = `${API_URL}?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
+    const response = await fetch(url);
+    const result = await response.json();
+
+    if (result.success) {
+      localStorage.setItem('sanad_user', username);
+      localStorage.setItem('sanad_logged_in', 'true');
+      // نحفظ رقم الهاتف القادم من الخادم إن وُجد، وإلا نُبقي على القيمة المخزّنة سابقاً
+      const loggedInPhone = result.phone || result.user?.phone || getCurrentUserPhone();
+      localStorage.setItem('sanad_user_phone', loggedInPhone || '');
+      msgDiv.innerHTML = '<span class="text-green-600">✅ تم تسجيل الدخول بنجاح!</span>';
+      showToast(`مرحباً ${username}`, 'success');
+      updateUserDisplay();
+      document.getElementById('loginUsername').value = '';
+      document.getElementById('loginPassword').value = '';
+      showSection('home');
+    } else {
+      msgDiv.innerHTML = `<span class="text-red-500">❌ ${result.message}</span>`;
+      showToast('فشل تسجيل الدخول، تحقق من بياناتك', 'error');
     }
+  } catch (error) {
+    console.error('خطأ في تسجيل الدخول:', error);
+    msgDiv.innerHTML = `<span class="text-red-500">❌ حدث خطأ في الاتصال: ${error.message}</span>`;
+    showToast('تعذّر الاتصال بالخادم', 'error');
+  } finally {
+    if (loginBtn) loginBtn.disabled = false;
+  }
+}
 
-    function clearFilters() {
-      document.getElementById('searchInput').value = '';
-      document.getElementById('areaSelect').value = 'all';
-      document.getElementById('typeSelect').value = 'all';
-      document.getElementById('ratingFilter').value = '0';
-      document.getElementById('sortFilter').value = 'recent';
-      document.getElementById('resultsContainer').innerHTML = '';
-      document.getElementById('clearSearchBtn').classList.add('hidden');
-      showToast('تم مسح الفلاتر', 'info');
+async function signup() {
+  const username = document.getElementById('signupUsername').value.trim();
+  const password = document.getElementById('signupPassword').value.trim();
+  const confirm = document.getElementById('signupConfirm').value.trim();
+  const msgDiv = document.getElementById('signupMessage');
+
+  if (!username || !password || !confirm) {
+    msgDiv.innerHTML = '<span class="text-red-500">⚠️ جميع الحقول مطلوبة</span>';
+    return;
+  }
+  if (username.length < 3) {
+    msgDiv.innerHTML = '<span class="text-red-500">⚠️ اسم المستخدم يجب أن يكون 3 أحرف على الأقل</span>';
+    return;
+  }
+  if (password.length < 4) {
+    msgDiv.innerHTML = '<span class="text-red-500">⚠️ كلمة المرور يجب أن تكون 4 أحرف على الأقل</span>';
+    return;
+  }
+  if (password !== confirm) {
+    msgDiv.innerHTML = '<span class="text-red-500">⚠️ كلمتا المرور غير متطابقتين</span>';
+    return;
+  }
+
+  const signupBtn = document.querySelector('#signupForm .btn-accent');
+  if (signupBtn) signupBtn.disabled = true;
+  msgDiv.innerHTML = '<span class="text-blue-500">⏳ جاري إنشاء الحساب...</span>';
+
+  try {
+    const url = `${API_URL}?action=signup&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
+    const response = await fetch(url);
+    const result = await response.json();
+
+    if (result.success) {
+      msgDiv.innerHTML = `<span class="text-green-600">✅ ${result.message}</span>`;
+      showToast('تم إنشاء الحساب بنجاح!', 'success');
+      const phone = document.getElementById('signupPhone')?.value?.trim() || '';
+      localStorage.setItem('sanad_user_phone', phone);
+      document.getElementById('signupUsername').value = '';
+      document.getElementById('signupPassword').value = '';
+      document.getElementById('signupConfirm').value = '';
+      setTimeout(() => {
+        toggleSignupForm();
+        document.getElementById('loginUsername').value = username;
+        document.getElementById('loginPassword').value = password;
+        showToast('يمكنك الآن تسجيل الدخول', 'info');
+      }, 2000);
+    } else {
+      msgDiv.innerHTML = `<span class="text-red-500">❌ ${result.message}</span>`;
+      showToast(result.message, 'error');
     }
+  } catch (error) {
+    console.error('خطأ في التسجيل:', error);
+    msgDiv.innerHTML = `<span class="text-red-500">❌ حدث خطأ في الاتصال: ${error.message}</span>`;
+    showToast('تعذّر الاتصال بالخادم', 'error');
+  } finally {
+    if (signupBtn) signupBtn.disabled = false;
+  }
+}
 
-    // ===== بحث سائقين =====
-    async function searchDriversDirect() {
-      if (!isLoggedIn()) return;
-      const query = document.getElementById('driverSearchInput').value.trim();
-      const area = document.getElementById('driverAreaSelect').value;
-      const container = document.getElementById('driverResults');
-      if (!query) { showToast('اكتب اسم السائق أو المنطقة', 'info'); return; }
-      renderDriverSkeleton(container);
-      try {
-        const url = `${API_URL}?action=search&query=${encodeURIComponent(query)}&area=${encodeURIComponent(area)}&type=driver`;
-        const res = await fetchWithTimeout(url);
-        const data = await res.json();
-        if (data.success) renderDriverResults(container, data.data || []);
-        else throw new Error(data.error || 'خطأ');
-      } catch(e) {
-        container.innerHTML = `<div class="bg-red-50 dark:bg-red-900/20 p-6 rounded-2xl text-center"><i class="fas fa-exclamation-triangle text-red-500"></i><p class="font-bold">${e.message}</p></div>`;
-        showToast('تعذر البحث', 'error');
-      }
+function logout() {
+  localStorage.removeItem('sanad_user');
+  localStorage.removeItem('sanad_logged_in');
+  document.getElementById('loginMessage').innerHTML = '<span class="text-blue-600">👋 تم تسجيل الخروج</span>';
+  showToast('تم تسجيل الخروج', 'info');
+  updateUserDisplay();
+  showSection('login');
+}
+
+function updateUserDisplay() {
+  const loggedIn = isLoggedIn();
+  const user = getCurrentUser();
+  const display = document.getElementById('userDisplay');
+  const nameSpan = document.getElementById('userNameDisplay');
+  const logoutBtn = document.getElementById('logoutBtn');
+  if (loggedIn) {
+    display.classList.remove('hidden');
+    nameSpan.textContent = user;
+    logoutBtn.classList.remove('hidden');
+  } else {
+    display.classList.add('hidden');
+    logoutBtn.classList.add('hidden');
+  }
+}
+
+/* ========================================================
+   الشريط الجانبي + الوضع الداكن
+   ======================================================== */
+const sidebar = document.getElementById('sidebar');
+document.getElementById('openSidebar').addEventListener('click', () => sidebar.classList.toggle('sidebar-closed'));
+document.getElementById('closeSidebar').addEventListener('click', () => sidebar.classList.add('sidebar-closed'));
+window.addEventListener('resize', () => {
+  if (window.innerWidth >= 768) sidebar.classList.remove('sidebar-closed');
+  else sidebar.classList.add('sidebar-closed');
+});
+
+const themeToggle = document.getElementById('themeToggle');
+const themeIcon = document.getElementById('themeIcon');
+const themeLabel = document.getElementById('themeLabel');
+// الوضع الافتراضي هو المضيء (Light) ما لم يكن المستخدم قد اختار الوضع الداكن سابقاً
+let darkMode = localStorage.getItem('darkMode') === 'true';
+function applyTheme() {
+  document.documentElement.classList.toggle('dark', darkMode);
+  themeIcon.setAttribute('data-lucide', darkMode ? 'sun' : 'moon');
+  themeLabel.textContent = darkMode ? 'الوضع المضيء' : 'الوضع الداكن';
+  localStorage.setItem('darkMode', darkMode);
+  if (window.lucide) lucide.createIcons();
+}
+applyTheme();
+themeToggle.addEventListener('click', () => { darkMode = !darkMode; applyTheme(); });
+
+/* ========================================================
+   حالة الاتصال بالإنترنت
+   ======================================================== */
+function updateConnStatus() {
+  const dot = document.getElementById('connDot');
+  const text = document.getElementById('connText');
+  if (navigator.onLine) {
+    dot.className = 'dot dot-on'; text.textContent = 'متصل بالإنترنت';
+  } else {
+    dot.className = 'dot dot-off'; text.textContent = 'غير متصل — تُعرض بيانات محفوظة';
+    showToast('انقطع الاتصال بالإنترنت', 'info');
+  }
+}
+window.addEventListener('online', updateConnStatus);
+window.addEventListener('offline', updateConnStatus);
+updateConnStatus();
+
+updateUserDisplay();
+
+if (isLoggedIn()) {
+  showSection('home');
+} else {
+  showSection('login');
+}
+
+/* ========================================================
+   لوحة الإحصائيات (٥ مقاييس) — مع معالجة أخطاء كاملة
+   ======================================================== */
+const STATS_CACHE_KEY = 'sanad_stats_cache';
+const STATS_IDS = ['statUsers', 'statServices', 'statDrivers', 'statReviews', 'statAvgRating'];
+
+function setStatValues(stats) {
+  document.getElementById('statUsers').textContent = stats.users ?? '—';
+  document.getElementById('statServices').textContent = stats.services ?? '—';
+  document.getElementById('statDrivers').textContent = stats.drivers ?? '—';
+  document.getElementById('statReviews').textContent = stats.reviews ?? '—';
+  document.getElementById('statAvgRating').textContent =
+    (stats.avgRating !== undefined && stats.avgRating !== null) ? `⭐ ${Number(stats.avgRating).toFixed(1)}` : '—';
+}
+
+/* ========================================================
+   لوحة الإحصائيات (٥ مقاييس) — مع جلب حقيقي من الخادم
+   ======================================================== */
+
+function setStatValues(stats) {
+  document.getElementById('statUsers').textContent = stats.users ?? '—';
+  document.getElementById('statServices').textContent = stats.services ?? '—';
+  document.getElementById('statDrivers').textContent = stats.drivers ?? '—';
+  document.getElementById('statReviews').textContent = stats.reviews ?? '—';
+  
+  // عرض متوسط التقييم فقط إذا كان هناك تقييمات
+  const avg = stats.avgRating;
+  const reviewCount = stats.reviews || 0;
+  document.getElementById('statAvgRating').textContent = 
+    (reviewCount > 0 && avg !== undefined && avg !== null) ? `⭐ ${Number(avg).toFixed(1)}` : '—';
+}
+
+async function fetchStats() {
+  // عرض القيم المخزنة مؤقتاً أولاً (إن وجدت)
+  try {
+    const cachedRaw = localStorage.getItem(STATS_CACHE_KEY);
+    if (cachedRaw) {
+      const cachedStats = JSON.parse(cachedRaw);
+      setStatValues(cachedStats);
     }
+  } catch (e) { /* تجاهل أي تلف في الكاش */ }
 
-    function renderDriverSkeleton(container) {
-      container.innerHTML = Array(2).fill(0).map(() => `
-        <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm flex items-center gap-4"><div class="skeleton h-12 w-12 rounded-full"></div><div class="flex-1 space-y-2"><div class="skeleton h-4 w-1/3"></div><div class="skeleton h-3 w-1/2"></div></div><div class="skeleton h-9 w-24 rounded-full"></div></div>
-      `).join('');
+  // إذا كان غير متصل، لا نحاول جلب بيانات جديدة
+  if (!navigator.onLine) {
+    // إذا لم تكن هناك قيمة مخزنة، نعرض "—"
+    if (!localStorage.getItem(STATS_CACHE_KEY)) {
+      setStatValues({ users: '—', services: '—', drivers: '—', reviews: '—', avgRating: '—' });
     }
+    return;
+  }
 
-    function renderDriverResults(container, data) {
-      if (!data || !data.length) {
-        container.innerHTML = `<div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-sm text-center"><i class="fas fa-truck text-4xl text-gray-400"></i><p class="font-bold mt-2">لا يوجد سائقين</p></div>`;
-        return;
-      }
-      const valid = data.filter(p => p.name && p.skill_offer && p.type === 'driver');
-      container.innerHTML = `<div class="space-y-4">${valid.map(p => {
-        const name = p.name, phone = p.phone, area = p.area || 'غير محدد', skill = p.skill_offer;
-        const cleanPhone = String(phone).replace(/\D/g,'').replace(/^0/,'');
-        const whatsapp = `https://wa.me/970${cleanPhone}`;
-        const vehicle = skill.match(/\(([^)]+)\)/)?.[1] || 'غير محدد';
-        return `
-          <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border-r-4 border-accent flex flex-wrap items-center justify-between gap-3">
-            <div class="flex items-center gap-3"><i class="fas fa-user-circle text-3xl text-primary"></i><div><p class="font-bold">${escapeHtml(name)}</p><p class="text-sm text-gray-500"><i class="fas fa-truck ml-1"></i>${escapeHtml(skill)}</p><p class="text-xs text-gray-400"><i class="fas fa-map-pin ml-1"></i>${escapeHtml(area)}</p></div></div>
-            <div class="flex items-center gap-2">
-              ${cleanPhone ? `<a href="${whatsapp}" target="_blank" class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-green-700 transition"><i class="fab fa-whatsapp"></i> واتساب</a>` : ''}
-              <button onclick="openReviewModal('${escapeHtml(name)}','${phone}')" class="bg-yellow-500 text-white px-3 py-2 rounded-full text-sm font-bold hover:bg-yellow-600 transition"><i class="fas fa-star"></i></button>
-            </div>
-          </div>
-        `;
-      }).join('')}</div>`;
-    }
-
-    function quickDriverSearch(term) {
-      document.getElementById('driverSearchInput').value = term;
-      searchDriversDirect();
-    }
-
-    function resetDriverSearch() {
-      document.getElementById('driverSearchInput').value = '';
-      document.getElementById('driverAreaSelect').value = 'all';
-      document.getElementById('driverResults').innerHTML = `<div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-sm text-center text-gray-400"><i class="fas fa-truck text-5xl block mb-3"></i><p class="font-semibold">ابحث عن سائق</p></div>`;
-      showToast('تم إعادة تعيين البحث', 'info');
-    }
-
-    // ===== دوال إضافة خدمة وسائق =====
-    function validatePalestinianPhone(phone) {
-      return /^(0)?5[0-9]{8}$/.test(phone.replace(/\D/g,''));
-    }
-
-    async function addService() {
-      if (!isLoggedIn()) { showToast('تسجيل الدخول أولاً', 'error'); return; }
-      const name = document.getElementById('addName').value.trim();
-      const phone = document.getElementById('addPhone').value.trim();
-      const area = document.getElementById('addArea').value.trim();
-      const skill = document.getElementById('addSkill').value.trim();
-      const request = document.getElementById('addRequest').value.trim();
-      const type = document.getElementById('addType').value;
-      const msg = document.getElementById('addMessage');
-      const btn = document.getElementById('addBtn');
-      if (!name || !phone || !area || !skill) { msg.innerHTML = '<span class="text-red-500">⚠️ جميع الحقول الأساسية مطلوبة</span>'; return; }
-      if (!validatePalestinianPhone(phone)) { msg.innerHTML = '<span class="text-red-500">⚠️ رقم هاتف غير صحيح</span>'; return; }
-      btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري...';
-      msg.innerHTML = '';
-      try {
-        const fd = new URLSearchParams();
-        fd.append('action','add'); fd.append('name',name); fd.append('phone',phone); fd.append('area',area);
-        fd.append('skill_offer',skill); fd.append('skill_request',request||'لا يوجد'); fd.append('type',type);
-        const res = await fetch(API_URL, { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:fd.toString() });
-        const data = await res.json();
-        if (data.success) {
-          msg.innerHTML = '<span class="text-green-600">✅ تم التسجيل بنجاح!</span>';
-          showToast('تمت الإضافة', 'success');
-          ['addName','addPhone','addArea','addSkill','addRequest'].forEach(id => document.getElementById(id).value = '');
-        } else throw new Error(data.error || 'فشل');
-      } catch(e) { msg.innerHTML = `<span class="text-red-500">❌ ${e.message}</span>`; showToast('فشل الإضافة', 'error'); }
-      finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-plus-circle"></i> إضافة إلى المنصة'; }
-    }
-
-    async function addDriver() {
-      if (!isLoggedIn()) return;
-      const name = document.getElementById('driverName').value.trim();
-      const phone = document.getElementById('driverPhone').value.trim();
-      const area = document.getElementById('driverArea').value.trim();
-      const vehicle = document.getElementById('driverVehicle').value.trim();
-      const msg = document.getElementById('driverMessage');
-      if (!name || !phone || !area || !vehicle) { msg.innerHTML = '<span class="text-red-500">⚠️ جميع الحقول مطلوبة</span>'; return; }
-      if (!validatePalestinianPhone(phone)) { msg.innerHTML = '<span class="text-red-500">⚠️ رقم هاتف غير صحيح</span>'; return; }
-      msg.innerHTML = '<span class="text-blue-500">⏳ جاري...</span>';
-      try {
-        const fd = new URLSearchParams();
-        fd.append('action','add'); fd.append('name',name); fd.append('phone',phone); fd.append('area',area);
-        fd.append('skill_offer',`توصيل (${vehicle})`); fd.append('skill_request','لا يوجد'); fd.append('type','driver');
-        const res = await fetch(API_URL, { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:fd.toString() });
-        const data = await res.json();
-        if (data.success) {
-          msg.innerHTML = '<span class="text-green-600">✅ تمت الإضافة!</span>';
-          showToast('تم إضافة السائق', 'success');
-          ['driverName','driverPhone','driverArea','driverVehicle'].forEach(id => document.getElementById(id).value = '');
-          setTimeout(() => { document.getElementById('driverSearchInput').value = name; searchDriversDirect(); }, 1000);
-        } else throw new Error(data.error || 'فشل');
-      } catch(e) { msg.innerHTML = `<span class="text-red-500">❌ ${e.message}</span>`; showToast('فشل الإضافة', 'error'); }
-    }
-
-    // ===== دوال تسجيل الدخول والتسجيل =====
-    function toggleSignupForm() {
-      document.getElementById('loginForm').classList.toggle('hidden');
-      document.getElementById('signupForm').classList.toggle('hidden');
-      document.getElementById('loginMessage').innerHTML = '';
-      document.getElementById('signupMessage').innerHTML = '';
-    }
-
-    async function login() {
-      const username = document.getElementById('loginUsername').value.trim();
-      const password = document.getElementById('loginPassword').value.trim();
-      const msg = document.getElementById('loginMessage');
-      if (!username || !password) { msg.innerHTML = '<span class="text-red-500">⚠️ ادخل البيانات</span>'; return; }
-      const btn = document.querySelector('#loginForm .btn-primary');
-      btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري...';
-      msg.innerHTML = '';
-      try {
-        const url = `${API_URL}?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
-        const res = await fetch(url); const data = await res.json();
-        if (data.success) {
-          localStorage.setItem('sanad_user', username);
-          localStorage.setItem('sanad_logged_in', 'true');
-          localStorage.setItem('sanad_user_phone', '');
-          msg.innerHTML = '<span class="text-green-600">✅ تم الدخول</span>';
-          showToast(`مرحباً ${username}`, 'success');
-          updateUIAfterLogin();
-          navigateTo('home');
-        } else { msg.innerHTML = `<span class="text-red-500">❌ ${data.message}</span>`; showToast('فشل الدخول', 'error'); }
-      } catch(e) { msg.innerHTML = `<span class="text-red-500">❌ ${e.message}</span>`; showToast('خطأ في الاتصال', 'error'); }
-      finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> دخول'; }
-    }
-
-    async function signup() {
-      const username = document.getElementById('signupUsername').value.trim();
-      const password = document.getElementById('signupPassword').value.trim();
-      const confirm = document.getElementById('signupConfirm').value.trim();
-      const msg = document.getElementById('signupMessage');
-      if (!username || !password || !confirm) { msg.innerHTML = '<span class="text-red-500">⚠️ جميع الحقول مطلوبة</span>'; return; }
-      if (username.length < 3) { msg.innerHTML = '<span class="text-red-500">⚠️ اسم المستخدم 3 أحرف على الأقل</span>'; return; }
-      if (password.length < 4) { msg.innerHTML = '<span class="text-red-500">⚠️ كلمة المرور 4 أحرف</span>'; return; }
-      if (password !== confirm) { msg.innerHTML = '<span class="text-red-500">⚠️ كلمتا المرور غير متطابقتين</span>'; return; }
-      const btn = document.querySelector('#signupForm .btn-accent');
-      btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري...';
-      msg.innerHTML = '';
-      try {
-        const url = `${API_URL}?action=signup&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
-        const res = await fetch(url); const data = await res.json();
-        if (data.success) {
-          msg.innerHTML = `<span class="text-green-600">✅ ${data.message}</span>`;
-          showToast('تم إنشاء الحساب', 'success');
-          setTimeout(() => { toggleSignupForm(); document.getElementById('loginUsername').value = username; document.getElementById('loginPassword').value = password; }, 1500);
-        } else { msg.innerHTML = `<span class="text-red-500">❌ ${data.message}</span>`; showToast('فشل', 'error'); }
-      } catch(e) { msg.innerHTML = `<span class="text-red-500">❌ ${e.message}</span>`; showToast('خطأ', 'error'); }
-      finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-user-check"></i> إنشاء حساب'; }
-    }
-
-    function logout() {
-      localStorage.removeItem('sanad_user');
-      localStorage.removeItem('sanad_logged_in');
-      localStorage.removeItem('sanad_user_phone');
-      updateUIAfterLogin();
-      showToast('تم تسجيل الخروج', 'info');
-      navigateTo('login');
-    }
-
-    function updateUIAfterLogin() {
-      const logged = isLoggedIn();
-      const user = getCurrentUser();
-      document.getElementById('userDisplay').innerHTML = logged ? `<i class="fas fa-user-circle ml-1"></i> ${user}` : '';
-      document.getElementById('logoutBtn').classList.toggle('hidden', !logged);
-      // إخفاء التبويبات غير الضرورية في login
-      if (!logged) {
-        document.querySelectorAll('.tab-item').forEach(t => { if (t.dataset.tab !== 'home' && t.dataset.tab !== 'login') t.style.display = 'none'; });
-      } else {
-        document.querySelectorAll('.tab-item').forEach(t => t.style.display = '');
-      }
-    }
-
-    // ===== IndexedDB للتخزين المؤقت =====
-    function openDB() {
-      return new Promise((resolve, reject) => {
-        const req = indexedDB.open('SanadCache', 1);
-        req.onupgradeneeded = e => { if (!e.target.result.objectStoreNames.contains('cache')) e.target.result.createObjectStore('cache', { keyPath: 'key' }); };
-        req.onsuccess = e => resolve(e.target.result);
-        req.onerror = e => reject(e.target.error);
-      });
-    }
-
-    async function saveToIndexedDB(key, data) {
-      try {
-        const db = await openDB();
-        const tx = db.transaction('cache', 'readwrite');
-        const store = tx.objectStore('cache');
-        store.put({ key, data, timestamp: Date.now() });
-        await tx.done;
-      } catch(e) { /* fallback to localStorage */ localStorage.setItem(key, JSON.stringify(data)); }
-    }
-
-    async function getFromIndexedDB(key) {
-      try {
-        const db = await openDB();
-        const tx = db.transaction('cache', 'readonly');
-        const store = tx.objectStore('cache');
-        const result = await new Promise(resolve => { const r = store.get(key); r.onsuccess = () => resolve(r.result); r.onerror = () => resolve(null); });
-        if (result && (Date.now() - result.timestamp) < 60000) return result.data;
-        return null;
-      } catch(e) { const cached = localStorage.getItem(key); return cached ? JSON.parse(cached) : null; }
-    }
-
-    // ===== بحث صوتي =====
-    function startVoiceSearch() {
-      const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-      recognition.lang = 'ar-AR';
-      recognition.onresult = function(e) {
-        const transcript = e.results[0][0].transcript;
-        document.getElementById('searchInput').value = transcript;
-        performSearch();
+  try {
+    const url = `${API_URL}?action=get_stats`;
+    const response = await fetchWithTimeout(url, 12000);
+    if (!response.ok) throw new Error(`الخادم أعاد الحالة ${response.status}`);
+    const result = await response.json();
+    
+    if (result.success && result.data) {
+      const stats = {
+        users: result.data.users ?? 0,
+        services: result.data.services ?? 0,
+        drivers: result.data.drivers ?? 0,
+        reviews: result.data.reviews ?? 0,
+        avgRating: result.data.avgRating ?? 0
       };
-      recognition.onerror = function() { showToast('لم يتم التعرف على الصوت', 'error'); };
-      recognition.start();
+      
+      // تحديث الواجهة
+      setStatValues(stats);
+      // حفظ القيم في LocalStorage للاستخدام عند انقطاع الاتصال
+      localStorage.setItem(STATS_CACHE_KEY, JSON.stringify(stats));
+    } else {
+      throw new Error(result.error || 'تعذّر جلب الإحصائيات');
     }
-    document.getElementById('voiceSearchBtn').addEventListener('click', startVoiceSearch);
+  } catch (error) {
+    console.error('خطأ في جلب الإحصائيات:', error);
+    // لا نعرض رسائل مزعجة، القيم المحفوظة أو "—" تبقى ظاهرة
+    // إذا لم تكن هناك قيم مخزنة، نعرض "—"
+    if (!localStorage.getItem(STATS_CACHE_KEY)) {
+      setStatValues({ users: '—', services: '—', drivers: '—', reviews: '—', avgRating: '—' });
+    }
+  }
+}
 
-    // ===== الاقتراحات التلقائية =====
-    const searchInput = document.getElementById('searchInput');
-    const autoList = document.getElementById('autocompleteList');
-    const clearBtn = document.getElementById('clearSearchBtn');
+// جلب الإحصائيات فور تحميل الصفحة، ثم كل دقيقتين
+fetchStats();
+setInterval(fetchStats, 120000);
 
-    searchInput.addEventListener('input', function() {
-      const val = this.value.trim();
-      if (val.length >= 2) {
-        const suggestions = ['صيانة شمسية','كهرباء','خياطة','نجارة','سباكة','دهان','تطريز','طبخ','توصيل','صيانة موبايل']
-          .filter(s => s.includes(val) || val.includes(s));
-        if (suggestions.length) {
-          autoList.innerHTML = suggestions.map(s => `<div class="px-4 py-2 hover:bg-primary hover:text-white cursor-pointer" onclick="selectAutocomplete('${s}')"><i class="fas fa-search ml-2"></i>${s}</div>`).join('');
-          autoList.classList.remove('hidden');
-          clearBtn.classList.remove('hidden');
-          return;
-        }
-      }
-      autoList.classList.add('hidden');
-      if (!val) clearBtn.classList.add('hidden');
-      else clearBtn.classList.remove('hidden');
+/* ===== نقاط التمرير لكاروسيل الإحصائيات في الجوال ===== */
+function initStatsCarousel() {
+  const scroller = document.getElementById('statsScroller');
+  const dotsHost = document.getElementById('statsDots');
+  if (!scroller || !dotsHost) return;
+  const cards = Array.from(scroller.children);
+  dotsHost.innerHTML = cards.map((_, i) => `<span class="${i === 0 ? 'active' : ''}"></span>`).join('');
+  const dots = Array.from(dotsHost.children);
+
+  let ticking = false;
+  scroller.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const scrollerRect = scroller.getBoundingClientRect();
+      const center = scrollerRect.left + scrollerRect.width / 2;
+      let closestIdx = 0, closestDist = Infinity;
+      cards.forEach((card, i) => {
+        const r = card.getBoundingClientRect();
+        const dist = Math.abs((r.left + r.width / 2) - center);
+        if (dist < closestDist) { closestDist = dist; closestIdx = i; }
+      });
+      dots.forEach((d, i) => d.classList.toggle('active', i === closestIdx));
+      ticking = false;
     });
+  }, { passive: true });
+}
+initStatsCarousel();
 
-    function selectAutocomplete(term) {
-      searchInput.value = term;
-      autoList.classList.add('hidden');
-      performSearch();
-    }
-    clearBtn.addEventListener('click', function() {
-      searchInput.value = '';
-      this.classList.add('hidden');
-      autoList.classList.add('hidden');
+/* ===== تهيئة أيقونات Lucide بعد بناء الصفحة ===== */
+if (window.lucide) lucide.createIcons();
+
+/* ===== إظهار/إخفاء زر مسح البحث أثناء الكتابة ===== */
+const searchInputEl = document.getElementById('searchInput');
+if (searchInputEl) {
+  searchInputEl.addEventListener('input', () => {
+    document.getElementById('clearSearchBtn').classList.toggle('hidden', searchInputEl.value.trim() === '');
+  });
+}
+// ========================================================
+// دوال التقييم (أضفها في نهاية الـ script)
+// ========================================================
+
+let currentReviewProvider = { name: '', phone: '' };
+let selectedRating = 0;
+
+function openReviewModal(providerName, providerPhone) {
+  currentReviewProvider = { name: providerName, phone: providerPhone };
+  document.getElementById('reviewProviderName').textContent = providerName;
+  document.getElementById('reviewModal').classList.remove('hidden');
+  document.getElementById('selectedRating').value = 0;
+  selectedRating = 0;
+  document.getElementById('ratingText').textContent = 'اختر تقييمك';
+  document.querySelectorAll('#starContainer span').forEach(el => el.textContent = '☆');
+  document.getElementById('reviewerName').value = '';
+  document.getElementById('reviewComment').value = '';
+  document.getElementById('reviewMessage').innerHTML = '';
+}
+
+function closeReviewModal() {
+  document.getElementById('reviewModal').classList.add('hidden');
+}
+
+function setRating(value) {
+  selectedRating = value;
+  document.getElementById('selectedRating').value = value;
+  document.getElementById('ratingText').textContent = `⭐ ${value} نجوم`;
+  document.querySelectorAll('#starContainer span').forEach(el => {
+    const starVal = parseInt(el.dataset.star);
+    el.textContent = starVal <= value ? '★' : '☆';
+  });
+}
+
+async function submitReview() {
+  const rating = selectedRating;
+  const reviewerName = document.getElementById('reviewerName').value.trim() || 'مستخدم';
+  const comment = document.getElementById('reviewComment').value.trim();
+  const msgDiv = document.getElementById('reviewMessage');
+
+  if (rating === 0) {
+    msgDiv.innerHTML = '<span class="text-red-500">⚠️ الرجاء اختيار عدد النجوم</span>';
+    return;
+  }
+
+  msgDiv.innerHTML = '<span class="text-blue-500">⏳ جاري إرسال التقييم...</span>';
+
+  try {
+    const formData = new URLSearchParams();
+    formData.append('action', 'add_review');
+    formData.append('provider_name', currentReviewProvider.name);
+    formData.append('provider_phone', currentReviewProvider.phone);
+    formData.append('reviewer_name', reviewerName);
+    formData.append('rating', rating);
+    formData.append('comment', comment);
+
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: formData.toString()
     });
-
-    // ===== دوال الترحيب والجولة =====
-    let tourSteps = [];
-    let currentTourStep = 0;
-
-    function shouldShowWelcome() {
-      return !(localStorage.getItem('sanad_dont_show_welcome') === 'true' || localStorage.getItem('sanad_has_seen_welcome') === 'true');
+    
+    // ✅ تحقق من حالة الاستجابة
+    if (!response.ok) {
+      throw new Error(`الخادم أعاد الحالة ${response.status}`);
     }
+    const result = await response.json();
 
-    function showWelcomeModal() {
-      if (!shouldShowWelcome() || !isLoggedIn()) return;
-      document.getElementById('welcomeModal').classList.remove('hidden');
-      setTimeout(() => { document.getElementById('welcomeContent').classList.remove('scale-95'); document.getElementById('welcomeContent').classList.add('scale-100'); }, 50);
+    if (result.success) {
+      msgDiv.innerHTML = '<span class="text-green-600">✅ تم إرسال التقييم بنجاح! شكراً لك</span>';
+      showToast('تم إرسال التقييم بنجاح!', 'success');
+      setTimeout(() => closeReviewModal(), 1500);
+      // تحديث التقييم المعروض (يمكنك استدعاء دالة لجلب التقييمات الجديدة)
+      // fetchRating(currentReviewProvider.name, currentReviewProvider.phone);
+    } else {
+      throw new Error(result.message || 'فشل إرسال التقييم');
     }
+  } catch (error) {
+    console.error('خطأ في إرسال التقييم:', error);
+    msgDiv.innerHTML = `<span class="text-red-500">❌ ${escapeHtml(error.message)}</span>`;
+    showToast('تعذّر إرسال التقييم', 'error');
+  }
+}
 
-    function closeWelcome() {
-      if (document.getElementById('dontShowAgain').checked) localStorage.setItem('sanad_dont_show_welcome', 'true');
-      localStorage.setItem('sanad_has_seen_welcome', 'true');
-      document.getElementById('welcomeModal').classList.add('hidden');
-      document.getElementById('welcomeContent').classList.add('scale-95');
+// دالة لجلب وعرض التقييمات (ستضيفها لاحقاً)
+// async function fetchRating(providerName, providerPhone) { ... }
+/* ========================================================
+   دوال الإشعارات (أضف هذا الكود في نهاية الـ script)
+   ======================================================== */
+
+let notificationTimeout = null;
+let lastNotificationCheck = 0;
+
+// جلب الإشعارات من الخادم
+async function fetchNotifications() {
+  if (!isLoggedIn()) return;
+
+  try {
+    const userPhone = getCurrentUserPhone() || '';
+    const url = `${API_URL}?action=get_notifications&user_phone=${encodeURIComponent(userPhone)}`;
+    const response = await fetch(url);
+    const result = await response.json();
+
+    if (result.success) {
+      updateNotificationUI(result.notifications || [], result.unreadCount || 0);
+      localStorage.setItem('sanad_notifications', JSON.stringify(result.notifications));
+      localStorage.setItem('sanad_unread_count', result.unreadCount);
     }
-
-    function startTour() {
-      closeWelcome();
-      tourSteps = [
-        { element: '#page-home', title: '🏠 الرئيسية', desc: 'صفحة البداية لعرض الإحصائيات والروابط السريعة.' },
-        { element: '#page-search', title: '🔍 البحث', desc: 'ابحث عن خبراء في مختلف المهارات.' },
-        { element: '#page-add', title: '🛠️ الإضافة', desc: 'سجل مهارتك ليتمكن جيرانك من التواصل.' },
-        { element: '#page-driver', title: '🚗 ديلفري', desc: 'ابحث عن سائقين أو سجل نفسك كسائق.' }
-      ];
-      currentTourStep = 0;
-      showTourStep();
+  } catch (error) {
+    console.error('خطأ في جلب الإشعارات:', error);
+    const cached = localStorage.getItem('sanad_notifications');
+    const cachedCount = localStorage.getItem('sanad_unread_count') || 0;
+    if (cached) {
+      updateNotificationUI(JSON.parse(cached), parseInt(cachedCount));
     }
+  }
+}
 
-    function showTourStep() {
-      if (currentTourStep >= tourSteps.length) { endTour(); return; }
-      const step = tourSteps[currentTourStep];
-      const el = document.querySelector(step.element);
-      if (!el) { currentTourStep++; showTourStep(); return; }
-      removeTourHighlights();
-      el.classList.add('tour-highlight');
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      // عرض فقاعة التوجيه
-      showTourBubble(el, step);
-    }
+// تحديث واجهة الإشعارات
+function updateNotificationUI(notifications, unreadCount) {
+  const badge = document.getElementById('notificationBadge');
+  const list = document.getElementById('notificationList');
 
-    function showTourBubble(el, step) {
-      document.getElementById('tourBubble')?.remove();
-      const rect = el.getBoundingClientRect();
-      const bubble = document.createElement('div');
-      bubble.id = 'tourBubble';
-      bubble.className = 'fixed z-50 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-5 max-w-sm w-full border-2 border-primary';
-      const top = rect.bottom + 20;
-      const left = Math.min(Math.max(rect.left + rect.width/2 - 160, 10), window.innerWidth - 340);
-      bubble.style.top = top + 'px';
-      bubble.style.left = left + 'px';
-      bubble.innerHTML = `
-        <div class="flex items-start gap-3">
-          <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold flex-shrink-0">${currentTourStep+1}</div>
-          <div class="flex-1"><h4 class="font-bold">${step.title}</h4><p class="text-sm text-gray-600 dark:text-gray-300">${step.desc}</p>
-          <div class="flex justify-between items-center mt-3 pt-2 border-t"><div class="flex gap-1">${tourSteps.map((_,i) => `<span class="w-2 h-2 rounded-full ${i===currentTourStep?'bg-primary':'bg-gray-300'}" style="background:${i===currentTourStep?'#0E5C56':'#d1d5db'};"></span>`).join('')}</div>
-          <div><button onclick="skipTour()" class="text-xs text-gray-400 ml-2">تخطي</button><button onclick="nextTourStep()" class="btn-primary text-sm px-3 py-1">${currentTourStep===tourSteps.length-1?'✅ إنهاء':'التالي →'}</button></div></div></div>
+  if (unreadCount > 0) {
+    badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+    badge.classList.remove('hidden');
+  } else {
+    badge.classList.add('hidden');
+  }
+
+  if (!notifications || notifications.length === 0) {
+    list.innerHTML = `<div class="p-4 text-center text-gray-500 dark:text-gray-400 text-sm">📭 لا توجد إشعارات جديدة</div>`;
+    return;
+  }
+
+  list.innerHTML = notifications.slice(0, 10).map(n => {
+    const isRead = n.read;
+    const bgClass = isRead ? 'bg-white dark:bg-gray-800' : 'bg-blue-50 dark:bg-blue-900/20';
+    const borderClass = isRead ? '' : 'border-r-4 border-blue-500';
+    return `
+      <div class="${bgClass} ${borderClass} p-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition cursor-pointer ${!isRead ? 'font-bold' : ''}"
+           onclick="handleNotificationClick('${n.id}', '${n.link || '#'}')">
+        <div class="flex items-start gap-2">
+          <span class="text-lg">${n.type === 'new_service' ? '🛠️' : n.type === 'new_driver' ? '🚗' : n.type === 'new_review' ? '⭐' : '📢'}</span>
+          <div class="flex-1">
+            <p class="text-sm">${n.title}</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">${n.message}</p>
+            <p class="text-xs text-gray-400 mt-1">${formatTime(n.timestamp)}</p>
+          </div>
+          ${!isRead ? `<span class="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-1"></span>` : ''}
         </div>
-      `;
-      document.body.appendChild(bubble);
-    }
+      </div>
+    `;
+  }).join('');
+}
 
-    function nextTourStep() {
-      removeTourHighlights();
-      document.getElementById('tourBubble')?.remove();
-      currentTourStep++;
-      showTourStep();
-    }
+// تنسيق الوقت
+function formatTime(timestamp) {
+  if (!timestamp) return 'الآن';
+  try {
+    const date = new Date(timestamp);
+    return date.toLocaleString('ar', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' });
+  } catch {
+    return timestamp;
+  }
+}
 
-    function skipTour() { endTour(); showToast('تم تخطي الجولة', 'info'); }
-    function endTour() {
-      removeTourHighlights();
-      document.getElementById('tourBubble')?.remove();
-      localStorage.setItem('sanad_has_seen_tour', 'true');
-      showToast('🎉 تمت الجولة', 'success');
-    }
-
-    function removeTourHighlights() {
-      document.querySelectorAll('.tour-highlight').forEach(el => el.classList.remove('tour-highlight'));
-    }
-
-    function restartTour() {
-      localStorage.removeItem('sanad_has_seen_tour');
-      localStorage.removeItem('sanad_has_seen_welcome');
-      localStorage.removeItem('sanad_dont_show_welcome');
-      showToast('🔄 سيتم عرض الجولة مجدداً', 'info');
-      location.reload();
-    }
-
-    // ===== دوال مساعدة أخرى =====
-    async function fetchWithTimeout(url, ms = FETCH_TIMEOUT) {
-      const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), ms);
-      try { const res = await fetch(url, { signal: controller.signal }); clearTimeout(timer); return res; }
-      catch(e) { clearTimeout(timer); throw new Error('انتهت المهلة أو فشل الاتصال'); }
-    }
-
-    // ===== التهيئة =====
-    document.addEventListener('DOMContentLoaded', function() {
-      // تحديث واجهة المستخدم حسب حالة الدخول
-      updateUIAfterLogin();
-
-      // إذا كان مسجلاً، اذهب للرئيسية، وإلا اذهب لتسجيل الدخول
-      if (isLoggedIn()) {
-        navigateTo('home');
-        setTimeout(showWelcomeModal, 1000);
-        // جلب الإحصائيات
-        fetchStats();
-      } else {
-        navigateTo('login');
-      }
-
-      // بدء جلب الإشعارات بشكل دوري
-      setInterval(() => { if (isLoggedIn()) fetchNotifications(); }, 60000);
-    });
-
-    // ===== إحصائيات وهمية (للتجميل) =====
-    async function fetchStats() {
-      try {
-        // يمكن جلب إحصائيات حقيقية من API إذا توفرت
-        document.getElementById('statUsers').textContent = '42';
-        document.getElementById('statServices').textContent = '18';
-        document.getElementById('statDrivers').textContent = '7';
-        document.getElementById('statReviews').textContent = '23';
-      } catch(e) {}
-    }
-
-    // ===== إضافة بعض التحسينات =====
-    // منع التمرير العرضي نهائياً (تم بالفعل عبر CSS)
-    // إضافة دالة لإغلاق القائمة الجانبية عند النقر خارجها (اختياري)
-
-    // ===== توسيع دالة navigateTo لتشمل تسجيل الخروج =====
-    // زر تسجيل الخروج موجود في الشريط الجانبي
-    document.getElementById('logoutBtn').addEventListener('click', logout);
-
-    // ===== تحسين: السماح بالضغط على Enter للبحث =====
-    document.getElementById('searchInput').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') performSearch();
-    });
-
-        // ========================================================
-    // تحسينات سهولة الاستخدام والمرونة
-    // ========================================================
-    
-    // إصلاح دالة updateUIAfterLogin
-    function updateUIAfterLogin() {
-      const logged = isLoggedIn();
-      const user = getCurrentUser();
-      
-      const userDisplay = document.getElementById('userDisplay');
-      if (userDisplay) {
-        userDisplay.innerHTML = logged ? `<i class="fas fa-user-circle ml-1"></i> ${user}` : '';
-        if (!logged) userDisplay.innerHTML = '';
-      }
-      
-      const logoutBtn = document.getElementById('logoutBtn');
-      if (logoutBtn) {
-        logoutBtn.style.display = logged ? '' : 'none';
-      }
-    
-      const tabs = document.querySelectorAll('.tab-item');
-      tabs.forEach(t => {
-        if (t.dataset.tab === 'home' || t.dataset.tab === 'login') return;
-        t.style.display = logged ? '' : 'none';
-      });
-    
-      const navLinks = document.querySelectorAll('.nav-link');
-      navLinks.forEach(link => {
-        if (link.dataset.target === 'login') return;
-        link.style.display = logged ? '' : 'none';
-      });
-    
-      // إذا كان المستخدم غير مسجل، إظهار صفحة تسجيل الدخول
-      if (!logged) {
-        document.querySelectorAll('.page-section').forEach(el => el.classList.add('hidden'));
-        const loginPage = document.getElementById('page-login');
-        if (loginPage) loginPage.classList.remove('hidden');
-      }
-    }
-    
-    // دوال التحميل
-    function showLoading(elementId) {
-      const el = document.getElementById(elementId);
-      if (el) {
-        const originalText = el.innerHTML;
-        el.dataset.originalText = originalText;
-        el.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري...';
-        el.disabled = true;
-      }
-    }
-    
-    function hideLoading(elementId) {
-      const el = document.getElementById(elementId);
-      if (el && el.dataset.originalText) {
-        el.innerHTML = el.dataset.originalText;
-        el.disabled = false;
-        delete el.dataset.originalText;
-      }
-    }
-    
-    // عرض رسائل خطأ محسنة
-    function showError(message, details = '') {
-      const container = document.getElementById('toastContainer');
-      if (!container) return;
-      const toast = document.createElement('div');
-      toast.className = 'toast bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300 flex items-center gap-2';
-      toast.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message} ${details ? `<span class="text-xs opacity-75">(${details})</span>` : ''}`;
-      container.appendChild(toast);
-      setTimeout(() => toast.remove(), 5000);
-    }
-    
-    // إغلاق القوائم عند النقر خارجها
-    document.addEventListener('click', function(e) {
-      const sidebar = document.querySelector('aside');
-      const menuBtn = document.getElementById('menuToggle');
-      if (window.innerWidth < 768 && sidebar && !sidebar.classList.contains('hidden')) {
-        if (!sidebar.contains(e.target) && !menuBtn?.contains(e.target)) {
-          sidebar.classList.add('hidden');
+// التعامل مع النقر على إشعار
+function handleNotificationClick(id, link) {
+  markNotificationRead(id);
+  if (link && link !== '#') {
+    if (link.startsWith('/')) {
+      const section = link.replace('/', '').split('?')[0];
+      if (section === 'search' || section === 'profile' || section === 'add') {
+        showSection(section);
+        const queryParams = new URLSearchParams(link.split('?')[1] || '');
+        if (queryParams.has('query')) {
+          document.getElementById('searchInput').value = queryParams.get('query');
+          performSearch();
         }
       }
-      
-      const notifDropdown = document.getElementById('notifDropdown');
-      const notifBtn = document.getElementById('notifBtn');
-      if (notifDropdown && notifBtn && !notifDropdown.classList.contains('hidden')) {
-        if (!notifDropdown.contains(e.target) && !notifBtn.contains(e.target)) {
-          notifDropdown.classList.add('hidden');
-        }
+    } else {
+      window.open(link, '_blank');
+    }
+  }
+  closeNotificationDropdown();
+}
+
+// تحديد إشعار كمقروء
+async function markNotificationRead(id) {
+  try {
+    const url = `${API_URL}?action=mark_read&id=${id}`;
+    await fetch(url);
+    fetchNotifications();
+  } catch (error) {
+    console.error('خطأ في تحديد الإشعار كمقروء:', error);
+  }
+}
+
+// تحديد الكل كمقروء
+async function markAllNotificationsRead() {
+  try {
+    const userPhone = getCurrentUserPhone() || '';
+    const url = `${API_URL}?action=mark_all_read&user_phone=${encodeURIComponent(userPhone)}`;
+    await fetch(url);
+    fetchNotifications();
+    showToast('تم تحديد جميع الإشعارات كمقروءة', 'success');
+  } catch (error) {
+    console.error('خطأ:', error);
+  }
+}
+
+// بحث صوتي
+function startVoiceSearch() {
+  const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognitionAPI) {
+    showToast('البحث الصوتي غير مدعوم في هذا المتصفح', 'info');
+    return;
+  }
+  try {
+    const recognition = new SpeechRecognitionAPI();
+    recognition.lang = 'ar-SA';
+    recognition.onresult = function(event) {
+      const transcript = event.results[0][0].transcript;
+      document.getElementById('searchInput').value = transcript;
+      performSearch();
+    };
+    recognition.onerror = function() {
+      showToast('تعذّر التعرف على الصوت، حاول مرة أخرى', 'error');
+    };
+    recognition.start();
+  } catch (error) {
+    console.error('خطأ في البحث الصوتي:', error);
+    showToast('تعذّر تشغيل البحث الصوتي', 'error');
+  }
+}
+
+// فتح/إغلاق قائمة الإشعارات
+function toggleNotificationDropdown() {
+  const dropdown = document.getElementById('notificationDropdown');
+  dropdown.classList.toggle('hidden');
+  if (!dropdown.classList.contains('hidden')) {
+    fetchNotifications();
+  }
+}
+
+function closeNotificationDropdown() {
+  document.getElementById('notificationDropdown').classList.add('hidden');
+}
+
+// جلب رقم هاتف المستخدم الحالي
+function getCurrentUserPhone() {
+  return localStorage.getItem('sanad_user_phone') || '';
+}
+
+// التحقق من الإشعارات بشكل دوري (كل 60 ثانية)
+function startNotificationPolling() {
+  setTimeout(fetchNotifications, 2000);
+  setInterval(() => {
+    if (isLoggedIn()) {
+      fetchNotifications();
+    }
+  }, 60000);
+}
+
+// استدعاء عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', function() {
+  startNotificationPolling();
+});
+
+/* ========================================================
+   دوال التنبيهات التفاعلي (Interactive Onboarding)
+   ======================================================== */
+
+// متغيرات الجولة الإرشادية
+let tourSteps = [];
+let currentTourStep = 0;
+let tourOverlay = null;
+
+// التحقق مما إذا كان المستخدم قد شاهد الترحيب من قبل
+function shouldShowWelcome() {
+  const dontShow = localStorage.getItem('sanad_dont_show_welcome') === 'true';
+  const hasSeen = localStorage.getItem('sanad_has_seen_welcome') === 'true';
+  return !dontShow && !hasSeen;
+}
+
+// عرض نافذة الترحيب
+function showWelcomeModal() {
+  if (!shouldShowWelcome()) return;
+  document.getElementById('welcomeModal').classList.remove('hidden');
+  // تأثير دخول أنيق
+  setTimeout(() => {
+    document.getElementById('welcomeContent').classList.remove('scale-95');
+    document.getElementById('welcomeContent').classList.add('scale-100');
+  }, 50);
+}
+
+// إغلاق نافذة الترحيب
+function closeWelcome() {
+  const dontShow = document.getElementById('dontShowAgain').checked;
+  if (dontShow) {
+    localStorage.setItem('sanad_dont_show_welcome', 'true');
+  }
+  localStorage.setItem('sanad_has_seen_welcome', 'true');
+  document.getElementById('welcomeModal').classList.add('hidden');
+  document.getElementById('welcomeContent').classList.add('scale-95');
+  document.getElementById('welcomeContent').classList.remove('scale-100');
+}
+
+// بدء الجولة الإرشادية
+function startTour() {
+  closeWelcome();
+  
+  // تعريف خطوات الجولة
+  tourSteps = [
+    {
+      element: '#section-home',
+      title: '🏠 الصفحة الرئيسية',
+      description: 'هذه هي الصفحة الرئيسية لمنصة سند. يمكنك من هنا الوصول إلى جميع أقسام المنصة.',
+      position: 'bottom'
+    },
+    {
+      element: '#section-search',
+      title: '🔍 البحث عن خبير',
+      description: 'ابحث عن خبراء في مختلف المهارات مثل الصيانة، الخياطة، الكهرباء، وغيرها.',
+      position: 'bottom'
+    },
+    {
+      element: '#section-add',
+      title: '🛠️ تقديم خدمة',
+      description: 'سجل مهارتك ليتمكن جيرانك من التواصل معك والاستفادة من خبراتك.',
+      position: 'bottom'
+    },
+    {
+      element: '.btn-accent', // زر إضافة خدمة
+      title: '📝 إضافة خدمة جديدة',
+      description: 'انقر هنا لإضافة خدمتك أو مهارتك الجديدة إلى المنصة.',
+      position: 'top'
+    },
+    {
+      element: '#section-driver',
+      title: '🚗 خدمة ديلفري',
+      description: 'ابحث عن سائقين في منطقتك لتوصيل الطلبات، أو سجل نفسك كسائق.',
+      position: 'bottom'
+    }
+  ];
+  
+  currentTourStep = 0;
+  showTourStep();
+}
+
+// عرض خطوة الجولة
+function showTourStep() {
+  if (currentTourStep >= tourSteps.length) {
+    endTour();
+    return;
+  }
+
+  const step = tourSteps[currentTourStep];
+  const element = document.querySelector(step.element);
+  
+  if (!element) {
+    currentTourStep++;
+    showTourStep();
+    return;
+  }
+
+  // إزالة أي تظليل سابق
+  removeTourHighlights();
+  
+  // إظهار التظليل
+  element.classList.add('tour-highlight');
+  element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  
+  // إنشاء أو تحديث فقاعة التوجيه
+  showTourBubble(element, step);
+}
+
+// عرض فقاعة التوجيه
+function showTourBubble(element, step) {
+  // إزالة الفقاعة السابقة
+  const oldBubble = document.getElementById('tourBubble');
+  if (oldBubble) oldBubble.remove();
+
+  const rect = element.getBoundingClientRect();
+  const bubble = document.createElement('div');
+  bubble.id = 'tourBubble';
+  bubble.className = 'fixed z-50 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-5 max-w-sm w-full border-2 border-primary';
+  
+  // تحديد موقع الفقاعة
+  const position = step.position || 'bottom';
+  let top, left;
+  
+  switch (position) {
+    case 'top':
+      top = rect.top - 120;
+      left = rect.left + rect.width / 2 - 160;
+      break;
+    case 'bottom':
+    default:
+      top = rect.bottom + 20;
+      left = rect.left + rect.width / 2 - 160;
+      break;
+  }
+  
+  // التأكد من أن الفقاعة داخل الشاشة
+  if (top < 10) top = 10;
+  if (left < 10) left = 10;
+  if (left + 320 > window.innerWidth) left = window.innerWidth - 330;
+  
+  bubble.style.top = top + 'px';
+  bubble.style.left = left + 'px';
+  
+  bubble.innerHTML = `
+    <div class="flex items-start gap-3">
+      <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold flex-shrink-0">
+        ${currentTourStep + 1}
+      </div>
+      <div class="flex-1">
+        <h4 class="font-bold text-lg">${step.title}</h4>
+        <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">${step.description}</p>
+        <div class="flex items-center justify-between mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
+          <div class="flex gap-1">
+            ${tourSteps.map((_, i) => `
+              <span class="w-2 h-2 rounded-full ${i === currentTourStep ? 'bg-primary' : 'bg-gray-300 dark:bg-gray-600'}"></span>
+            `).join('')}
+          </div>
+          <div class="flex gap-2">
+            <button onclick="skipTour()" class="text-xs text-gray-400 hover:text-gray-600">تخطي</button>
+            <button onclick="nextTourStep()" class="btn-primary text-sm px-4 py-1.5">
+              ${currentTourStep === tourSteps.length - 1 ? '✅ إنهاء' : 'التالي →'}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(bubble);
+  
+  // سهم指向 العنصر
+  const arrow = document.createElement('div');
+  arrow.className = 'absolute w-3 h-3 bg-white dark:bg-gray-800 transform rotate-45 border-t-2 border-l-2 border-primary';
+  if (position === 'bottom') {
+    arrow.style.top = '-7px';
+    arrow.style.left = '20px';
+    arrow.style.borderRight = 'none';
+    arrow.style.borderBottom = 'none';
+  } else {
+    arrow.style.bottom = '-7px';
+    arrow.style.left = '20px';
+    arrow.style.borderLeft = 'none';
+    arrow.style.borderTop = 'none';
+    arrow.style.borderRight = '2px solid #0E5C56';
+    arrow.style.borderBottom = '2px solid #0E5C56';
+  }
+  bubble.appendChild(arrow);
+}
+
+// الانتقال إلى الخطوة التالية
+function nextTourStep() {
+  removeTourHighlights();
+  document.getElementById('tourBubble')?.remove();
+  currentTourStep++;
+  showTourStep();
+}
+
+// تخطي الجولة
+function skipTour() {
+  endTour();
+  showToast('تم تخطي الجولة، يمكنك العودة إليها من خلال الإعدادات', 'info');
+}
+
+// إنهاء الجولة
+function endTour() {
+  removeTourHighlights();
+  document.getElementById('tourBubble')?.remove();
+  localStorage.setItem('sanad_has_seen_tour', 'true');
+  showToast('🎉 تمت الجولة بنجاح! استمتع باستخدام سند', 'success');
+}
+
+// إزالة التظليل
+function removeTourHighlights() {
+  document.querySelectorAll('.tour-highlight').forEach(el => {
+    el.classList.remove('tour-highlight');
+  });
+}
+
+// إضافة CSS للتظليل
+function addTourStyles() {
+  const style = document.createElement('style');
+  style.textContent = `
+    .tour-highlight {
+      position: relative;
+      z-index: 100;
+      box-shadow: 0 0 0 4px #D98E2B, 0 0 0 8px rgba(217, 142, 43, 0.3);
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      animation: tourPulse 1.5s ease-in-out infinite;
+    }
+    @keyframes tourPulse {
+      0%, 100% { box-shadow: 0 0 0 4px #D98E2B, 0 0 0 8px rgba(217, 142, 43, 0.3); }
+      50% { box-shadow: 0 0 0 6px #D98E2B, 0 0 0 12px rgba(217, 142, 43, 0.1); }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+// تهيئة النظام عند تحميل الصفحة
+function initOnboarding() {
+  addTourStyles();
+  
+  // عرض نافذة الترحيب بعد ثانيتين من تحميل الصفحة
+  setTimeout(() => {
+    if (isLoggedIn() && shouldShowWelcome()) {
+      showWelcomeModal();
+    }
+  }, 2000);
+}
+
+// استدعاء التهيئة عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', function() {
+  // ... الكود الموجود ...
+  startNotificationPolling();
+  
+  // إضافة تهيئة التنبيهات التفاعلي
+  initOnboarding();
+});
+
+// زر لإعادة تشغيل الجولة (يمكن وضعه في الإعدادات لاحقاً)
+function restartTour() {
+  localStorage.removeItem('sanad_has_seen_tour');
+  localStorage.removeItem('sanad_has_seen_welcome');
+  localStorage.removeItem('sanad_dont_show_welcome');
+  showToast('🔄 تم إعادة تعيين الجولة، سيتم عرضها عند تحديث الصفحة', 'info');
+  location.reload();
+}
+
+/* ========================================================
+   تحسينات الأداء: IndexedDB للتخزين المؤقت
+   ======================================================== */
+
+// فتح قاعدة بيانات IndexedDB
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open('SanadCache', 1);
+    
+    request.onupgradeneeded = function(event) {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains('cache')) {
+        db.createObjectStore('cache', { keyPath: 'key' });
       }
-    });
-    
-    // تحسين fetch مع إعادة المحاولة
-    async function fetchWithTimeout(url, ms = FETCH_TIMEOUT, retries = 2) {
-      try {
-        const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), ms);
-        const res = await fetch(url, { signal: controller.signal });
-        clearTimeout(timer);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return res;
-      } catch (e) {
-        if (retries > 0) {
-          showToast(`إعادة المحاولة... (${retries} متبقية)`, 'info');
-          await new Promise(r => setTimeout(r, 1000));
-          return fetchWithTimeout(url, ms, retries - 1);
-        }
-        throw new Error('فشل الاتصال بعد عدة محاولات');
-      }
-    }
-    
-    // حفظ التبويب النشط
-    function saveActiveTab(tab) {
-      try { localStorage.setItem('sanad_active_tab', tab); } catch(e) {}
-    }
-    
-    function getActiveTab() {
-      try { return localStorage.getItem('sanad_active_tab') || 'home'; } catch(e) { return 'home'; }
-    }
-    
-    // توسيع دالة navigateTo لحفظ التبويب
-    const originalNavigate = navigateTo;
-    navigateTo = function(page) {
-      originalNavigate(page);
-      saveActiveTab(page);
     };
     
-    // البحث الفوري مع تأخير
-    let searchTimeout = null;
-    function setupInstantSearch() {
-      const input = document.getElementById('searchInput');
-      if (!input) return;
-      input.addEventListener('input', function() {
-        clearTimeout(searchTimeout);
-        const val = this.value.trim();
-        if (val.length >= 2) {
-          searchTimeout = setTimeout(performSearch, 500);
-        }
-      });
-    }
+    request.onsuccess = function(event) {
+      resolve(event.target.result);
+    };
     
-    // تلميحات (Tooltips)
-    function initTooltips() {
-      document.querySelectorAll('[data-tooltip]').forEach(el => {
-        el.addEventListener('mouseenter', function(e) {
-          const tip = document.createElement('div');
-          tip.className = 'fixed z-50 bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-lg pointer-events-none';
-          tip.textContent = this.dataset.tooltip;
-          tip.style.top = Math.min(e.pageY - 30, window.innerHeight - 50) + 'px';
-          tip.style.left = Math.min(e.pageX + 10, window.innerWidth - 20) + 'px';
-          tip.id = 'tooltip';
-          document.body.appendChild(tip);
-        });
-        el.addEventListener('mouseleave', () => {
-          document.getElementById('tooltip')?.remove();
-        });
-      });
-    }
-    
-    // تهيئة التحسينات
-    document.addEventListener('DOMContentLoaded', function() {
-      setupInstantSearch();
-      initTooltips();
-      
-      // استعادة التبويب النشط بعد التحميل
-      const activeTab = getActiveTab();
-      if (isLoggedIn()) {
-        setTimeout(() => navigateTo(activeTab), 100);
-      }
-    });
+    request.onerror = function(event) {
+      reject(event.target.error);
+    };
+  });
+}
 
-    console.log('🚀 منصة سند جاهزة للاستخدام');
-  </script>
+// حفظ البيانات في IndexedDB
+async function saveToIndexedDB(key, data) {
+  try {
+    const db = await openDB();
+    const tx = db.transaction('cache', 'readwrite');
+    const store = tx.objectStore('cache');
+    store.put({ key, data, timestamp: Date.now() });
+    await tx.done;
+  } catch (error) {
+    console.error('خطأ في حفظ IndexedDB:', error);
+    // الاحتفاظ بـ localStorage كخيار احتياطي
+    try {
+      localStorage.setItem(key, JSON.stringify(data));
+    } catch (e) {}
+  }
+}
+
+// جلب البيانات من IndexedDB
+async function getFromIndexedDB(key, maxAge = 60000) { // 60 ثانية افتراضياً
+  try {
+    const db = await openDB();
+    const tx = db.transaction('cache', 'readonly');
+    const store = tx.objectStore('cache');
+    const result = await new Promise((resolve) => {
+      const request = store.get(key);
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => resolve(null);
+    });
+    
+    if (result && (Date.now() - result.timestamp) < maxAge) {
+      return result.data;
+    }
+    return null;
+  } catch (error) {
+    console.error('خطأ في جلب IndexedDB:', error);
+    // الاحتفاظ بـ localStorage كخيار احتياطي
+    try {
+      const cached = localStorage.getItem(key);
+      if (cached) return JSON.parse(cached);
+    } catch (e) {}
+    return null;
+  }
+}
+
+// تحديث دالة performSearch لاستخدام IndexedDB
+// ابحث عن دالة performSearch واستبدل استدعاءات localStorage بـ IndexedDB
+
+</script>
+
 </body>
 </html>
