@@ -279,73 +279,74 @@
   </header>
 
   <main class="p-4 max-w-4xl mx-auto">
-
-        <!-- الصفحة الرئيسية -->
-        <!-- قسم الترحيب المحسن -->
-    <section class="relative bg-gradient-to-br from-primary/90 to-primaryDark/90 text-white py-20 px-4">
-      <div class="max-w-4xl mx-auto text-center relative z-10">
-        <h1 class="text-4xl sm:text-5xl font-extrabold mb-4 animate-fadeInDown">
-          منصة <span class="text-accent">سند</span>
-        </h1>
-        <p class="text-xl sm:text-2xl font-light mb-6 opacity-90">
-          ربط المهارات بالاحتياجات في غزة
-        </p>
-        <p class="text-lg mb-8 max-w-2xl mx-auto opacity-80">
-          سند هي منصة مجتمعية تربط أصحاب المهارات والخبرات مع من يحتاجها في نفس الحي
-        </p>
-        <div class="flex flex-wrap justify-center gap-4">
-          <a href="#" onclick="showSection('search')" 
-            class="btn-accent px-8 py-4 text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
-            🔍 ابحث عن خبير
-          </a>
-          <a href="#" onclick="showSection('add')" 
-            class="bg-white/20 backdrop-blur-sm text-white border-2 border-white/50 px-8 py-4 rounded-full text-lg font-semibold hover:bg-white/30 transition-all duration-300">
-            🛠️ قدم خدمتك
-          </a>
+    
+    <!-- الصفحة الرئيسية -->
+    <section id="section-home" class="fade-in hidden">
+      <section class="relative bg-gradient-to-br from-primary/90 to-primaryDark/90 text-white py-20 px-4">
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+          <h1 class="text-4xl sm:text-5xl font-extrabold mb-4 animate-fadeInDown">
+            منصة <span class="text-accent">سند</span>
+          </h1>
+          <p class="text-xl sm:text-2xl font-light mb-6 opacity-90">
+            ربط المهارات بالاحتياجات في غزة
+          </p>
+          <p class="text-lg mb-8 max-w-2xl mx-auto opacity-80">
+            سند هي منصة مجتمعية تربط أصحاب المهارات والخبرات مع من يحتاجها في نفس الحي
+          </p>
+          <div class="flex flex-wrap justify-center gap-4">
+            <a href="#" onclick="showSection('search')" 
+              class="btn-accent px-8 py-4 text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
+              🔍 ابحث عن خبير
+            </a>
+            <a href="#" onclick="showSection('add')" 
+              class="bg-white/20 backdrop-blur-sm text-white border-2 border-white/50 px-8 py-4 rounded-full text-lg font-semibold hover:bg-white/30 transition-all duration-300">
+              🛠️ قدم خدمتك
+            </a>
+          </div>
         </div>
-      </div>
-      <!-- خلفية مزخرفة -->
-      <div class="absolute inset-0 opacity-10">
-        <svg class="w-full h-full" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="100" cy="100" r="200" fill="white" />
-          <circle cx="700" cy="600" r="300" fill="white" />
-          <circle cx="400" cy="400" r="150" fill="white" />
-        </svg>
-      </div>
-    </section>
+        <!-- خلفية مزخرفة -->
+        <div class="absolute inset-0 opacity-10">
+          <svg class="w-full h-full" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="100" cy="100" r="200" fill="white" />
+            <circle cx="700" cy="600" r="300" fill="white" />
+            <circle cx="400" cy="400" r="150" fill="white" />
+          </svg>
+        </div>
+      </section>
 
     <!-- إحصائيات سريعة (٥ مقاييس) -->
-    <section class="bg-white dark:bg-gray-800 py-10 shadow-inner">
-      <div class="max-w-5xl mx-auto px-2">
-        <div class="stats-scroller" id="statsScroller">
-          <div class="stat-card p-5 text-center">
-            <i data-lucide="users" class="lucide text-primary mb-2" style="width:1.6em;height:1.6em"></i>
-            <div class="text-3xl font-extrabold text-primary" id="statUsers" aria-live="polite">—</div>
-            <div class="text-sm text-gray-500 dark:text-gray-400">مستخدم نشط</div>
+      <section class="bg-white dark:bg-gray-800 py-10 shadow-inner">
+        <div class="max-w-5xl mx-auto px-2">
+          <div class="stats-scroller" id="statsScroller">
+            <div class="stat-card p-5 text-center">
+              <i data-lucide="users" class="lucide text-primary mb-2" style="width:1.6em;height:1.6em"></i>
+              <div class="text-3xl font-extrabold text-primary" id="statUsers" aria-live="polite">—</div>
+              <div class="text-sm text-gray-500 dark:text-gray-400">مستخدم نشط</div>
+            </div>
+            <div class="stat-card p-5 text-center">
+              <i data-lucide="hand-heart" class="lucide text-accent mb-2" style="width:1.6em;height:1.6em"></i>
+              <div class="text-3xl font-extrabold text-accent" id="statServices" aria-live="polite">—</div>
+              <div class="text-sm text-gray-500 dark:text-gray-400">خدمة مقدمة</div>
+            </div>
+            <div class="stat-card p-5 text-center">
+              <i data-lucide="car" class="lucide text-green-600 mb-2" style="width:1.6em;height:1.6em"></i>
+              <div class="text-3xl font-extrabold text-green-600" id="statDrivers" aria-live="polite">—</div>
+              <div class="text-sm text-gray-500 dark:text-gray-400">سائق</div>
+            </div>
+            <div class="stat-card p-5 text-center">
+              <i data-lucide="star" class="lucide text-blue-600 mb-2" style="width:1.6em;height:1.6em"></i>
+              <div class="text-3xl font-extrabold text-blue-600" id="statReviews" aria-live="polite">—</div>
+              <div class="text-sm text-gray-500 dark:text-gray-400">تقييم</div>
+            </div>
+            <div class="stat-card p-5 text-center">
+              <i data-lucide="sparkles" class="lucide text-amber-500 mb-2" style="width:1.6em;height:1.6em"></i>
+              <div class="text-3xl font-extrabold text-amber-500" id="statAvgRating" aria-live="polite">—</div>
+              <div class="text-sm text-gray-500 dark:text-gray-400">متوسط التقييم</div>
+            </div>
           </div>
-          <div class="stat-card p-5 text-center">
-            <i data-lucide="hand-heart" class="lucide text-accent mb-2" style="width:1.6em;height:1.6em"></i>
-            <div class="text-3xl font-extrabold text-accent" id="statServices" aria-live="polite">—</div>
-            <div class="text-sm text-gray-500 dark:text-gray-400">خدمة مقدمة</div>
-          </div>
-          <div class="stat-card p-5 text-center">
-            <i data-lucide="car" class="lucide text-green-600 mb-2" style="width:1.6em;height:1.6em"></i>
-            <div class="text-3xl font-extrabold text-green-600" id="statDrivers" aria-live="polite">—</div>
-            <div class="text-sm text-gray-500 dark:text-gray-400">سائق</div>
-          </div>
-          <div class="stat-card p-5 text-center">
-            <i data-lucide="star" class="lucide text-blue-600 mb-2" style="width:1.6em;height:1.6em"></i>
-            <div class="text-3xl font-extrabold text-blue-600" id="statReviews" aria-live="polite">—</div>
-            <div class="text-sm text-gray-500 dark:text-gray-400">تقييم</div>
-          </div>
-          <div class="stat-card p-5 text-center">
-            <i data-lucide="sparkles" class="lucide text-amber-500 mb-2" style="width:1.6em;height:1.6em"></i>
-            <div class="text-3xl font-extrabold text-amber-500" id="statAvgRating" aria-live="polite">—</div>
-            <div class="text-sm text-gray-500 dark:text-gray-400">متوسط التقييم</div>
-          </div>
+          <div class="stats-dots" id="statsDots"></div>
         </div>
-        <div class="stats-dots" id="statsDots"></div>
-      </div>
+      </section>
     </section>
 
     <!-- صفحة البحث -->
