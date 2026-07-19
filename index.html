@@ -156,6 +156,8 @@
     <a href="#" onclick="showSection('driver')" data-nav="driver" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold">🚗 خدمة ديلفري</a>
     <a href="#" onclick="showSection('contact')" data-nav="contact" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold">📞 تواصل معنا</a>
     <a href="#" onclick="showSection('policy')" data-nav="policy" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold">📜 سياسة الاستخدام</a>
+    <!-- زر إعادة تشغيل الجولة -->
+    <a href="#" onclick="restartTour()" class="block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold text-sm text-gray-400">🔄 إعادة الجولة الإرشادية</a>
     <a href="#" id="logoutBtn" onclick="logout()" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-red-600 hover:text-white transition font-semibold hidden">🚪 تسجيل خروج</a>
   </nav>
 
@@ -206,25 +208,58 @@
 
   <main class="p-4 max-w-4xl mx-auto">
 
-    <!-- الصفحة الرئيسية -->
-    <section id="section-home" class="fade-in hidden">
-      <div class="text-center my-10">
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-primary dark:text-primaryLight">تبادل المهارات في حيك</h2>
-        <p class="text-gray-600 dark:text-gray-400 mt-3 max-w-md mx-auto">ربط أصحاب المهارات مع المحتاجين إليها في غزة، بسهولة وبلا وسيط</p>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8">
-        <div onclick="showSection('search')" class="card-hover bg-white dark:bg-gray-800 p-7 rounded-2xl shadow-md text-center cursor-pointer">
-          <div class="text-5xl mb-4">🔍</div>
-          <h3 class="text-xl font-bold mb-1">أبحث عن خبير</h3>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">صيانة، خياطة، كهرباء، وغيرها</p>
-          <button class="btn-primary">ابحث الآن</button>
+        <!-- الصفحة الرئيسية -->
+        <!-- قسم الترحيب المحسن -->
+    <section class="relative bg-gradient-to-br from-primary/90 to-primaryDark/90 text-white py-20 px-4">
+      <div class="max-w-4xl mx-auto text-center relative z-10">
+        <h1 class="text-4xl sm:text-5xl font-extrabold mb-4 animate-fadeInDown">
+          منصة <span class="text-accent">سند</span>
+        </h1>
+        <p class="text-xl sm:text-2xl font-light mb-6 opacity-90">
+          ربط المهارات بالاحتياجات في غزة
+        </p>
+        <p class="text-lg mb-8 max-w-2xl mx-auto opacity-80">
+          سند هي منصة مجتمعية تربط أصحاب المهارات والخبرات مع من يحتاجها في نفس الحي
+        </p>
+        <div class="flex flex-wrap justify-center gap-4">
+          <a href="#" onclick="showSection('search')" 
+            class="btn-accent px-8 py-4 text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
+            🔍 ابحث عن خبير
+          </a>
+          <a href="#" onclick="showSection('add')" 
+            class="bg-white/20 backdrop-blur-sm text-white border-2 border-white/50 px-8 py-4 rounded-full text-lg font-semibold hover:bg-white/30 transition-all duration-300">
+            🛠️ قدم خدمتك
+          </a>
         </div>
-        <div onclick="showSection('add')" class="card-hover bg-white dark:bg-gray-800 p-7 rounded-2xl shadow-md text-center cursor-pointer">
-          <div class="text-5xl mb-4">🛠️</div>
-          <h3 class="text-xl font-bold mb-1">أريد تقديم خدمة</h3>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">سجّل مهارتك ليصلك جيرانك</p>
-          <button class="btn-accent">سجّل خدمتك</button>
+      </div>
+      <!-- خلفية مزخرفة -->
+      <div class="absolute inset-0 opacity-10">
+        <svg class="w-full h-full" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="100" cy="100" r="200" fill="white" />
+          <circle cx="700" cy="600" r="300" fill="white" />
+          <circle cx="400" cy="400" r="150" fill="white" />
+        </svg>
+      </div>
+    </section>
+
+    <!-- إحصائيات سريعة -->
+    <section class="bg-white dark:bg-gray-800 py-12 shadow-inner">
+      <div class="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+        <div class="p-4">
+          <div class="text-3xl font-extrabold text-primary" id="statUsers">0</div>
+          <div class="text-sm text-gray-500">مستخدم نشط</div>
+        </div>
+        <div class="p-4">
+          <div class="text-3xl font-extrabold text-accent" id="statServices">0</div>
+          <div class="text-sm text-gray-500">خدمة مقدمة</div>
+        </div>
+        <div class="p-4">
+          <div class="text-3xl font-extrabold text-green-600" id="statDrivers">0</div>
+          <div class="text-sm text-gray-500">سائق</div>
+        </div>
+        <div class="p-4">
+          <div class="text-3xl font-extrabold text-blue-600" id="statReviews">0</div>
+          <div class="text-sm text-gray-500">تقييم</div>
         </div>
       </div>
     </section>
@@ -234,25 +269,81 @@
       <h2 class="text-2xl font-bold mb-4">🔍 ابحث عن خبير</h2>
       <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md">
         <div class="flex flex-col gap-3">
-          <input type="text" id="searchInput" placeholder="ماذا تبحث؟ (مثال: صيانة شمسية أو خياطة)"
-                 class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
-          <div class="flex flex-wrap gap-2">
-            <span class="chip" onclick="quickSearch('صيانة شمسية')">صيانة شمسية</span>
-            <span class="chip" onclick="quickSearch('كهرباء')">كهرباء</span>
-            <span class="chip" onclick="quickSearch('خياطة')">خياطة</span>
-            <span class="chip" onclick="quickSearch('نجارة')">نجارة</span>
-            <span class="chip" onclick="quickSearch('سباكة')">سباكة</span>
+          
+          <!-- ====== حقل البحث المحسن ====== -->
+          <div class="relative">
+            <input type="text" id="searchInput" placeholder="ماذا تبحث؟ (مثال: صيانة شمسية أو خياطة)"
+                  class="w-full p-3 pr-12 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary transition">
+            <!-- زر البحث الصوتي -->
+            <button onclick="startVoiceSearch()" 
+                    class="absolute left-2 top-1/2 -translate-y-1/2 p-2 text-gray-400 hover:text-primary transition">
+              🎤
+            </button>
+            <!-- زر مسح النص -->
+            <button onclick="clearSearch()" 
+                    class="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-red-500 transition hidden" id="clearSearchBtn">
+              ✕
+            </button>
           </div>
-          <select id="areaSelect" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
-            <option value="all">كل المناطق</option>
-            <option>الشجاعية</option><option>تل الهوا</option><option>جباليا</option><option>خان يونس</option><option>رفح</option><option>بيت لاهيا</option>
-          </select>
-          <select id="typeSelect" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
-            <option value="all">الجميع (خبراء وسائقين)</option>
-            <option value="both">خبراء</option>
-            <option value="driver">سائقين (ديلفري)</option>
-          </select>
-          <button onclick="performSearch()" class="btn-accent w-full">🔎 بحث</button>
+          
+          <!-- ====== الاقتراحات التلقائية (Autocomplete) ====== -->
+          <div id="autocompleteList" class="hidden absolute left-0 right-0 top-full mt-1 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 z-50 max-h-48 overflow-y-auto"></div>
+          
+          <!-- ====== الفلاتر السريعة (Chips) ====== -->
+          <div class="flex flex-wrap gap-2">
+            <span class="chip" onclick="quickSearch('صيانة شمسية')">☀️ صيانة شمسية</span>
+            <span class="chip" onclick="quickSearch('كهرباء')">⚡ كهرباء</span>
+            <span class="chip" onclick="quickSearch('خياطة')">🧵 خياطة</span>
+            <span class="chip" onclick="quickSearch('نجارة')">🪚 نجارة</span>
+            <span class="chip" onclick="quickSearch('سباكة')">🔧 سباكة</span>
+            <span class="chip" onclick="quickSearch('توصيل')">🚗 توصيل</span>
+          </div>
+          
+          <!-- ====== الفلاتر المتقدمة ====== -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <!-- المنطقة -->
+            <select id="areaSelect" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+              <option value="all">📍 كل المناطق</option>
+              <option>الشجاعية</option>
+              <option>تل الهوا</option>
+              <option>جباليا</option>
+              <option>خان يونس</option>
+              <option>رفح</option>
+              <option>بيت لاهيا</option>
+            </select>
+            
+            <!-- النوع -->
+            <select id="typeSelect" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+              <option value="all">👥 الجميع</option>
+              <option value="both">🛠️ خبراء</option>
+              <option value="driver">🚗 سائقين</option>
+            </select>
+            
+            <!-- ====== فلتر التقييم (جديد) ====== -->
+            <select id="ratingFilter" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+              <option value="0">⭐ كل التقييمات</option>
+              <option value="4">⭐ 4 نجوم فأكثر</option>
+              <option value="3">⭐ 3 نجوم فأكثر</option>
+              <option value="2">⭐ 2 نجوم فأكثر</option>
+            </select>
+            
+            <!-- ====== فلتر الترتيب (جديد) ====== -->
+            <select id="sortFilter" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+              <option value="recent">🕐 الأحدث</option>
+              <option value="rating">⭐ الأعلى تقييماً</option>
+              <option value="name">🔤 أبجدياً</option>
+            </select>
+          </div>
+          
+          <!-- ====== زر البحث المحسن ====== -->
+          <button onclick="performSearch()" class="btn-accent w-full py-3 flex items-center justify-center gap-2">
+            <span>🔎</span> بحث متقدم
+          </button>
+          
+          <!-- ====== زر مسح الفلاتر ====== -->
+          <button onclick="clearFilters()" class="text-sm text-gray-400 hover:text-gray-600 transition text-center">
+            🧹 مسح جميع الفلاتر
+          </button>
         </div>
       </div>
       <div id="resultsContainer" class="mt-6 space-y-4"></div>
@@ -477,6 +568,28 @@
   </div>
 </div>
 
+<!-- ====== هنا أضف نافذة الترحيب ====== -->
+<div id="welcomeModal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 hidden">
+  <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl transform transition-all duration-300 scale-95" id="welcomeContent">
+    <div class="text-center">
+      <div class="text-6xl mb-4">👋</div>
+      <h2 class="text-2xl font-bold mb-2">مرحباً بك في <span class="text-primary">سند</span></h2>
+      <p class="text-gray-600 dark:text-gray-300 mb-6">
+        منصة تبادل المهارات بين جيرانك في غزة. ابدأ باستكشاف الخدمات أو قدم مهارتك.
+      </p>
+      <div class="flex flex-col gap-3">
+        <button onclick="closeWelcome()" class="btn-primary w-full">ابدأ الآن</button>
+        <button onclick="startTour()" class="text-sm text-primary hover:underline">خذني في جولة</button>
+      </div>
+      <div class="mt-4 text-xs text-gray-400">
+        <input type="checkbox" id="dontShowAgain" class="ml-2">
+        <label for="dontShowAgain">لا تظهر مرة أخرى</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <script>
 /* ========================================================
    الإعدادات
@@ -605,6 +718,7 @@ function renderSkeleton(container) {
 }
 
 function renderResults(container, data) {
+  // حالة عدم وجود بيانات
   if (!data || !Array.isArray(data) || data.length === 0) {
     container.innerHTML = `
       <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center fade-in">
@@ -614,35 +728,16 @@ function renderResults(container, data) {
         <button onclick="showSection('add')" class="btn-accent mt-4">سجّل مهارتك</button>
       </div>`;
     return;
-  
   }
 
+  // تصفية البيانات غير المكتملة
   const validData = data.filter(p => p.name && p.skill_offer);
   if (validData.length === 0) {
     container.innerHTML = `<div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg text-center">⚠️ توجد بيانات لكنها غير مكتملة.</div>`;
     return;
   }
 
-  container.innerHTML = `<div class="space-y-3">${validData.map(p => {
-    const name = p.name || 'غير معروف';
-    const phone = p.phone || '';
-    const area = p.area || 'غير محدد';
-    const skill = p.skill_offer || 'لم يحدد';
-    const cleanPhone = String(phone).replace(/\D/g, '').replace(/^0/, '');
-    const whatsappLink = `https://wa.me/970${cleanPhone}`;
-    const typeLabel = p.type === 'driver' ? '🚗 سائق' : '🛠️ خبير';
-    return `
-      <div class="card-hover fade-in bg-white dark:bg-gray-700 p-4 rounded-xl shadow flex flex-wrap items-center justify-between gap-3 border-r-4 border-accent">
-        <div>
-          <p class="font-bold text-lg">${escapeHtml(name)}</p>
-          <p class="text-sm text-gray-500 dark:text-gray-300">${typeLabel} ${escapeHtml(skill)}</p>
-          <p class="text-xs text-gray-400">📍 ${escapeHtml(area)}</p>
-        </div>
-        ${cleanPhone ? `<a href="${whatsappLink}" target="_blank" rel="noopener" class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-green-700 transition">💬 تواصل عبر واتساب</a>` : ''}
-      </div>`;
-  }).join('')}</div>`;
-
-  // إضافة نظام النجوم ومتوسط التقييم
+  // عرض البطاقات مع نظام التقييم (بدون تكرار)
   container.innerHTML = `<div class="space-y-3">${validData.map(p => {
     const name = p.name || 'غير معروف';
     const phone = p.phone || '';
@@ -652,18 +747,19 @@ function renderResults(container, data) {
     const whatsappLink = `https://wa.me/970${cleanPhone}`;
     const typeLabel = p.type === 'driver' ? '🚗 سائق' : '🛠️ خبير';
 
-    // عرض متوسط التقييم (سيتم جلبها بشكل غير متزامن)
     return `
-      <div class="card-hover fade-in bg-white dark:bg-gray-700 p-4 rounded-xl shadow flex flex-wrap items-center justify-between gap-3 border-r-4 border-accent" data-provider="${name}" data-phone="${phone}">
+      <div class="card-hover fade-in bg-white dark:bg-gray-700 p-4 rounded-xl shadow flex flex-wrap items-center justify-between gap-3 border-r-4 border-accent" 
+           data-provider="${escapeHtml(name)}" data-phone="${phone}">
         <div>
           <p class="font-bold text-lg">${escapeHtml(name)}</p>
           <p class="text-sm text-gray-500 dark:text-gray-300">${typeLabel} ${escapeHtml(skill)}</p>
           <p class="text-xs text-gray-400">📍 ${escapeHtml(area)}</p>
-          <!-- نظام التقييم -->
+          <!-- نظام التقييم الجديد -->
           <div class="flex items-center gap-2 mt-2">
             <span class="text-sm font-bold" id="rating-${phone}">⭐ 0.0</span>
             <span class="text-xs text-gray-400" id="rating-count-${phone}">(0 مراجعة)</span>
-            <button onclick="openReviewModal('${escapeHtml(name)}', '${phone}')" class="text-xs text-primary hover:underline">أضف تقييم</button>
+            <button onclick="openReviewModal('${escapeHtml(name)}', '${phone}')" 
+                    class="text-xs text-primary hover:underline">أضف تقييم</button>
           </div>
         </div>
         <div class="flex items-center gap-2">
@@ -672,24 +768,27 @@ function renderResults(container, data) {
       </div>`;
   }).join('')}</div>`;
 
-  // جلب التقييمات لكل مقدم خدمة
+  // جلب التقييمات لكل مقدم خدمة (خارجي)
   validData.forEach(p => {
     fetchRating(p.name, p.phone);
   });
 }
 
 // دالة جلب التقييمات من الخادم
+// دالة جلب التقييمات من الخادم
 async function fetchRating(providerName, providerPhone) {
   try {
     const url = `${API_URL}?action=get_rating&provider_name=${encodeURIComponent(providerName)}&provider_phone=${encodeURIComponent(providerPhone)}`;
     const response = await fetch(url);
     const result = await response.json();
+    
     if (result.success) {
       const ratingEl = document.getElementById(`rating-${providerPhone}`);
       const countEl = document.getElementById(`rating-count-${providerPhone}`);
+      
       if (ratingEl) {
-        const avg = result.data.average || 0;
-        const count = result.data.count || 0;
+        const avg = result.data?.average || 0;
+        const count = result.data?.count || 0;
         ratingEl.textContent = `⭐ ${avg.toFixed(1)}`;
         countEl.textContent = `(${count} مراجعة${count !== 1 ? 'ات' : ''})`;
       }
@@ -697,6 +796,14 @@ async function fetchRating(providerName, providerPhone) {
   } catch (error) {
     console.error('خطأ في جلب التقييم:', error);
   }
+}
+
+// دالة توليد النجوم بناءً على التقييم
+function generateStars(rating) {
+  const full = Math.floor(rating);
+  const half = rating % 1 >= 0.5 ? 1 : 0;
+  const empty = 5 - full - half;
+  return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(empty);
 }
 
 
@@ -747,7 +854,7 @@ async function performSearch() {
   renderSkeleton(container);
 
   if (!navigator.onLine) {
-    const cached = localStorage.getItem(cacheKey);
+    const cached = await getFromIndexedDB(cacheKey);
     if (cached) {
       renderResults(container, JSON.parse(cached));
       showToast('لا يوجد اتصال — تُعرض آخر نتائج محفوظة', 'info');
@@ -768,7 +875,7 @@ async function performSearch() {
 
     if (result.success) {
       renderResults(container, result.data);
-      localStorage.setItem(cacheKey, JSON.stringify(result.data));
+      await saveToIndexedDB(cacheKey, result.data);
     } else {
       throw new Error(result.error || 'خطأ غير معروف من الخادم');
     }
@@ -1508,6 +1615,43 @@ async function markAllNotificationsRead() {
   }
 }
 
+// استخدام IndexedDB لتخزين البيانات
+async function saveToIndexedDB(key, data) {
+  const db = await openDB();
+  const tx = db.transaction('cache', 'readwrite');
+  const store = tx.objectStore('cache');
+  store.put({ key, data, timestamp: Date.now() });
+  await tx.done;
+}
+
+async function getFromIndexedDB(key) {
+  const db = await openDB();
+  const tx = db.transaction('cache', 'readonly');
+  const store = tx.objectStore('cache');
+  const result = await store.get(key);
+  if (result && (Date.now() - result.timestamp) < 60000) { // دقيقة واحدة
+    return result.data;
+  }
+  return null;
+}
+
+// بحث صوتي
+function startVoiceSearch() {
+  const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+  recognition.lang = 'ar-AR';
+  recognition.onresult = function(event) {
+    const transcript = event.results[0][0].transcript;
+    document.getElementById('searchInput').value = transcript;
+    performSearch();
+  };
+  recognition.start();
+}
+
+// زر البحث الصوتي
+<button onclick="startVoiceSearch()" class="bg-gray-200 dark:bg-gray-700 p-3 rounded-xl hover:bg-gray-300 transition">
+  🎤
+</button>
+
 // فتح/إغلاق قائمة الإشعارات
 function toggleNotificationDropdown() {
   const dropdown = document.getElementById('notificationDropdown');
@@ -1540,6 +1684,348 @@ function startNotificationPolling() {
 document.addEventListener('DOMContentLoaded', function() {
   startNotificationPolling();
 });
+
+/* ========================================================
+   دوال التنبيهات التفاعلي (Interactive Onboarding)
+   ======================================================== */
+
+// متغيرات الجولة الإرشادية
+let tourSteps = [];
+let currentTourStep = 0;
+let tourOverlay = null;
+
+// التحقق مما إذا كان المستخدم قد شاهد الترحيب من قبل
+function shouldShowWelcome() {
+  const dontShow = localStorage.getItem('sanad_dont_show_welcome') === 'true';
+  const hasSeen = localStorage.getItem('sanad_has_seen_welcome') === 'true';
+  return !dontShow && !hasSeen;
+}
+
+// عرض نافذة الترحيب
+function showWelcomeModal() {
+  if (!shouldShowWelcome()) return;
+  document.getElementById('welcomeModal').classList.remove('hidden');
+  // تأثير دخول أنيق
+  setTimeout(() => {
+    document.getElementById('welcomeContent').classList.remove('scale-95');
+    document.getElementById('welcomeContent').classList.add('scale-100');
+  }, 50);
+}
+
+// إغلاق نافذة الترحيب
+function closeWelcome() {
+  const dontShow = document.getElementById('dontShowAgain').checked;
+  if (dontShow) {
+    localStorage.setItem('sanad_dont_show_welcome', 'true');
+  }
+  localStorage.setItem('sanad_has_seen_welcome', 'true');
+  document.getElementById('welcomeModal').classList.add('hidden');
+  document.getElementById('welcomeContent').classList.add('scale-95');
+  document.getElementById('welcomeContent').classList.remove('scale-100');
+}
+
+// بدء الجولة الإرشادية
+function startTour() {
+  closeWelcome();
+  
+  // تعريف خطوات الجولة
+  tourSteps = [
+    {
+      element: '#section-home',
+      title: '🏠 الصفحة الرئيسية',
+      description: 'هذه هي الصفحة الرئيسية لمنصة سند. يمكنك من هنا الوصول إلى جميع أقسام المنصة.',
+      position: 'bottom'
+    },
+    {
+      element: '#section-search',
+      title: '🔍 البحث عن خبير',
+      description: 'ابحث عن خبراء في مختلف المهارات مثل الصيانة، الخياطة، الكهرباء، وغيرها.',
+      position: 'bottom'
+    },
+    {
+      element: '#section-add',
+      title: '🛠️ تقديم خدمة',
+      description: 'سجل مهارتك ليتمكن جيرانك من التواصل معك والاستفادة من خبراتك.',
+      position: 'bottom'
+    },
+    {
+      element: '.btn-accent', // زر إضافة خدمة
+      title: '📝 إضافة خدمة جديدة',
+      description: 'انقر هنا لإضافة خدمتك أو مهارتك الجديدة إلى المنصة.',
+      position: 'top'
+    },
+    {
+      element: '#section-driver',
+      title: '🚗 خدمة ديلفري',
+      description: 'ابحث عن سائقين في منطقتك لتوصيل الطلبات، أو سجل نفسك كسائق.',
+      position: 'bottom'
+    }
+  ];
+  
+  currentTourStep = 0;
+  showTourStep();
+}
+
+// عرض خطوة الجولة
+function showTourStep() {
+  if (currentTourStep >= tourSteps.length) {
+    endTour();
+    return;
+  }
+
+  const step = tourSteps[currentTourStep];
+  const element = document.querySelector(step.element);
+  
+  if (!element) {
+    currentTourStep++;
+    showTourStep();
+    return;
+  }
+
+  // إزالة أي تظليل سابق
+  removeTourHighlights();
+  
+  // إظهار التظليل
+  element.classList.add('tour-highlight');
+  element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  
+  // إنشاء أو تحديث فقاعة التوجيه
+  showTourBubble(element, step);
+}
+
+// عرض فقاعة التوجيه
+function showTourBubble(element, step) {
+  // إزالة الفقاعة السابقة
+  const oldBubble = document.getElementById('tourBubble');
+  if (oldBubble) oldBubble.remove();
+
+  const rect = element.getBoundingClientRect();
+  const bubble = document.createElement('div');
+  bubble.id = 'tourBubble';
+  bubble.className = 'fixed z-50 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-5 max-w-sm w-full border-2 border-primary';
+  
+  // تحديد موقع الفقاعة
+  const position = step.position || 'bottom';
+  let top, left;
+  
+  switch (position) {
+    case 'top':
+      top = rect.top - 120;
+      left = rect.left + rect.width / 2 - 160;
+      break;
+    case 'bottom':
+    default:
+      top = rect.bottom + 20;
+      left = rect.left + rect.width / 2 - 160;
+      break;
+  }
+  
+  // التأكد من أن الفقاعة داخل الشاشة
+  if (top < 10) top = 10;
+  if (left < 10) left = 10;
+  if (left + 320 > window.innerWidth) left = window.innerWidth - 330;
+  
+  bubble.style.top = top + 'px';
+  bubble.style.left = left + 'px';
+  
+  bubble.innerHTML = `
+    <div class="flex items-start gap-3">
+      <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold flex-shrink-0">
+        ${currentTourStep + 1}
+      </div>
+      <div class="flex-1">
+        <h4 class="font-bold text-lg">${step.title}</h4>
+        <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">${step.description}</p>
+        <div class="flex items-center justify-between mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
+          <div class="flex gap-1">
+            ${tourSteps.map((_, i) => `
+              <span class="w-2 h-2 rounded-full ${i === currentTourStep ? 'bg-primary' : 'bg-gray-300 dark:bg-gray-600'}"></span>
+            `).join('')}
+          </div>
+          <div class="flex gap-2">
+            <button onclick="skipTour()" class="text-xs text-gray-400 hover:text-gray-600">تخطي</button>
+            <button onclick="nextTourStep()" class="btn-primary text-sm px-4 py-1.5">
+              ${currentTourStep === tourSteps.length - 1 ? '✅ إنهاء' : 'التالي →'}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(bubble);
+  
+  // سهم指向 العنصر
+  const arrow = document.createElement('div');
+  arrow.className = 'absolute w-3 h-3 bg-white dark:bg-gray-800 transform rotate-45 border-t-2 border-l-2 border-primary';
+  if (position === 'bottom') {
+    arrow.style.top = '-7px';
+    arrow.style.left = '20px';
+    arrow.style.borderRight = 'none';
+    arrow.style.borderBottom = 'none';
+  } else {
+    arrow.style.bottom = '-7px';
+    arrow.style.left = '20px';
+    arrow.style.borderLeft = 'none';
+    arrow.style.borderTop = 'none';
+    arrow.style.borderRight = '2px solid #0E5C56';
+    arrow.style.borderBottom = '2px solid #0E5C56';
+  }
+  bubble.appendChild(arrow);
+}
+
+// الانتقال إلى الخطوة التالية
+function nextTourStep() {
+  removeTourHighlights();
+  document.getElementById('tourBubble')?.remove();
+  currentTourStep++;
+  showTourStep();
+}
+
+// تخطي الجولة
+function skipTour() {
+  endTour();
+  showToast('تم تخطي الجولة، يمكنك العودة إليها من خلال الإعدادات', 'info');
+}
+
+// إنهاء الجولة
+function endTour() {
+  removeTourHighlights();
+  document.getElementById('tourBubble')?.remove();
+  localStorage.setItem('sanad_has_seen_tour', 'true');
+  showToast('🎉 تمت الجولة بنجاح! استمتع باستخدام سند', 'success');
+}
+
+// إزالة التظليل
+function removeTourHighlights() {
+  document.querySelectorAll('.tour-highlight').forEach(el => {
+    el.classList.remove('tour-highlight');
+  });
+}
+
+// إضافة CSS للتظليل
+function addTourStyles() {
+  const style = document.createElement('style');
+  style.textContent = `
+    .tour-highlight {
+      position: relative;
+      z-index: 100;
+      box-shadow: 0 0 0 4px #D98E2B, 0 0 0 8px rgba(217, 142, 43, 0.3);
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      animation: tourPulse 1.5s ease-in-out infinite;
+    }
+    @keyframes tourPulse {
+      0%, 100% { box-shadow: 0 0 0 4px #D98E2B, 0 0 0 8px rgba(217, 142, 43, 0.3); }
+      50% { box-shadow: 0 0 0 6px #D98E2B, 0 0 0 12px rgba(217, 142, 43, 0.1); }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+// تهيئة النظام عند تحميل الصفحة
+function initOnboarding() {
+  addTourStyles();
+  
+  // عرض نافذة الترحيب بعد ثانيتين من تحميل الصفحة
+  setTimeout(() => {
+    if (isLoggedIn() && shouldShowWelcome()) {
+      showWelcomeModal();
+    }
+  }, 2000);
+}
+
+// استدعاء التهيئة عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', function() {
+  // ... الكود الموجود ...
+  startNotificationPolling();
+  
+  // إضافة تهيئة التنبيهات التفاعلي
+  initOnboarding();
+});
+
+// زر لإعادة تشغيل الجولة (يمكن وضعه في الإعدادات لاحقاً)
+function restartTour() {
+  localStorage.removeItem('sanad_has_seen_tour');
+  localStorage.removeItem('sanad_has_seen_welcome');
+  localStorage.removeItem('sanad_dont_show_welcome');
+  showToast('🔄 تم إعادة تعيين الجولة، سيتم عرضها عند تحديث الصفحة', 'info');
+  location.reload();
+}
+
+/* ========================================================
+   تحسينات الأداء: IndexedDB للتخزين المؤقت
+   ======================================================== */
+
+// فتح قاعدة بيانات IndexedDB
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open('SanadCache', 1);
+    
+    request.onupgradeneeded = function(event) {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains('cache')) {
+        db.createObjectStore('cache', { keyPath: 'key' });
+      }
+    };
+    
+    request.onsuccess = function(event) {
+      resolve(event.target.result);
+    };
+    
+    request.onerror = function(event) {
+      reject(event.target.error);
+    };
+  });
+}
+
+// حفظ البيانات في IndexedDB
+async function saveToIndexedDB(key, data) {
+  try {
+    const db = await openDB();
+    const tx = db.transaction('cache', 'readwrite');
+    const store = tx.objectStore('cache');
+    store.put({ key, data, timestamp: Date.now() });
+    await tx.done;
+  } catch (error) {
+    console.error('خطأ في حفظ IndexedDB:', error);
+    // الاحتفاظ بـ localStorage كخيار احتياطي
+    try {
+      localStorage.setItem(key, JSON.stringify(data));
+    } catch (e) {}
+  }
+}
+
+// جلب البيانات من IndexedDB
+async function getFromIndexedDB(key, maxAge = 60000) { // 60 ثانية افتراضياً
+  try {
+    const db = await openDB();
+    const tx = db.transaction('cache', 'readonly');
+    const store = tx.objectStore('cache');
+    const result = await new Promise((resolve) => {
+      const request = store.get(key);
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => resolve(null);
+    });
+    
+    if (result && (Date.now() - result.timestamp) < maxAge) {
+      return result.data;
+    }
+    return null;
+  } catch (error) {
+    console.error('خطأ في جلب IndexedDB:', error);
+    // الاحتفاظ بـ localStorage كخيار احتياطي
+    try {
+      const cached = localStorage.getItem(key);
+      if (cached) return JSON.parse(cached);
+    } catch (e) {}
+    return null;
+  }
+}
+
+// تحديث دالة performSearch لاستخدام IndexedDB
+// ابحث عن دالة performSearch واستبدل استدعاءات localStorage بـ IndexedDB
+
 </script>
 
 </body>
