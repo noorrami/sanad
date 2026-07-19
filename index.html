@@ -10,6 +10,27 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
 
+<!-- Leaflet.js للخرائط -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  /* تنسيق الخريطة */
+  #map {
+    height: 400px;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+  .leaflet-popup-content {
+    font-family: 'Tajawal', sans-serif;
+    font-size: 0.9rem;
+    min-width: 200px;
+  }
+  .leaflet-popup-content strong {
+    color: #0E5C56;
+  }
+</style>
+
 <!-- أيقونات Lucide -->
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
@@ -205,6 +226,8 @@
     <a href="#" onclick="showSection('driver')" data-nav="driver" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold"><i data-lucide="car" class="lucide"></i> خدمة ديلفري</a>
     <a href="#" onclick="showSection('contact')" data-nav="contact" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold"><i data-lucide="phone" class="lucide"></i> تواصل معنا</a>
     <a href="#" onclick="showSection('policy')" data-nav="policy" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold"><i data-lucide="scroll-text" class="lucide"></i> سياسة الاستخدام</a>
+    <a href="#" onclick="showSection('map')" data-nav="map" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold"><i data-lucide="map-pin" class="lucide"></i> خريطة الخدمات</a>
+    <a href="#" onclick="showSection('bookings')" data-nav="bookings" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold"><i data-lucide="calendar" class="lucide"></i> حجوزاتي</a>
     <!-- زر إعادة تشغيل الجولة -->
     <a href="#" onclick="restartTour()" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold text-sm text-gray-400"><i data-lucide="refresh-cw" class="lucide"></i> إعادة الجولة الإرشادية</a>
     <a href="#" id="logoutBtn" onclick="logout()" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-red-600 hover:text-white transition font-semibold hidden"><i data-lucide="log-out" class="lucide"></i> تسجيل خروج</a>
@@ -588,6 +611,97 @@
           <p class="font-bold">⚠️ تنبيه هام:</p>
           <p>منصة "سند" هي مجرد وسيط للتواصل، ولا تتحمل أي مسؤولية عن جودة الخدمات المقدمة أو أي خلافات تنشأ بين المستخدمين.</p>
         </div>
+      </div>
+    </section>
+
+    <!-- صفحة الخريطة -->
+    <section id="section-map" class="hidden">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-2xl font-bold">🗺️ خريطة الخبراء والسائقين</h2>
+        <span class="text-sm bg-primary/10 text-primary px-3 py-1 rounded-full flex items-center gap-1">
+          <span class="dot dot-on" style="display:inline-block;width:0.5rem;height:0.5rem;border-radius:9999px;background:#22c55e;"></span>
+          <span id="mapMarkerCount">0</span> موقع
+        </span>
+      </div>
+
+      <!-- الفلاتر -->
+      <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md mb-4">
+        <div class="flex flex-wrap gap-3">
+          <select id="mapTypeFilter" class="p-2 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+            <option value="all">👥 الجميع</option>
+            <option value="both">🛠️ خبراء</option>
+            <option value="driver">🚗 سائقين</option>
+          </select>
+          <select id="mapAreaFilter" class="p-2 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+            <option value="all">📍 كل المناطق</option>
+            <option>الشجاعية</option><option>تل الهوا</option><option>جباليا</option>
+            <option>خان يونس</option><option>رفح</option><option>بيت لاهيا</option><option>غزة</option>
+          </select>
+          <button onclick="loadMapMarkers()" class="btn-accent px-4 py-2 flex items-center gap-2">
+            <i data-lucide="refresh-cw" class="lucide" style="width:1em;height:1em"></i> تحديث
+          </button>
+          <button onclick="resetMapView()" class="px-4 py-2 rounded-xl bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 transition">
+            <i data-lucide="home" class="lucide" style="width:1em;height:1em"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- حاوية الخريطة -->
+      <div id="map"></div>
+
+      <!-- قائمة المواقع (أسفل الخريطة) -->
+      <div id="mapLocationsList" class="mt-4 space-y-2 max-h-60 overflow-y-auto"></div>
+    </section>
+
+    <!-- صفحة الحجوزات -->
+    <section id="section-bookings" class="hidden">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-2xl font-bold">📅 الحجوزات والمواعيد</h2>
+        <button onclick="showBookingForm()" class="btn-accent px-4 py-2 text-sm flex items-center gap-2">
+          <i data-lucide="plus-circle" class="lucide"></i> حجز جديد
+        </button>
+      </div>
+
+      <!-- نموذج الحجز (مخفي افتراضياً) -->
+      <div id="bookingFormContainer" class="hidden mb-6">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md">
+          <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+            <i data-lucide="calendar-plus" class="lucide"></i> حجز موعد جديد
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input type="text" id="bookingServiceName" placeholder="اسم الخدمة (مثال: صيانة شمسية)" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+            <input type="text" id="bookingProviderPhone" placeholder="رقم مقدم الخدمة (واتساب)" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+            <input type="text" id="bookingClientName" placeholder="اسمك" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+            <input type="tel" id="bookingClientPhone" placeholder="رقم هاتفك" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+            <input type="text" id="bookingServiceType" placeholder="نوع الخدمة (مثال: كهرباء، خياطة)" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+            <input type="date" id="bookingDate" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+            <input type="time" id="bookingTime" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+            <textarea id="bookingNotes" rows="2" placeholder="ملاحظات إضافية (اختياري)" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white resize-none"></textarea>
+          </div>
+          <div class="flex gap-3 mt-4">
+            <button onclick="submitBooking()" class="btn-primary flex items-center gap-2">
+              <i data-lucide="check-circle" class="lucide"></i> تأكيد الحجز
+            </button>
+            <button onclick="hideBookingForm()" class="px-4 py-2 rounded-xl bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 transition">إلغاء</button>
+          </div>
+          <div id="bookingFormMessage" class="text-center font-bold min-h-[1.5rem] mt-2"></div>
+        </div>
+      </div>
+
+      <!-- حالة الحجوزات -->
+      <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md mb-4">
+        <div class="flex flex-wrap gap-2" id="bookingStatusFilters">
+          <button onclick="loadBookings('all')" class="chip active" data-status="all">الكل</button>
+          <button onclick="loadBookings('pending')" class="chip" data-status="pending">⏳ قيد الانتظار</button>
+          <button onclick="loadBookings('confirmed')" class="chip" data-status="confirmed">✅ مؤكد</button>
+          <button onclick="loadBookings('completed')" class="chip" data-status="completed">✔️ مكتمل</button>
+          <button onclick="loadBookings('cancelled')" class="chip" data-status="cancelled">❌ ملغي</button>
+        </div>
+      </div>
+
+      <!-- قائمة الحجوزات -->
+      <div id="bookingsContainer" class="space-y-4">
+        <div class="text-center text-gray-400 py-8">قم بتسجيل الدخول لعرض حجوزاتك</div>
       </div>
     </section>
 
@@ -2192,6 +2306,419 @@ async function getFromIndexedDB(key, maxAge = 60000) { // 60 ثانية افتر
   }
 }
 
+/* ========================================================
+   دوال الخريطة التفاعلية
+   ======================================================== */
+
+let mapInstance = null;
+let mapMarkers = [];
+let mapLocationsData = [];
+
+// تهيئة الخريطة
+function initMap() {
+  if (mapInstance) {
+    mapInstance.invalidateSize();
+    return;
+  }
+
+  mapInstance = L.map('map').setView([31.5017, 34.4668], 11);
+
+  // إضافة طبقة الخريطة (OpenStreetMap)
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(mapInstance);
+
+  // تحميل العلامات
+  loadMapMarkers();
+
+  // إعادة تحجيم الخريطة عند تغيير حجم النافذة
+  window.addEventListener('resize', function() {
+    if (mapInstance) {
+      mapInstance.invalidateSize();
+    }
+  });
+}
+
+// جلب البيانات وعرض العلامات
+async function loadMapMarkers() {
+  if (!isLoggedIn()) {
+    showToast('الرجاء تسجيل الدخول لعرض الخريطة', 'info');
+    return;
+  }
+
+  if (!mapInstance) {
+    initMap();
+    return;
+  }
+
+  const typeFilter = document.getElementById('mapTypeFilter')?.value || 'all';
+  const areaFilter = document.getElementById('mapAreaFilter')?.value || 'all';
+
+  try {
+    const url = `${API_URL}?action=get_locations`;
+    const response = await fetchWithTimeout(url);
+    const result = await response.json();
+
+    if (!result.success) {
+      throw new Error(result.error || 'تعذّر جلب البيانات');
+    }
+
+    // تصفية البيانات
+    let locations = result.locations || [];
+    if (typeFilter !== 'all') {
+      locations = locations.filter(l => l.type === typeFilter);
+    }
+    if (areaFilter !== 'all') {
+      locations = locations.filter(l => l.area === areaFilter);
+    }
+
+    mapLocationsData = locations;
+    document.getElementById('mapMarkerCount').textContent = locations.length;
+
+    // عرض العلامات
+    renderMapMarkers(locations);
+
+    // عرض القائمة
+    renderLocationsList(locations);
+
+  } catch (error) {
+    console.error('خطأ في تحميل الخريطة:', error);
+    showToast('تعذّر تحميل الخريطة', 'error');
+  }
+}
+
+// عرض العلامات على الخريطة
+function renderMapMarkers(locations) {
+  // إزالة العلامات القديمة
+  if (mapMarkers.length) {
+    mapMarkers.forEach(marker => mapInstance.removeLayer(marker));
+    mapMarkers = [];
+  }
+
+  if (!locations.length) {
+    showToast('لا توجد مواقع لعرضها', 'info');
+    return;
+
+  }
+
+  // تجميع العلامات في مجموعة لتحديد حدود الخريطة
+  const bounds = L.latLngBounds();
+
+  locations.forEach(location => {
+    const lat = location.lat || 31.5017;
+    const lng = location.lng || 34.4668;
+    const marker = L.marker([lat, lng]);
+
+    // تحديد أيقونة حسب النوع
+    const iconClass = location.type === 'driver' ? 'fa-truck' : 'fa-tools';
+    const iconColor = location.type === 'driver' ? '#2563eb' : '#0E5C56';
+    // يمكن استخدام أيقونات مخصصة هنا
+
+    // نافذة منبثقة
+    const popupContent = `
+      <div class="text-right">
+        <strong>${escapeHtml(location.name)}</strong><br>
+        <span class="text-sm">🛠️ ${escapeHtml(location.skill_offer)}</span><br>
+        <span class="text-sm text-gray-500">📍 ${escapeHtml(location.area)}</span><br>
+        <span class="text-xs ${location.type === 'driver' ? 'text-blue-600' : 'text-primary'}">${location.type === 'driver' ? '🚗 سائق' : '🛠️ خبير'}</span><br>
+        <button onclick="openReviewModal('${escapeHtml(location.name)}', '${escapeHtml(location.phone)}')" 
+                class="text-xs text-primary hover:underline mt-1">⭐ تقييم</button>
+        ${location.phone ? `<a href="https://wa.me/970${location.phone.replace(/\D/g,'')}" target="_blank" class="block text-xs text-green-600 hover:underline mt-1">💬 تواصل عبر واتساب</a>` : ''}
+      </div>
+    `;
+
+    marker.bindPopup(popupContent);
+    marker.addTo(mapInstance);
+    mapMarkers.push(marker);
+    bounds.extend([lat, lng]);
+  });
+
+  // تكبير الخريطة لتشمل جميع العلامات
+  if (locations.length > 0) {
+    mapInstance.fitBounds(bounds, { padding: [30, 30] });
+  } else {
+    // إذا لم تكن هناك مواقع، نعود إلى الإحداثيات الافتراضية
+    mapInstance.setView([31.5017, 34.4668], 11);
+  }
+
+  // إعادة تحجيم الخريطة
+  setTimeout(() => {
+    if (mapInstance) mapInstance.invalidateSize();
+  }, 300);
+}
+
+// عرض قائمة المواقع أسفل الخريطة
+function renderLocationsList(locations) {
+  const container = document.getElementById('mapLocationsList');
+  if (!locations.length) {
+    container.innerHTML = `<div class="text-center text-gray-400 py-4">لا توجد مواقع مطابقة</div>`;
+    return;
+  }
+
+  container.innerHTML = locations.map(l => `
+    <div class="bg-white dark:bg-gray-800 p-3 rounded-xl shadow-sm flex items-center justify-between hover:shadow-md transition cursor-pointer" onclick="focusOnLocation(${l.lat}, ${l.lng})">
+      <div>
+        <p class="font-bold text-sm">${escapeHtml(l.name)}</p>
+        <p class="text-xs text-gray-500">🛠️ ${escapeHtml(l.skill_offer)}</p>
+        <p class="text-xs text-gray-400">📍 ${escapeHtml(l.area)}</p>
+      </div>
+      <span class="text-xs ${l.type === 'driver' ? 'text-blue-600' : 'text-primary'} bg-primary/10 px-2 py-1 rounded-full">
+        ${l.type === 'driver' ? '🚗 سائق' : '🛠️ خبير'}
+      </span>
+    </div>
+  `).join('');
+}
+
+// التركيز على موقع معين
+function focusOnLocation(lat, lng) {
+  if (mapInstance) {
+    mapInstance.setView([lat, lng], 14);
+    // البحث عن العلامة المقابلة
+    mapMarkers.forEach(marker => {
+      const pos = marker.getLatLng();
+      if (Math.abs(pos.lat - lat) < 0.0001 && Math.abs(pos.lng - lng) < 0.0001) {
+        marker.openPopup();
+      }
+    });
+  }
+}
+
+// إعادة تعيين عرض الخريطة
+function resetMapView() {
+  if (mapInstance) {
+    mapInstance.setView([31.5017, 34.4668], 11);
+    // إغلاق جميع النوافذ المنبثقة
+    mapMarkers.forEach(marker => marker.closePopup());
+  }
+}
+
+// تحديث الخريطة عند عرض الصفحة
+document.addEventListener('DOMContentLoaded', function() {
+  // عند الضغط على رابط الخريطة، تأكد من تهيئة الخريطة
+  const originalShowSection = window.showSection;
+  window.showSection = function(id) {
+    originalShowSection(id);
+    if (id === 'map') {
+      setTimeout(() => {
+        if (!mapInstance) {
+          initMap();
+        } else {
+          mapInstance.invalidateSize();
+          loadMapMarkers();
+        }
+      }, 300);
+    }
+  };
+});
+
+/* ========================================================
+   دوال الحجوزات والمواعيد
+   ======================================================== */
+
+let currentBookingStatus = 'all';
+
+// إظهار/إخفاء نموذج الحجز
+function showBookingForm() {
+  document.getElementById('bookingFormContainer').classList.remove('hidden');
+  // تعبئة التاريخ والوقت الحاليين كاقتراح
+  const today = new Date();
+  document.getElementById('bookingDate').value = today.toISOString().split('T')[0];
+  document.getElementById('bookingTime').value = today.toTimeString().slice(0, 5);
+}
+
+function hideBookingForm() {
+  document.getElementById('bookingFormContainer').classList.add('hidden');
+  document.getElementById('bookingFormMessage').innerHTML = '';
+}
+
+// إرسال طلب حجز جديد
+async function submitBooking() {
+  if (!isLoggedIn()) {
+    showToast('الرجاء تسجيل الدخول أولاً', 'error');
+    return;
+  }
+
+  const service_name = document.getElementById('bookingServiceName').value.trim();
+  const provider_phone = document.getElementById('bookingProviderPhone').value.trim();
+  const client_name = document.getElementById('bookingClientName').value.trim();
+  const client_phone = document.getElementById('bookingClientPhone').value.trim();
+  const service_type = document.getElementById('bookingServiceType').value.trim();
+  const booking_date = document.getElementById('bookingDate').value.trim();
+  const booking_time = document.getElementById('bookingTime').value.trim();
+  const notes = document.getElementById('bookingNotes').value.trim();
+  const msgDiv = document.getElementById('bookingFormMessage');
+
+  if (!service_name || !provider_phone || !client_name || !client_phone || !booking_date || !booking_time) {
+    msgDiv.innerHTML = '<span class="text-red-500">⚠️ جميع الحقول الأساسية مطلوبة</span>';
+    return;
+  }
+
+  // التحقق من رقم الهاتف
+  if (!validatePalestinianPhone(client_phone)) {
+    msgDiv.innerHTML = '<span class="text-red-500">⚠️ رقم هاتف غير صحيح</span>';
+    return;
+  }
+
+  msgDiv.innerHTML = '<span class="text-blue-500">⏳ جاري إرسال الطلب...</span>';
+
+  try {
+    const params = new URLSearchParams();
+    params.append('action', 'add_booking');
+    params.append('service_name', service_name);
+    params.append('provider_phone', provider_phone);
+    params.append('client_name', client_name);
+    params.append('client_phone', client_phone);
+    params.append('service_type', service_type);
+    params.append('booking_date', booking_date);
+    params.append('booking_time', booking_time);
+    params.append('notes', notes);
+
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params.toString()
+    });
+
+    const result = await response.json();
+    if (result.success) {
+      msgDiv.innerHTML = '<span class="text-green-600">✅ تم حجز الموعد بنجاح!</span>';
+      showToast('تم حجز الموعد بنجاح', 'success');
+      hideBookingForm();
+      // تحديث قائمة الحجوزات
+      setTimeout(() => loadBookings(currentBookingStatus), 1000);
+    } else {
+      throw new Error(result.message || 'فشل الحجز');
+    }
+  } catch (error) {
+    msgDiv.innerHTML = `<span class="text-red-500">❌ ${error.message}</span>`;
+    showToast('تعذّر إتمام الحجز', 'error');
+  }
+}
+
+// جلب وعرض الحجوزات
+async function loadBookings(status = 'all') {
+  if (!isLoggedIn()) {
+    document.getElementById('bookingsContainer').innerHTML = `
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center">
+        <p class="text-gray-400">الرجاء تسجيل الدخول لعرض الحجوزات</p>
+      </div>`;
+    return;
+  }
+
+  currentBookingStatus = status;
+
+  // تحديث الفلاتر
+  document.querySelectorAll('#bookingStatusFilters .chip').forEach(chip => {
+    chip.classList.remove('bg-primary', 'text-white');
+    chip.classList.add('bg-primary/10', 'text-primary');
+    if (chip.dataset.status === status) {
+      chip.classList.remove('bg-primary/10', 'text-primary');
+      chip.classList.add('bg-primary', 'text-white');
+    }
+  });
+
+  const container = document.getElementById('bookingsContainer');
+  container.innerHTML = `
+    <div class="space-y-3">
+      ${[1,2,3].map(() => `
+        <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow flex items-center gap-4">
+          <div class="skeleton h-12 w-12 rounded-full"></div>
+          <div class="flex-1 space-y-2"><div class="skeleton h-4 w-1/3"></div><div class="skeleton h-3 w-1/2"></div></div>
+        </div>
+      `).join('')}
+    </div>`;
+
+  try {
+    const userPhone = getCurrentUserPhone() || '';
+    const url = `${API_URL}?action=get_bookings&user_phone=${encodeURIComponent(userPhone)}&status=${status}`;
+    const response = await fetchWithTimeout(url);
+    const result = await response.json();
+
+    if (result.success) {
+      renderBookings(container, result.bookings || []);
+    } else {
+      throw new Error(result.error || 'تعذّر جلب الحجوزات');
+    }
+  } catch (error) {
+    container.innerHTML = `
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center">
+        <p class="text-red-500">⚠️ ${error.message}</p>
+        <button onclick="loadBookings('${status}')" class="btn-primary mt-4">إعادة المحاولة</button>
+      </div>`;
+  }
+}
+
+// عرض قائمة الحجوزات
+function renderBookings(container, bookings) {
+  if (!bookings || bookings.length === 0) {
+    container.innerHTML = `
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center">
+        <div class="text-4xl mb-2">📭</div>
+        <p class="font-bold">لا توجد حجوزات</p>
+        <p class="text-sm text-gray-400">يمكنك حجز موعد جديد من خلال زر "حجز جديد"</p>
+      </div>`;
+    return;
+  }
+
+  const statusMap = {
+    'pending': { label: '⏳ قيد الانتظار', class: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300' },
+    'confirmed': { label: '✅ مؤكد', class: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' },
+    'completed': { label: '✔️ مكتمل', class: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' },
+    'cancelled': { label: '❌ ملغي', class: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300' }
+  };
+
+  container.innerHTML = bookings.map(b => {
+    const statusInfo = statusMap[b.status] || statusMap['pending'];
+    const isClient = b.client_phone === getCurrentUserPhone();
+
+    return `
+      <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border-r-4 ${b.status === 'pending' ? 'border-yellow-500' : b.status === 'confirmed' ? 'border-green-500' : b.status === 'completed' ? 'border-blue-500' : 'border-red-500'}">
+        <div class="flex flex-wrap items-start justify-between gap-2">
+          <div>
+            <p class="font-bold text-lg">${escapeHtml(b.service_name)}</p>
+            <p class="text-sm text-gray-500">${isClient ? '👤 أنت' : '👤 ' + escapeHtml(b.client_name)}</p>
+            <p class="text-sm text-gray-500">🛠️ ${escapeHtml(b.service_type || 'خدمة')}</p>
+            <p class="text-sm text-gray-400">📅 ${b.booking_date} ${b.booking_time}</p>
+            ${b.notes ? `<p class="text-xs text-gray-400 mt-1">📝 ${escapeHtml(b.notes)}</p>` : ''}
+          </div>
+          <div class="text-right">
+            <span class="text-xs px-3 py-1 rounded-full ${statusInfo.class}">${statusInfo.label}</span>
+            ${b.status === 'pending' ? `
+              <div class="flex flex-col gap-1 mt-2">
+                <button onclick="updateBookingStatus(${b.id}, 'confirmed')" class="text-xs text-green-600 hover:underline">تأكيد</button>
+                <button onclick="updateBookingStatus(${b.id}, 'cancelled')" class="text-xs text-red-600 hover:underline">إلغاء</button>
+              </div>
+            ` : ''}
+            ${b.status === 'confirmed' ? `
+              <div class="flex flex-col gap-1 mt-2">
+                <button onclick="updateBookingStatus(${b.id}, 'completed')" class="text-xs text-blue-600 hover:underline">إكمال</button>
+                <button onclick="updateBookingStatus(${b.id}, 'cancelled')" class="text-xs text-red-600 hover:underline">إلغاء</button>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// تحديث حالة الحجز
+async function updateBookingStatus(id, status) {
+  try {
+    const url = `${API_URL}?action=update_booking_status&id=${id}&status=${status}`;
+    const response = await fetch(url);
+    const result = await response.json();
+
+    if (result.success) {
+      showToast(`تم تحديث حالة الحجز إلى ${status}`, 'success');
+      loadBookings(currentBookingStatus);
+    } else {
+      throw new Error(result.message || 'فشل التحديث');
+    }
+  } catch (error) {
+    showToast(error.message, 'error');
+  }
+}
 // تحديث دالة performSearch لاستخدام IndexedDB
 // ابحث عن دالة performSearch واستبدل استدعاءات localStorage بـ IndexedDB
 
