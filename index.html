@@ -779,7 +779,7 @@
 /* ========================================================
    الإعدادات
    ======================================================== */
-const API_URL = "https://script.google.com/macros/s/AKfycbwCL3yqlW-GOIrX4_WAIXMjUQyArcO-7CYPRRVeyR7j90fG1MNhwiy0zKEv9iSEWA1T/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycby4TKyFT5OsAuYWOnX5nO0jIvFWv1y00jGDogVQnx0jy1N6bx7VIf7g01jN3HlnRnAM/exec";
 const FETCH_TIMEOUT_MS = 20000;
 const CACHE_KEY_PREFIX = "sanad_cache_";
 
@@ -1320,6 +1320,7 @@ async function addService() {
 
     if (!response.ok) throw new Error(`الخادم أعاد الحالة ${response.status}`);
     const result = await response.json();
+    console.log('📥 رد الخادم:', result); // طباعة الرد الكامل
 
     if (result.success) {
       msgDiv.innerHTML = '<span class="text-green-600">✅ تم التسجيل بنجاح! سيتمكن جيرانك الآن من التواصل معك</span>';
@@ -1327,7 +1328,9 @@ async function addService() {
       ['addName','addPhone','addArea','addSkill','addRequest'].forEach(id => document.getElementById(id).value = '');
       localStorage.clear();
     } else {
-      throw new Error(result.error || 'فشل التسجيل لسبب غير معروف');
+      // عرض رسالة الخطأ من الخادم إن وجدت
+      const errorMsg = result.message || result.error || 'فشل التسجيل لسبب غير معروف';
+      throw new Error(errorMsg);
     }
   } catch (error) {
     console.error('❌ خطأ في الإضافة:', error);
