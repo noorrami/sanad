@@ -779,7 +779,7 @@
 /* ========================================================
    الإعدادات
    ======================================================== */
-const API_URL = "https://script.google.com/macros/s/AKfycbwLeCEeovsTBIZR731qHmYqwgXzTxa1zX0QNC503Yj2jy18eVx033vVno4ij3tmn83m/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxqegPwKRe0U0GXgJDuyngt6N-4ydUCl3A_Pa1kRcSw6kWH92fU3HfFDHfmc8BE8IZS/exec";
 const FETCH_TIMEOUT_MS = 20000;
 const CACHE_KEY_PREFIX = "sanad_cache_";
 
@@ -1263,15 +1263,13 @@ function resetDriverSearch() {
    إضافة خدمة جديدة
    ======================================================== */
 function validatePalestinianPhone(phone) {
-  // يسمح الآن بأي رقم يبدأ برمز دولة صحيح (مثل 970, 972, إلخ)
   const digits = phone.replace(/\D/g, '');
-  // يمكنك تخصيص التحقق حسب الحاجة، مثلاً التأكد من الطول
   return digits.length >= 10 && digits.length <= 15;
 }
 
 async function addService() {
   if (!requireLogin()) return;
-  
+
   const name = document.getElementById('addName').value.trim();
   const phone = document.getElementById('addPhone').value.trim();
   const area = document.getElementById('addArea').value.trim();
@@ -1281,12 +1279,13 @@ async function addService() {
   const msgDiv = document.getElementById('addMessage');
   const btn = document.getElementById('addBtn');
 
+  // التحقق من صحة الحقول
   if (!name || !phone || !area || !skill) {
     msgDiv.innerHTML = '<span class="text-red-500">⚠️ جميع الحقول الأساسية مطلوبة</span>';
     return;
   }
   if (!validatePalestinianPhone(phone)) {
-    msgDiv.innerHTML = '<span class="text-red-500">⚠️ الرجاء إدخال رقم هاتف فلسطيني صحيح (مثال: 0599123456)</span>';
+    msgDiv.innerHTML = '<span class="text-red-500">⚠️ الرجاء إدخال رقم هاتف صحيح</span>';
     return;
   }
 
@@ -1295,7 +1294,7 @@ async function addService() {
   msgDiv.innerHTML = '';
 
   if (!navigator.onLine) {
-    msgDiv.innerHTML = '<span class="text-red-500">⚠️ لا يوجد اتصال بالإنترنت، حاول مرة أخرى عند توفر الشبكة</span>';
+    msgDiv.innerHTML = '<span class="text-red-500">⚠️ لا يوجد اتصال بالإنترنت</span>';
     btn.disabled = false;
     btn.textContent = '✅ إضافة إلى المنصة';
     return;
@@ -1317,14 +1316,18 @@ async function addService() {
       body: formData.toString()
     });
 
-    if (!response.ok) throw new Error(`الخادم أعاد الحالة ${response.status}`);
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`الخادم أعاد الحالة ${response.status}: ${errorText}`);
+    }
+
     const result = await response.json();
     console.log('📥 رد الخادم:', result);
 
     if (result.success) {
       msgDiv.innerHTML = '<span class="text-green-600">✅ تم التسجيل بنجاح! سيتمكن جيرانك الآن من التواصل معك</span>';
       showToast('تم تسجيل مهارتك بنجاح', 'success');
-      ['addName','addPhone','addArea','addSkill','addRequest'].forEach(id => document.getElementById(id).value = '');
+      ['addName', 'addPhone', 'addArea', 'addSkill', 'addRequest'].forEach(id => document.getElementById(id).value = '');
     } else {
       const errorMsg = result.message || result.error || 'فشل التسجيل لسبب غير معروف';
       throw new Error(errorMsg);
@@ -1341,9 +1344,10 @@ async function addService() {
 
 async function addDriver() {
   if (!requireLogin()) return;
-  
+
   const name = document.getElementById('driverName').value.trim();
-  const countryCode = document.getElementById('addCountryCode').value.trim();
+  const countryCodeSelect = document.getElementById('addCountryCode'); // تأكد من وجود هذا العنصر
+  const countryCode = countryCodeSelect ? countryCodeSelect.value.trim() : '970';
   const phoneInput = document.getElementById('driverPhone').value.trim();
   const phone = countryCode + phoneInput.replace(/^0+/, '');
   const area = document.getElementById('driverArea').value.trim();
@@ -1359,13 +1363,11 @@ async function addDriver() {
     return;
   }
 
-  // تعطيل الزر مؤقتاً
   const addBtn = document.querySelector('#section-driver .btn-primary');
   if (addBtn) addBtn.disabled = true;
   msgDiv.innerHTML = '<span class="text-blue-500">⏳ جاري إضافة السائق...</span>';
 
   try {
-    // إرسال البيانات لإضافة سائق (type=driver)
     const formData = new URLSearchParams();
     formData.append('action', 'add');
     formData.append('name', name);
@@ -1381,18 +1383,21 @@ async function addDriver() {
       body: formData.toString()
     });
 
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`الخادم أعاد الحالة ${response.status}: ${errorText}`);
+    }
+
     const result = await response.json();
 
     if (result.success) {
       msgDiv.innerHTML = '<span class="text-green-600">✅ تم إضافة السائق بنجاح!</span>';
       showToast('تم إضافة السائق بنجاح', 'success');
-      // مسح الحقول
-      ['driverName','driverPhone','driverArea','driverVehicle'].forEach(id => document.getElementById(id).value = '');
-      // إعادة البحث لعرض السائق الجديد
+      ['driverName', 'driverPhone', 'driverArea', 'driverVehicle'].forEach(id => document.getElementById(id).value = '');
       setTimeout(() => {
         showSection('driver');
         const searchInput = document.getElementById('driverSearchInput');
-        searchInput.value = name;
+        if (searchInput) searchInput.value = name;
         searchDriversDirect();
       }, 1000);
     } else {
