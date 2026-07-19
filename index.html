@@ -228,7 +228,6 @@
     <a href="#" onclick="showSection('policy')" data-nav="policy" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold"><i data-lucide="scroll-text" class="lucide"></i> سياسة الاستخدام</a>
     <a href="#" onclick="showSection('map')" data-nav="map" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold"><i data-lucide="map-pin" class="lucide"></i> خريطة الخدمات</a>
     <a href="#" onclick="showSection('bookings')" data-nav="bookings" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold"><i data-lucide="calendar" class="lucide"></i> حجوزاتي</a>
-    <!-- زر إعادة تشغيل الجولة -->
     <a href="#" onclick="restartTour()" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold text-sm text-gray-400"><i data-lucide="refresh-cw" class="lucide"></i> إعادة الجولة الإرشادية</a>
     <a href="#" id="logoutBtn" onclick="logout()" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-red-600 hover:text-white transition font-semibold hidden"><i data-lucide="log-out" class="lucide"></i> تسجيل خروج</a>
   </nav>
@@ -250,13 +249,11 @@
   <header class="bg-primary dark:bg-gray-800 text-white p-4 flex items-center justify-between shadow-md sticky top-0 z-40">
     <h1 class="text-xl font-extrabold">منصة سند</h1>
     <div class="flex items-center gap-4">
-      <!-- ===== أيقونة الإشعارات (أضف هذا الكود هنا) ===== -->
       <div class="relative">
         <button onclick="toggleNotificationDropdown()" class="hover:scale-110 transition relative p-1" aria-label="الإشعارات">
           <i data-lucide="bell" class="lucide" style="width:1.5em;height:1.5em"></i>
           <span id="notificationBadge" class="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
         </button>
-        <!-- القائمة المنسدلة للإشعارات -->
         <div id="notificationDropdown" class="hidden absolute left-0 top-full mt-2 w-80 max-h-96 overflow-y-auto bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 z-50">
           <div class="p-3 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center sticky top-0 bg-white dark:bg-gray-800 rounded-t-2xl">
             <span class="font-bold flex items-center gap-2"><i data-lucide="inbox" class="lucide"></i> الإشعارات</span>
@@ -273,7 +270,6 @@
           </div>
         </div>
       </div>
-      <!-- ===== نهاية أيقونة الإشعارات ===== -->
       <button id="openSidebar" class="md:hidden leading-none" aria-label="القائمة"><i data-lucide="menu" class="lucide" style="width:1.7em;height:1.7em"></i></button>
     </div>
   </header>
@@ -295,16 +291,15 @@
           </p>
           <div class="flex flex-wrap justify-center gap-4">
             <a href="#" onclick="showSection('search')" 
-              class="btn-accent px-8 py-4 text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
-              🔍 ابحث عن خبير
+              class="btn-accent px-8 py-4 text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center gap-2">
+              <i data-lucide="search" class="lucide"></i> ابحث عن خبير
             </a>
             <a href="#" onclick="showSection('add')" 
-              class="bg-white/20 backdrop-blur-sm text-white border-2 border-white/50 px-8 py-4 rounded-full text-lg font-semibold hover:bg-white/30 transition-all duration-300">
-              🛠️ قدم خدمتك
+              class="bg-white/20 backdrop-blur-sm text-white border-2 border-white/50 px-8 py-4 rounded-full text-lg font-semibold hover:bg-white/30 transition-all duration-300 flex items-center gap-2">
+              <i data-lucide="wrench" class="lucide"></i> قدم خدمتك
             </a>
           </div>
         </div>
-        <!-- خلفية مزخرفة -->
         <div class="absolute inset-0 opacity-10">
           <svg class="w-full h-full" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
             <circle cx="100" cy="100" r="200" fill="white" />
@@ -314,7 +309,6 @@
         </div>
       </section>
 
-    <!-- إحصائيات سريعة (٥ مقاييس) -->
       <section class="bg-white dark:bg-gray-800 py-10 shadow-inner">
         <div class="max-w-5xl mx-auto px-2">
           <div class="stats-scroller" id="statsScroller">
@@ -351,44 +345,37 @@
 
     <!-- صفحة البحث -->
     <section id="section-search" class="hidden">
-      <h2 class="text-2xl font-bold mb-4">🔍 ابحث عن خبير</h2>
+      <h2 class="text-2xl font-bold mb-4 flex items-center gap-2"><i data-lucide="search" class="lucide text-primary"></i> ابحث عن خبير</h2>
       <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md">
         <div class="flex flex-col gap-3">
           
-          <!-- ====== حقل البحث المحسن ====== -->
           <div class="relative">
             <input type="text" id="searchInput" placeholder="ماذا تبحث؟ (مثال: صيانة شمسية أو خياطة)"
                   class="w-full p-3 pr-12 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary transition">
-            <!-- زر البحث الصوتي -->
             <button onclick="startVoiceSearch()" 
                     class="absolute left-2 top-1/2 -translate-y-1/2 p-2 text-gray-400 hover:text-primary transition">
-              🎤
+              <i data-lucide="mic" class="lucide"></i>
             </button>
-            <!-- زر مسح النص -->
             <button onclick="clearSearch()" 
                     class="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-red-500 transition hidden" id="clearSearchBtn">
-              ✕
+              <i data-lucide="x-circle" class="lucide"></i>
             </button>
           </div>
           
-          <!-- ====== الاقتراحات التلقائية (Autocomplete) ====== -->
           <div id="autocompleteList" class="hidden absolute left-0 right-0 top-full mt-1 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 z-50 max-h-48 overflow-y-auto"></div>
           
-          <!-- ====== الفلاتر السريعة (Chips) ====== -->
           <div class="flex flex-wrap gap-2">
-            <span class="chip" onclick="quickSearch('صيانة شمسية')">☀️ صيانة شمسية</span>
-            <span class="chip" onclick="quickSearch('كهرباء')">⚡ كهرباء</span>
-            <span class="chip" onclick="quickSearch('خياطة')">🧵 خياطة</span>
-            <span class="chip" onclick="quickSearch('نجارة')">🪚 نجارة</span>
-            <span class="chip" onclick="quickSearch('سباكة')">🔧 سباكة</span>
-            <span class="chip" onclick="quickSearch('توصيل')">🚗 توصيل</span>
+            <span class="chip" onclick="quickSearch('صيانة شمسية')"><i data-lucide="sun" class="lucide" style="width:1em;height:1em"></i> صيانة شمسية</span>
+            <span class="chip" onclick="quickSearch('كهرباء')"><i data-lucide="bolt" class="lucide" style="width:1em;height:1em"></i> كهرباء</span>
+            <span class="chip" onclick="quickSearch('خياطة')"><i data-lucide="scissors" class="lucide" style="width:1em;height:1em"></i> خياطة</span>
+            <span class="chip" onclick="quickSearch('نجارة')"><i data-lucide="hammer" class="lucide" style="width:1em;height:1em"></i> نجارة</span>
+            <span class="chip" onclick="quickSearch('سباكة')"><i data-lucide="wrench" class="lucide" style="width:1em;height:1em"></i> سباكة</span>
+            <span class="chip" onclick="quickSearch('توصيل')"><i data-lucide="truck" class="lucide" style="width:1em;height:1em"></i> توصيل</span>
           </div>
           
-          <!-- ====== الفلاتر المتقدمة ====== -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <!-- المنطقة -->
             <select id="areaSelect" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
-              <option value="all">📍 كل المناطق</option>
+              <option value="all"><i data-lucide="map-pin" class="lucide"></i> كل المناطق</option>
               <option>الشجاعية</option>
               <option>تل الهوا</option>
               <option>جباليا</option>
@@ -397,37 +384,32 @@
               <option>بيت لاهيا</option>
             </select>
             
-            <!-- النوع -->
             <select id="typeSelect" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
-              <option value="all">👥 الجميع</option>
-              <option value="both">🛠️ خبراء</option>
-              <option value="driver">🚗 سائقين</option>
+              <option value="all"><i data-lucide="users" class="lucide"></i> الجميع</option>
+              <option value="both"><i data-lucide="wrench" class="lucide"></i> خبراء</option>
+              <option value="driver"><i data-lucide="car" class="lucide"></i> سائقين</option>
             </select>
             
-            <!-- ====== فلتر التقييم (جديد) ====== -->
             <select id="ratingFilter" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
-              <option value="0">⭐ كل التقييمات</option>
-              <option value="4">⭐ 4 نجوم فأكثر</option>
-              <option value="3">⭐ 3 نجوم فأكثر</option>
-              <option value="2">⭐ 2 نجوم فأكثر</option>
+              <option value="0"><i data-lucide="star" class="lucide"></i> كل التقييمات</option>
+              <option value="4"><i data-lucide="star" class="lucide"></i> 4 نجوم فأكثر</option>
+              <option value="3"><i data-lucide="star" class="lucide"></i> 3 نجوم فأكثر</option>
+              <option value="2"><i data-lucide="star" class="lucide"></i> 2 نجوم فأكثر</option>
             </select>
             
-            <!-- ====== فلتر الترتيب (جديد) ====== -->
             <select id="sortFilter" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
-              <option value="recent">🕐 الأحدث</option>
-              <option value="rating">⭐ الأعلى تقييماً</option>
-              <option value="name">🔤 أبجدياً</option>
+              <option value="recent"><i data-lucide="clock" class="lucide"></i> الأحدث</option>
+              <option value="rating"><i data-lucide="star" class="lucide"></i> الأعلى تقييماً</option>
+              <option value="name"><i data-lucide="align-right" class="lucide"></i> أبجدياً</option>
             </select>
           </div>
           
-          <!-- ====== زر البحث المحسن ====== -->
           <button onclick="performSearch()" class="btn-accent w-full py-3 flex items-center justify-center gap-2">
-            <span>🔎</span> بحث متقدم
+            <i data-lucide="search" class="lucide"></i> بحث متقدم
           </button>
           
-          <!-- ====== زر مسح الفلاتر ====== -->
-          <button onclick="clearFilters()" class="text-sm text-gray-400 hover:text-gray-600 transition text-center">
-            🧹 مسح جميع الفلاتر
+          <button onclick="clearFilters()" class="text-sm text-gray-400 hover:text-gray-600 transition text-center flex items-center justify-center gap-1">
+            <i data-lucide="eraser" class="lucide" style="width:1em;height:1em"></i> مسح جميع الفلاتر
           </button>
         </div>
       </div>
@@ -436,7 +418,7 @@
 
     <!-- صفحة إضافة خدمة -->
     <section id="section-add" class="hidden">
-      <h2 class="text-2xl font-bold mb-4">🛠️ سجّل مهارتك</h2>
+      <h2 class="text-2xl font-bold mb-4 flex items-center gap-2"><i data-lucide="wrench" class="lucide text-accent"></i> سجّل مهارتك</h2>
       <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md">
         <div class="grid grid-cols-1 gap-4">
           <input type="text" id="addName" placeholder="الاسم الكامل" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
@@ -445,30 +427,30 @@
           <input type="text" id="addSkill" placeholder="المهارات التي تقدمها (مثال: صيانة شمسية، إلكترونيات)" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
           <input type="text" id="addRequest" placeholder="المهارات التي تبحث عنها (اختياري)" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
           <select id="addType" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
-            <option value="both">خبير (أقدم خدمة)</option>
-            <option value="driver">سائق (ديلفري)</option>
+            <option value="both"><i data-lucide="wrench" class="lucide"></i> خبير (أقدم خدمة)</option>
+            <option value="driver"><i data-lucide="car" class="lucide"></i> سائق (ديلفري)</option>
           </select>
-          <button onclick="addService()" id="addBtn" class="btn-primary w-full">✅ إضافة إلى المنصة</button>
+          <button onclick="addService()" id="addBtn" class="btn-primary w-full flex items-center justify-center gap-2">
+            <i data-lucide="plus-circle" class="lucide"></i> إضافة إلى المنصة
+          </button>
           <div id="addMessage" class="text-center font-bold min-h-[1.5rem]"></div>
         </div>
       </div>
     </section>
 
     <!-- صفحة ديلفري -->
-    <!-- صفحة ديلفري المحسّنة -->
     <section id="section-driver" class="hidden">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-2xl font-bold">🚗 خدمة ديلفري - السائقين</h2>
-        <span class="text-sm bg-primary/10 text-primary px-3 py-1 rounded-full">✨ بحث ذكي</span>
+        <h2 class="text-2xl font-bold flex items-center gap-2"><i data-lucide="car" class="lucide"></i> خدمة ديلفري - السائقين</h2>
+        <span class="text-sm bg-primary/10 text-primary px-3 py-1 rounded-full flex items-center gap-1"><i data-lucide="sparkles" class="lucide" style="width:1em;height:1em"></i> بحث ذكي</span>
       </div>
 
       <p class="text-gray-600 dark:text-gray-400 mb-6">ابحث عن سائق في منطقتك لتوصيل الطلبات بسهولة وأمان</p>
 
-      <!-- بطاقة البحث المتقدم -->
       <div class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 mb-6">
         <div class="flex flex-col md:flex-row gap-4">
           <div class="flex-1 relative">
-            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
+            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"><i data-lucide="search" class="lucide" style="width:1.2em;height:1.2em"></i></span>
             <input type="text" id="driverSearchInput" 
                   placeholder="ابحث عن سائق (اسم، منطقة، أو نوع المركبة)"
                   class="w-full p-3 pr-10 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition">
@@ -476,7 +458,7 @@
           <div class="md:w-48">
             <select id="driverAreaSelect" 
                     class="w-full p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition">
-              <option value="all">📍 كل المناطق</option>
+              <option value="all"><i data-lucide="map-pin" class="lucide"></i> كل المناطق</option>
               <option>الشجاعية</option><option>تل الهوا</option><option>جباليا</option>
               <option>خان يونس</option><option>رفح</option><option>بيت لاهيا</option>
               <option>غزة</option>
@@ -484,38 +466,34 @@
           </div>
           <button onclick="searchDriversDirect()" 
                   class="btn-accent px-8 py-3 flex items-center justify-center gap-2 whitespace-nowrap">
-            <span>🔎</span> بحث
+            <i data-lucide="search" class="lucide"></i> بحث
           </button>
           <button onclick="resetDriverSearch()" 
                   class="px-4 py-3 rounded-xl bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition font-semibold">
-            ↺
+            <i data-lucide="rotate-ccw" class="lucide"></i>
           </button>
         </div>
 
-        <!-- فلتر سريع (Chips) -->
         <div class="flex flex-wrap gap-2 mt-4">
           <span class="text-sm text-gray-500 dark:text-gray-400 ml-2">بحث سريع:</span>
-          <span class="chip" onclick="quickDriverSearch('سيارة')">🚗 سيارة</span>
-          <span class="chip" onclick="quickDriverSearch('دراجة')">🛵 دراجة</span>
-          <span class="chip" onclick="quickDriverSearch('توصيل')">📦 توصيل</span>
-          <span class="chip" onclick="quickDriverSearch('غزة')">📍 غزة</span>
+          <span class="chip" onclick="quickDriverSearch('سيارة')"><i data-lucide="car" class="lucide" style="width:1em;height:1em"></i> سيارة</span>
+          <span class="chip" onclick="quickDriverSearch('دراجة')"><i data-lucide="bike" class="lucide" style="width:1em;height:1em"></i> دراجة</span>
+          <span class="chip" onclick="quickDriverSearch('توصيل')"><i data-lucide="package" class="lucide" style="width:1em;height:1em"></i> توصيل</span>
+          <span class="chip" onclick="quickDriverSearch('غزة')"><i data-lucide="map-pin" class="lucide" style="width:1em;height:1em"></i> غزة</span>
         </div>
       </div>
 
-      <!-- حاوية النتائج -->
       <div id="driverResults" class="mt-4 space-y-4">
-        <!-- ستظهر النتائج هنا -->
         <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow text-center text-gray-500 dark:text-gray-400">
-          <div class="text-5xl mb-3">🚗</div>
+          <i data-lucide="truck" class="lucide text-5xl mb-3 block" style="width:3em;height:3em;margin:0 auto;"></i>
           <p class="font-semibold">ابحث عن سائق</p>
           <p class="text-sm">اكتب اسم السائق، المنطقة، أو نوع المركبة في الأعلى</p>
         </div>
       </div>
 
-      <!-- نموذج إضافة سائق جديد (مطوّر) -->
       <div class="mt-10 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700">
         <div class="flex items-center gap-3 mb-4">
-          <span class="text-2xl">➕</span>
+          <i data-lucide="plus-circle" class="lucide text-2xl"></i>
           <h3 class="text-xl font-bold">إضافة سائق جديد</h3>
           <span class="text-xs bg-accent/20 text-accentDark px-2 py-1 rounded-full">مطلوب للمنطقة</span>
         </div>
@@ -530,7 +508,7 @@
                 class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition">
           <button onclick="addDriver()" 
                   class="btn-primary col-span-full py-3 flex items-center justify-center gap-2">
-            <span>✅</span> إضافة سائق
+            <i data-lucide="plus" class="lucide"></i> إضافة سائق
           </button>
           <div id="driverMessage" class="col-span-full text-center font-bold min-h-[2rem]"></div>
         </div>
@@ -540,14 +518,13 @@
     <!-- صفحة تسجيل الدخول والتسجيل -->
     <section id="section-login" class="fade-in">
       <div class="max-w-md mx-auto mt-10">
-        <!-- نموذج تسجيل الدخول -->
         <div id="loginForm">
-          <h2 class="text-3xl font-extrabold text-center text-primary dark:text-primaryLight mb-6">🔐 تسجيل الدخول</h2>
+          <h2 class="text-3xl font-extrabold text-center text-primary dark:text-primaryLight mb-6 flex items-center justify-center gap-2"><i data-lucide="lock" class="lucide"></i> تسجيل الدخول</h2>
           <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg">
             <div class="grid grid-cols-1 gap-4">
               <input type="text" id="loginUsername" placeholder="اسم المستخدم" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white text-center text-lg">
               <input type="password" id="loginPassword" placeholder="كلمة المرور" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white text-center text-lg">
-              <button onclick="login()" class="btn-primary w-full py-3 text-lg">🚪 دخول</button>
+              <button onclick="login()" class="btn-primary w-full py-3 text-lg flex items-center justify-center gap-2"><i data-lucide="log-in" class="lucide"></i> دخول</button>
               <div id="loginMessage" class="text-center font-bold min-h-[2rem]"></div>
               <p class="text-center text-sm mt-2">
                 ليس لديك حساب؟ <a href="#" onclick="toggleSignupForm()" class="text-primary font-bold">إنشاء حساب جديد</a>
@@ -556,15 +533,14 @@
           </div>
         </div>
 
-        <!-- نموذج التسجيل -->
         <div id="signupForm" class="hidden">
-          <h2 class="text-3xl font-extrabold text-center text-primary dark:text-primaryLight mb-6">📝 إنشاء حساب جديد</h2>
+          <h2 class="text-3xl font-extrabold text-center text-primary dark:text-primaryLight mb-6 flex items-center justify-center gap-2"><i data-lucide="user-plus" class="lucide"></i> إنشاء حساب جديد</h2>
           <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg">
             <div class="grid grid-cols-1 gap-4">
               <input type="text" id="signupUsername" placeholder="اسم المستخدم (3 أحرف على الأقل)" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white text-center text-lg">
               <input type="password" id="signupPassword" placeholder="كلمة المرور (4 أحرف على الأقل)" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white text-center text-lg">
               <input type="password" id="signupConfirm" placeholder="تأكيد كلمة المرور" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white text-center text-lg">
-              <button onclick="signup()" class="btn-accent w-full py-3 text-lg">📝 إنشاء حساب</button>
+              <button onclick="signup()" class="btn-accent w-full py-3 text-lg flex items-center justify-center gap-2"><i data-lucide="user-check" class="lucide"></i> إنشاء حساب</button>
               <div id="signupMessage" class="text-center font-bold min-h-[2rem]"></div>
               <p class="text-center text-sm mt-2">
                 لديك حساب بالفعل؟ <a href="#" onclick="toggleSignupForm()" class="text-primary font-bold">تسجيل الدخول</a>
@@ -577,11 +553,11 @@
 
     <!-- صفحة تواصل معنا -->
     <section id="section-contact" class="hidden">
-      <h2 class="text-2xl font-bold mb-4">📞 تواصل معنا</h2>
+      <h2 class="text-2xl font-bold mb-4 flex items-center gap-2"><i data-lucide="phone" class="lucide"></i> تواصل معنا</h2>
       <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md text-center">
         <p class="text-lg mb-4">للتواصل والدعم، يمكنك مراسلتنا عبر واتساب:</p>
-        <a href="https://wa.me/970567715743" target="_blank" class="inline-block bg-green-600 text-white px-8 py-4 rounded-full text-xl font-bold hover:bg-green-700 transition">
-          💬 واتساب: 0567715743
+        <a href="https://wa.me/970567715743" target="_blank" class="inline-flex items-center gap-2 bg-green-600 text-white px-8 py-4 rounded-full text-xl font-bold hover:bg-green-700 transition shadow-lg hover:shadow-xl">
+          <i data-lucide="message-circle" class="lucide"></i> واتساب: 0567715743
         </a>
         <p class="text-sm text-gray-500 dark:text-gray-400 mt-4">نحن هنا لمساعدتك في أي استفسار</p>
       </div>
@@ -589,27 +565,27 @@
 
     <!-- صفحة سياسة الاستخدام -->
     <section id="section-policy" class="hidden">
-      <h2 class="text-2xl font-bold mb-4">📜 سياسة الاستخدام</h2>
+      <h2 class="text-2xl font-bold mb-4 flex items-center gap-2"><i data-lucide="scroll-text" class="lucide"></i> سياسة الاستخدام</h2>
       <div class="policy-section">
-        <h3>🎯 رؤيتنا</h3>
+        <h3><i data-lucide="target" class="lucide" style="width:1.2em;height:1.2em;display:inline-block;vertical-align:middle;"></i> رؤيتنا</h3>
         <p>منصة "سند" هي منصة مجتمعية تهدف إلى تعزيز التكافل وتبادل المهارات بين أبناء غزة، من خلال ربط أصحاب المهارات بالمحتاجين إليها.</p>
-        <h3>📋 القواعد الأساسية</h3>
+        <h3><i data-lucide="list-checks" class="lucide" style="width:1.2em;height:1.2em;display:inline-block;vertical-align:middle;"></i> القواعد الأساسية</h3>
         <ul>
           <li><strong>الصدق والأمانة:</strong> يجب على جميع المستخدمين تقديم معلومات صحيحة عن مهاراتهم واحتياجاتهم.</li>
           <li><strong>الاحترام المتبادل:</strong> التعامل باحترام وأدب بين جميع الأطراف.</li>
           <li><strong>عدم الاحتيال:</strong> يمنع منعاً باتاً انتحال شخصية الآخرين أو تقديم خدمات وهمية.</li>
           <li><strong>خصوصية البيانات:</strong> نحن نحافظ على سرية معلوماتك ولا نشاركها مع أطراف خارجية.</li>
         </ul>
-        <h3>⚖️ سياسة مكافحة الاحتيال</h3>
+        <h3><i data-lucide="shield-alert" class="lucide" style="width:1.2em;height:1.2em;display:inline-block;vertical-align:middle;"></i> سياسة مكافحة الاحتيال</h3>
         <ul>
           <li>في حالة اكتشاف أي حالة احتيال أو نصب، سيتم حظر المستخدم المخالف فوراً.</li>
           <li>يمكن للمستخدمين الإبلاغ عن أي نشاط مشبوه عبر واتساب (0567715743).</li>
           <li>نوصي بإجراء المعاملات وجهاً لوجه في مكان عام آمن.</li>
         </ul>
-        <h3>📞 التواصل والإبلاغ</h3>
+        <h3><i data-lucide="phone" class="lucide" style="width:1.2em;height:1.2em;display:inline-block;vertical-align:middle;"></i> التواصل والإبلاغ</h3>
         <p>لأي استفسار أو بلاغ، يرجى التواصل معنا عبر واتساب: <strong>0567715743</strong></p>
         <div class="mt-6 p-4 bg-yellow-50 dark:bg-yellow-900/30 rounded-xl border-r-4 border-accent">
-          <p class="font-bold">⚠️ تنبيه هام:</p>
+          <p class="font-bold"><i data-lucide="triangle-alert" class="lucide" style="display:inline-block;vertical-align:middle;"></i> تنبيه هام:</p>
           <p>منصة "سند" هي مجرد وسيط للتواصل، ولا تتحمل أي مسؤولية عن جودة الخدمات المقدمة أو أي خلافات تنشأ بين المستخدمين.</p>
         </div>
       </div>
@@ -618,23 +594,22 @@
     <!-- صفحة الخريطة -->
     <section id="section-map" class="hidden">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="text-2xl font-bold">🗺️ خريطة الخبراء والسائقين</h2>
+        <h2 class="text-2xl font-bold flex items-center gap-2"><i data-lucide="map-pin" class="lucide"></i> خريطة الخبراء والسائقين</h2>
         <span class="text-sm bg-primary/10 text-primary px-3 py-1 rounded-full flex items-center gap-1">
           <span class="dot dot-on" style="display:inline-block;width:0.5rem;height:0.5rem;border-radius:9999px;background:#22c55e;"></span>
           <span id="mapMarkerCount">0</span> موقع
         </span>
       </div>
 
-      <!-- الفلاتر -->
       <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md mb-4">
         <div class="flex flex-wrap gap-3">
           <select id="mapTypeFilter" class="p-2 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
-            <option value="all">👥 الجميع</option>
-            <option value="both">🛠️ خبراء</option>
-            <option value="driver">🚗 سائقين</option>
+            <option value="all"><i data-lucide="users" class="lucide"></i> الجميع</option>
+            <option value="both"><i data-lucide="wrench" class="lucide"></i> خبراء</option>
+            <option value="driver"><i data-lucide="car" class="lucide"></i> سائقين</option>
           </select>
           <select id="mapAreaFilter" class="p-2 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
-            <option value="all">📍 كل المناطق</option>
+            <option value="all"><i data-lucide="map-pin" class="lucide"></i> كل المناطق</option>
             <option>الشجاعية</option><option>تل الهوا</option><option>جباليا</option>
             <option>خان يونس</option><option>رفح</option><option>بيت لاهيا</option><option>غزة</option>
           </select>
@@ -647,23 +622,19 @@
         </div>
       </div>
 
-      <!-- حاوية الخريطة -->
       <div id="map"></div>
-
-      <!-- قائمة المواقع (أسفل الخريطة) -->
       <div id="mapLocationsList" class="mt-4 space-y-2 max-h-60 overflow-y-auto"></div>
     </section>
 
     <!-- صفحة الحجوزات -->
     <section id="section-bookings" class="hidden">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="text-2xl font-bold">📅 الحجوزات والمواعيد</h2>
+        <h2 class="text-2xl font-bold flex items-center gap-2"><i data-lucide="calendar" class="lucide"></i> الحجوزات والمواعيد</h2>
         <button onclick="showBookingForm()" class="btn-accent px-4 py-2 text-sm flex items-center gap-2">
           <i data-lucide="plus-circle" class="lucide"></i> حجز جديد
         </button>
       </div>
 
-      <!-- نموذج الحجز (مخفي افتراضياً) -->
       <div id="bookingFormContainer" class="hidden mb-6">
         <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md">
           <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
@@ -689,18 +660,16 @@
         </div>
       </div>
 
-      <!-- حالة الحجوزات -->
       <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md mb-4">
         <div class="flex flex-wrap gap-2" id="bookingStatusFilters">
           <button onclick="loadBookings('all')" class="chip active" data-status="all">الكل</button>
-          <button onclick="loadBookings('pending')" class="chip" data-status="pending">⏳ قيد الانتظار</button>
-          <button onclick="loadBookings('confirmed')" class="chip" data-status="confirmed">✅ مؤكد</button>
-          <button onclick="loadBookings('completed')" class="chip" data-status="completed">✔️ مكتمل</button>
-          <button onclick="loadBookings('cancelled')" class="chip" data-status="cancelled">❌ ملغي</button>
+          <button onclick="loadBookings('pending')" class="chip" data-status="pending"><i data-lucide="clock" class="lucide" style="width:1em;height:1em"></i> قيد الانتظار</button>
+          <button onclick="loadBookings('confirmed')" class="chip" data-status="confirmed"><i data-lucide="check-circle" class="lucide" style="width:1em;height:1em"></i> مؤكد</button>
+          <button onclick="loadBookings('completed')" class="chip" data-status="completed"><i data-lucide="check" class="lucide" style="width:1em;height:1em"></i> مكتمل</button>
+          <button onclick="loadBookings('cancelled')" class="chip" data-status="cancelled"><i data-lucide="x-circle" class="lucide" style="width:1em;height:1em"></i> ملغي</button>
         </div>
       </div>
 
-      <!-- قائمة الحجوزات -->
       <div id="bookingsContainer" class="space-y-4">
         <div class="text-center text-gray-400 py-8">قم بتسجيل الدخول لعرض حجوزاتك</div>
       </div>
@@ -712,11 +681,12 @@
     © 2026 منصة سند – تبادل المهارات في غزة
   </footer>
 </div>
-<!-- ====== هنا نافذة التقييم المنبثقة ====== -->
+
+<!-- ====== نافذة التقييم المنبثقة ====== -->
 <div id="reviewModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden" onclick="if(event.target===this) closeReviewModal()">
   <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl" onclick="event.stopPropagation()">
     <div class="flex justify-between items-center mb-4">
-      <h3 class="text-xl font-bold">⭐ تقييم الخدمة</h3>
+      <h3 class="text-xl font-bold flex items-center gap-2"><i data-lucide="star" class="lucide text-accent"></i> تقييم الخدمة</h3>
       <button onclick="closeReviewModal()" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 text-2xl">&times;</button>
     </div>
     <div class="space-y-4">
@@ -738,13 +708,13 @@
       <div>
         <textarea id="reviewComment" rows="3" placeholder="اكتب تعليقك (اختياري)" class="w-full p-2 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white resize-none"></textarea>
       </div>
-      <button onclick="submitReview()" class="btn-primary w-full">إرسال التقييم</button>
+      <button onclick="submitReview()" class="btn-primary w-full flex items-center justify-center gap-2"><i data-lucide="send" class="lucide"></i> إرسال التقييم</button>
       <div id="reviewMessage" class="text-center font-bold min-h-[1.5rem]"></div>
     </div>
   </div>
 </div>
 
-<!-- ====== هنا أضف نافذة الترحيب ====== -->
+<!-- ====== نافذة الترحيب ====== -->
 <div id="welcomeModal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 hidden">
   <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl transform transition-all duration-300 scale-95" id="welcomeContent">
     <div class="text-center">
@@ -754,7 +724,7 @@
         منصة تبادل المهارات بين جيرانك في غزة. ابدأ باستكشاف الخدمات أو قدم مهارتك.
       </p>
       <div class="flex flex-col gap-3">
-        <button onclick="closeWelcome()" class="btn-primary w-full">ابدأ الآن</button>
+        <button onclick="closeWelcome()" class="btn-primary w-full flex items-center justify-center gap-2"><i data-lucide="rocket" class="lucide"></i> ابدأ الآن</button>
         <button onclick="startTour()" class="text-sm text-primary hover:underline">خذني في جولة</button>
       </div>
       <div class="mt-4 text-xs text-gray-400">
@@ -770,7 +740,7 @@
 /* ========================================================
    الإعدادات
    ======================================================== */
-const API_URL = "https://script.google.com/macros/s/AKfycbytC66xRGrNizF7oHqKUQPUK8nUDZgjsqHzX-w-REjW10F5z-QJABxi-acO2NAmcjWl/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyJzBItavr1UqIFdr--kjVhXA6netSAY40Ah2gZOCCyJ5bXW1u2SwJyLdQGmZxD-ab1/exec";
 const FETCH_TIMEOUT_MS = 20000;
 const CACHE_KEY_PREFIX = "sanad_cache_";
 
