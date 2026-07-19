@@ -779,7 +779,7 @@
 /* ========================================================
    الإعدادات
    ======================================================== */
-const API_URL = "https://script.google.com/macros/s/AKfycbw-y0AIlN-PnAUvQcQqriugh4yDtkH7OXpklumPgW_0YDGOn7OCDDYFs2Xj5rzVqgXd/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwLeCEeovsTBIZR731qHmYqwgXzTxa1zX0QNC503Yj2jy18eVx033vVno4ij3tmn83m/exec";
 const FETCH_TIMEOUT_MS = 20000;
 const CACHE_KEY_PREFIX = "sanad_cache_";
 
@@ -1343,7 +1343,7 @@ async function addDriver() {
   if (!requireLogin()) return;
   
   const name = document.getElementById('driverName').value.trim();
-   const countryCode = document.getElementById('driverCountryCode').value.trim();
+  const countryCode = document.getElementById('addCountryCode').value.trim();
   const phoneInput = document.getElementById('driverPhone').value.trim();
   const phone = countryCode + phoneInput.replace(/^0+/, '');
   const area = document.getElementById('driverArea').value.trim();
