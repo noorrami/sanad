@@ -1271,11 +1271,9 @@ function validatePalestinianPhone(phone) {
 
 async function addService() {
   if (!requireLogin()) return;
+  
   const name = document.getElementById('addName').value.trim();
-  const countryCode = document.getElementById('addCountryCode').value.trim(); // جديد
-  const phoneInput = document.getElementById('addPhone').value.trim();
-  // دمج المقدمة مع الرقم (مع إزالة أي أصفار زائدة في البداية)
-  const phone = countryCode + phoneInput.replace(/^0+/, '');
+  const phone = document.getElementById('addPhone').value.trim();
   const area = document.getElementById('addArea').value.trim();
   const skill = document.getElementById('addSkill').value.trim();
   const request = document.getElementById('addRequest').value.trim();
@@ -1298,7 +1296,8 @@ async function addService() {
 
   if (!navigator.onLine) {
     msgDiv.innerHTML = '<span class="text-red-500">⚠️ لا يوجد اتصال بالإنترنت، حاول مرة أخرى عند توفر الشبكة</span>';
-    btn.disabled = false; btn.textContent = '✅ إضافة إلى المنصة';
+    btn.disabled = false;
+    btn.textContent = '✅ إضافة إلى المنصة';
     return;
   }
 
@@ -1320,15 +1319,16 @@ async function addService() {
 
     if (!response.ok) throw new Error(`الخادم أعاد الحالة ${response.status}`);
     const result = await response.json();
-    console.log('📥 رد الخادم:', result); // طباعة الرد الكامل
+    console.log('📥 رد الخادم:', result);
 
     if (result.success) {
       msgDiv.innerHTML = '<span class="text-green-600">✅ تم التسجيل بنجاح! سيتمكن جيرانك الآن من التواصل معك</span>';
       showToast('تم تسجيل مهارتك بنجاح', 'success');
       ['addName','addPhone','addArea','addSkill','addRequest'].forEach(id => document.getElementById(id).value = '');
+      // مسح الكاش المحلي إن وجد
       localStorage.clear();
     } else {
-      // عرض رسالة الخطأ من الخادم إن وجدت
+      // عرض رسالة الخطأ من الخادم
       const errorMsg = result.message || result.error || 'فشل التسجيل لسبب غير معروف';
       throw new Error(errorMsg);
     }
