@@ -1227,6 +1227,175 @@
       if (e.key === 'Enter') performSearch();
     });
 
+        // ========================================================
+    // تحسينات سهولة الاستخدام والمرونة
+    // ========================================================
+    
+    // إصلاح دالة updateUIAfterLogin
+    function updateUIAfterLogin() {
+      const logged = isLoggedIn();
+      const user = getCurrentUser();
+      
+      const userDisplay = document.getElementById('userDisplay');
+      if (userDisplay) {
+        userDisplay.innerHTML = logged ? `<i class="fas fa-user-circle ml-1"></i> ${user}` : '';
+        if (!logged) userDisplay.innerHTML = '';
+      }
+      
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.style.display = logged ? '' : 'none';
+      }
+    
+      const tabs = document.querySelectorAll('.tab-item');
+      tabs.forEach(t => {
+        if (t.dataset.tab === 'home' || t.dataset.tab === 'login') return;
+        t.style.display = logged ? '' : 'none';
+      });
+    
+      const navLinks = document.querySelectorAll('.nav-link');
+      navLinks.forEach(link => {
+        if (link.dataset.target === 'login') return;
+        link.style.display = logged ? '' : 'none';
+      });
+    
+      // إذا كان المستخدم غير مسجل، إظهار صفحة تسجيل الدخول
+      if (!logged) {
+        document.querySelectorAll('.page-section').forEach(el => el.classList.add('hidden'));
+        const loginPage = document.getElementById('page-login');
+        if (loginPage) loginPage.classList.remove('hidden');
+      }
+    }
+    
+    // دوال التحميل
+    function showLoading(elementId) {
+      const el = document.getElementById(elementId);
+      if (el) {
+        const originalText = el.innerHTML;
+        el.dataset.originalText = originalText;
+        el.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري...';
+        el.disabled = true;
+      }
+    }
+    
+    function hideLoading(elementId) {
+      const el = document.getElementById(elementId);
+      if (el && el.dataset.originalText) {
+        el.innerHTML = el.dataset.originalText;
+        el.disabled = false;
+        delete el.dataset.originalText;
+      }
+    }
+    
+    // عرض رسائل خطأ محسنة
+    function showError(message, details = '') {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = 'toast bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300 flex items-center gap-2';
+      toast.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message} ${details ? `<span class="text-xs opacity-75">(${details})</span>` : ''}`;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 5000);
+    }
+    
+    // إغلاق القوائم عند النقر خارجها
+    document.addEventListener('click', function(e) {
+      const sidebar = document.querySelector('aside');
+      const menuBtn = document.getElementById('menuToggle');
+      if (window.innerWidth < 768 && sidebar && !sidebar.classList.contains('hidden')) {
+        if (!sidebar.contains(e.target) && !menuBtn?.contains(e.target)) {
+          sidebar.classList.add('hidden');
+        }
+      }
+      
+      const notifDropdown = document.getElementById('notifDropdown');
+      const notifBtn = document.getElementById('notifBtn');
+      if (notifDropdown && notifBtn && !notifDropdown.classList.contains('hidden')) {
+        if (!notifDropdown.contains(e.target) && !notifBtn.contains(e.target)) {
+          notifDropdown.classList.add('hidden');
+        }
+      }
+    });
+    
+    // تحسين fetch مع إعادة المحاولة
+    async function fetchWithTimeout(url, ms = FETCH_TIMEOUT, retries = 2) {
+      try {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), ms);
+        const res = await fetch(url, { signal: controller.signal });
+        clearTimeout(timer);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res;
+      } catch (e) {
+        if (retries > 0) {
+          showToast(`إعادة المحاولة... (${retries} متبقية)`, 'info');
+          await new Promise(r => setTimeout(r, 1000));
+          return fetchWithTimeout(url, ms, retries - 1);
+        }
+        throw new Error('فشل الاتصال بعد عدة محاولات');
+      }
+    }
+    
+    // حفظ التبويب النشط
+    function saveActiveTab(tab) {
+      try { localStorage.setItem('sanad_active_tab', tab); } catch(e) {}
+    }
+    
+    function getActiveTab() {
+      try { return localStorage.getItem('sanad_active_tab') || 'home'; } catch(e) { return 'home'; }
+    }
+    
+    // توسيع دالة navigateTo لحفظ التبويب
+    const originalNavigate = navigateTo;
+    navigateTo = function(page) {
+      originalNavigate(page);
+      saveActiveTab(page);
+    };
+    
+    // البحث الفوري مع تأخير
+    let searchTimeout = null;
+    function setupInstantSearch() {
+      const input = document.getElementById('searchInput');
+      if (!input) return;
+      input.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        const val = this.value.trim();
+        if (val.length >= 2) {
+          searchTimeout = setTimeout(performSearch, 500);
+        }
+      });
+    }
+    
+    // تلميحات (Tooltips)
+    function initTooltips() {
+      document.querySelectorAll('[data-tooltip]').forEach(el => {
+        el.addEventListener('mouseenter', function(e) {
+          const tip = document.createElement('div');
+          tip.className = 'fixed z-50 bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-lg pointer-events-none';
+          tip.textContent = this.dataset.tooltip;
+          tip.style.top = Math.min(e.pageY - 30, window.innerHeight - 50) + 'px';
+          tip.style.left = Math.min(e.pageX + 10, window.innerWidth - 20) + 'px';
+          tip.id = 'tooltip';
+          document.body.appendChild(tip);
+        });
+        el.addEventListener('mouseleave', () => {
+          document.getElementById('tooltip')?.remove();
+        });
+      });
+    }
+    
+    // تهيئة التحسينات
+    document.addEventListener('DOMContentLoaded', function() {
+      setupInstantSearch();
+      initTooltips();
+      
+      // استعادة التبويب النشط بعد التحميل
+      const activeTab = getActiveTab();
+      if (isLoggedIn()) {
+        setTimeout(() => navigateTo(activeTab), 100);
+      }
+    });
+
     console.log('🚀 منصة سند جاهزة للاستخدام');
   </script>
 </body>
