@@ -1325,10 +1325,7 @@ async function addService() {
       msgDiv.innerHTML = '<span class="text-green-600">✅ تم التسجيل بنجاح! سيتمكن جيرانك الآن من التواصل معك</span>';
       showToast('تم تسجيل مهارتك بنجاح', 'success');
       ['addName','addPhone','addArea','addSkill','addRequest'].forEach(id => document.getElementById(id).value = '');
-      // مسح الكاش المحلي إن وجد
-      localStorage.clear();
     } else {
-      // عرض رسالة الخطأ من الخادم
       const errorMsg = result.message || result.error || 'فشل التسجيل لسبب غير معروف';
       throw new Error(errorMsg);
     }
