@@ -228,6 +228,8 @@
     <a href="#" onclick="showSection('policy')" data-nav="policy" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold"><i data-lucide="scroll-text" class="lucide"></i> سياسة الاستخدام</a>
     <a href="#" onclick="showSection('map')" data-nav="map" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold"><i data-lucide="map-pin" class="lucide"></i> خريطة الخدمات</a>
     <a href="#" onclick="showSection('bookings')" data-nav="bookings" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold"><i data-lucide="calendar" class="lucide"></i> حجوزاتي</a>
+    <a href="#" onclick="showSection('bids')" data-nav="bids" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold"><i data-lucide="gavel" class="lucide"></i> طلباتي</a>
+    <a href="#" onclick="showSection('auctions')" data-nav="auctions" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold"><i data-lucide="hammer" class="lucide"></i> المزادات</a>
     <a href="#" onclick="restartTour()" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold text-sm text-gray-400"><i data-lucide="refresh-cw" class="lucide"></i> إعادة الجولة الإرشادية</a>
     <a href="#" id="logoutBtn" onclick="logout()" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-red-600 hover:text-white transition font-semibold hidden"><i data-lucide="log-out" class="lucide"></i> تسجيل خروج</a>
   </nav>
@@ -714,6 +716,81 @@
       </div>
     </section>
 
+    <!-- صفحة طلباتي (المزادات - للمستفيد) -->
+    <section id="section-bids" class="hidden">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-2xl font-bold flex items-center gap-2"><i data-lucide="gavel" class="lucide"></i> طلباتي</h2>
+        <button onclick="showBidForm()" class="btn-accent px-4 py-2 text-sm flex items-center gap-2">
+          <i data-lucide="plus-circle" class="lucide"></i> طلب جديد
+        </button>
+      </div>
+
+      <!-- نموذج طلب جديد -->
+      <div id="bidFormContainer" class="hidden mb-6">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md">
+          <h3 class="text-xl font-bold mb-4 flex items-center gap-2"><i data-lucide="file-plus" class="lucide"></i> طلب خدمة جديد</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input type="text" id="bidTitle" placeholder="عنوان الطلب (مثال: تركيب طاقة شمسية)" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+            <textarea id="bidDescription" rows="3" placeholder="وصف تفصيلي للخدمة المطلوبة" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white resize-none"></textarea>
+            <input type="text" id="bidCategory" placeholder="الفئة (مثال: كهرباء، بناء، صيانة)" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+            <input type="number" id="bidBudget" placeholder="الميزانية المقترحة (بالشيكل)" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+            <input type="text" id="bidArea" placeholder="المنطقة" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+            <input type="date" id="bidDeadline" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+          </div>
+          <div class="flex gap-3 mt-4">
+            <button onclick="submitBid()" class="btn-primary flex items-center gap-2"><i data-lucide="send" class="lucide"></i> طرح الطلب</button>
+            <button onclick="hideBidForm()" class="px-4 py-2 rounded-xl bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 transition">إلغاء</button>
+          </div>
+          <div id="bidFormMessage" class="text-center font-bold min-h-[1.5rem] mt-2"></div>
+        </div>
+      </div>
+
+      <!-- فلتر الطلبات -->
+      <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md mb-4">
+        <div class="flex flex-wrap gap-2">
+          <button onclick="loadMyBids('all')" class="chip active" data-status="all">الكل</button>
+          <button onclick="loadMyBids('open')" class="chip" data-status="open">📋 مفتوح</button>
+          <button onclick="loadMyBids('assigned')" class="chip" data-status="assigned">✅ تم التعيين</button>
+          <button onclick="loadMyBids('closed')" class="chip" data-status="closed">🔒 مغلق</button>
+        </div>
+      </div>
+
+      <!-- قائمة الطلبات -->
+      <div id="bidsContainer" class="space-y-4">
+        <div class="text-center text-gray-400 py-8">قم بتسجيل الدخول لعرض طلباتك</div>
+      </div>
+    </section>
+
+    <!-- صفحة المزادات (لعرض الطلبات المفتوحة وتقديم العروض) -->
+    <section id="section-auctions" class="hidden">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-2xl font-bold flex items-center gap-2"><i data-lucide="hammer" class="lucide"></i> المزادات - طلبات مفتوحة</h2>
+        <span class="text-sm bg-primary/10 text-primary px-3 py-1 rounded-full flex items-center gap-1"><i data-lucide="sparkles" class="lucide" style="width:1em;height:1em"></i> تقديم عروض</span>
+      </div>
+
+      <!-- فلاتر -->
+      <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md mb-4">
+        <div class="flex flex-wrap gap-3">
+          <select id="auctionAreaFilter" class="p-2 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+            <option value="all">📍 كل المناطق</option>
+            <option>الشجاعية</option><option>تل الهوا</option><option>جباليا</option>
+            <option>خان يونس</option><option>رفح</option><option>بيت لاهيا</option><option>غزة</option>
+          </select>
+          <select id="auctionCategoryFilter" class="p-2 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+            <option value="all">📂 كل الفئات</option>
+            <option>كهرباء</option><option>بناء</option><option>صيانة</option>
+            <option>خياطة</option><option>نجارة</option><option>توصيل</option>
+          </select>
+          <button onclick="loadAuctions()" class="btn-accent px-4 py-2 flex items-center gap-2"><i data-lucide="search" class="lucide"></i> بحث</button>
+        </div>
+      </div>
+
+      <!-- قائمة الطلبات المفتوحة -->
+      <div id="auctionsContainer" class="space-y-4">
+        <div class="text-center text-gray-400 py-8">جاري تحميل الطلبات...</div>
+      </div>
+    </section>
+
   </main>
 
   <footer class="text-center text-sm text-gray-500 dark:text-gray-400 p-6 border-t border-gray-200 dark:border-gray-700 mt-8">
@@ -774,12 +851,29 @@
   </div>
 </div>
 
+<!-- نافذة تقديم عرض -->
+<div id="offerModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden" onclick="if(event.target===this) closeOfferModal()">
+  <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl" onclick="event.stopPropagation()">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-xl font-bold flex items-center gap-2"><i data-lucide="coins" class="lucide text-accent"></i> تقديم عرض</h3>
+      <button onclick="closeOfferModal()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+    </div>
+    <div class="space-y-4">
+      <p class="text-sm text-gray-500">تقديم عرض على: <span id="offerBidTitle" class="font-bold text-primary"></span></p>
+      <input type="number" id="offerPrice" placeholder="السعر المقترح (بالشيكل)" class="w-full p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+      <textarea id="offerNote" rows="3" placeholder="ملاحظات إضافية (اختياري)" class="w-full p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white resize-none"></textarea>
+      <button onclick="submitOffer()" class="btn-primary w-full flex items-center justify-center gap-2"><i data-lucide="send" class="lucide"></i> إرسال العرض</button>
+      <div id="offerMessage" class="text-center font-bold min-h-[1.5rem]"></div>
+    </div>
+  </div>
+</div>
+
 
 <script>
 /* ========================================================
    الإعدادات
    ======================================================== */
-const API_URL = "https://script.google.com/macros/s/AKfycbxqegPwKRe0U0GXgJDuyngt6N-4ydUCl3A_Pa1kRcSw6kWH92fU3HfFDHfmc8BE8IZS/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwxP_p_3WAAGE_qGPVem6TZvttVRhvPv9USPQrKCiI4tqrIwGaCtl_NIKEeHlkEvU-P/exec";
 const FETCH_TIMEOUT_MS = 20000;
 const CACHE_KEY_PREFIX = "sanad_cache_";
 
@@ -2758,6 +2852,301 @@ async function updateBookingStatus(id, status) {
   }
 }
 
+/* ========================================================
+   دوال المزادات والعروض
+   ======================================================== */
+
+let currentBidId = 0;
+let currentBidTitle = '';
+
+// ===== إظهار/إخفاء نموذج الطلب =====
+function showBidForm() {
+  document.getElementById('bidFormContainer').classList.remove('hidden');
+  // تعبئة التاريخ الحالي كاقتراح
+  const today = new Date();
+  const future = new Date(today);
+  future.setDate(today.getDate() + 7);
+  document.getElementById('bidDeadline').value = future.toISOString().split('T')[0];
+}
+
+function hideBidForm() {
+  document.getElementById('bidFormContainer').classList.add('hidden');
+  document.getElementById('bidFormMessage').innerHTML = '';
+  ['bidTitle','bidDescription','bidCategory','bidBudget','bidArea','bidDeadline'].forEach(id => document.getElementById(id).value = '');
+}
+
+// ===== طرح طلب جديد =====
+async function submitBid() {
+  if (!requireLogin()) return;
+
+  const title = document.getElementById('bidTitle').value.trim();
+  const description = document.getElementById('bidDescription').value.trim();
+  const category = document.getElementById('bidCategory').value.trim();
+  const budget = document.getElementById('bidBudget').value.trim();
+  const area = document.getElementById('bidArea').value.trim();
+  const deadline = document.getElementById('bidDeadline').value.trim();
+  const msgDiv = document.getElementById('bidFormMessage');
+
+  if (!title || !description || !category || !budget || !area || !deadline) {
+    msgDiv.innerHTML = '<span class="text-red-500">⚠️ جميع الحقول مطلوبة</span>';
+    return;
+  }
+
+  const client_name = getCurrentUser();
+  const client_phone = getCurrentUserPhone();
+
+  msgDiv.innerHTML = '<span class="text-blue-500">⏳ جاري طرح الطلب...</span>';
+
+  try {
+    const params = new URLSearchParams();
+    params.append('action', 'add_bid');
+    params.append('client_name', client_name);
+    params.append('client_phone', client_phone);
+    params.append('title', title);
+    params.append('description', description);
+    params.append('category', category);
+    params.append('budget', budget);
+    params.append('area', area);
+    params.append('deadline', deadline);
+
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params.toString()
+    });
+    const result = await response.json();
+
+    if (result.success) {
+      msgDiv.innerHTML = '<span class="text-green-600">✅ تم طرح الطلب بنجاح!</span>';
+      showToast('تم طرح طلبك', 'success');
+      hideBidForm();
+      loadMyBids('all');
+    } else {
+      throw new Error(result.message || 'فشل طرح الطلب');
+    }
+  } catch (error) {
+    msgDiv.innerHTML = `<span class="text-red-500">❌ ${error.message}</span>`;
+    showToast('فشل طرح الطلب', 'error');
+  }
+}
+
+// ===== جلب طلباتي =====
+async function loadMyBids(status = 'all') {
+  if (!isLoggedIn()) {
+    document.getElementById('bidsContainer').innerHTML = `
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center">
+        <p class="text-gray-400">الرجاء تسجيل الدخول لعرض طلباتك</p>
+      </div>`;
+    return;
+  }
+
+  // تحديث الفلاتر
+  document.querySelectorAll('#bidsContainer .chip').forEach(chip => {
+    chip.classList.remove('bg-primary', 'text-white');
+    chip.classList.add('bg-primary/10', 'text-primary');
+    if (chip.dataset.status === status) {
+      chip.classList.remove('bg-primary/10', 'text-primary');
+      chip.classList.add('bg-primary', 'text-white');
+    }
+  });
+
+  const container = document.getElementById('bidsContainer');
+  container.innerHTML = `<div class="space-y-3">${[1,2,3].map(() => `
+    <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow"><div class="skeleton h-4 w-1/3"></div><div class="skeleton h-3 w-1/2 mt-2"></div></div>
+  `).join('')}</div>`;
+
+  try {
+    const userPhone = getCurrentUserPhone() || '';
+    const url = `${API_URL}?action=get_bids&status=${status}&user_phone=${encodeURIComponent(userPhone)}`;
+    const response = await fetchWithTimeout(url);
+    const result = await response.json();
+
+    if (result.success) {
+      renderMyBids(container, result.bids || []);
+    } else {
+      throw new Error(result.error || 'تعذّر جلب الطلبات');
+    }
+  } catch (error) {
+    container.innerHTML = `<div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center"><p class="text-red-500">⚠️ ${error.message}</p><button onclick="loadMyBids('${status}')" class="btn-primary mt-4">إعادة المحاولة</button></div>`;
+  }
+}
+
+// ===== عرض طلباتي =====
+function renderMyBids(container, bids) {
+  if (!bids || bids.length === 0) {
+    container.innerHTML = `
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center">
+        <div class="text-4xl mb-2">📋</div>
+        <p class="font-bold">لا توجد طلبات</p>
+        <p class="text-sm text-gray-400">يمكنك طرح طلب جديد من خلال زر "طلب جديد"</p>
+      </div>`;
+    return;
+  }
+
+  const statusMap = {
+    'open': { label: '📋 مفتوح', class: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' },
+    'assigned': { label: '✅ تم التعيين', class: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' },
+    'closed': { label: '🔒 مغلق', class: 'bg-gray-100 text-gray-800 dark:bg-gray-700/30 dark:text-gray-300' }
+  };
+
+  container.innerHTML = bids.map(b => {
+    const statusInfo = statusMap[b.status] || statusMap['open'];
+    return `
+      <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border-r-4 ${b.status === 'open' ? 'border-green-500' : b.status === 'assigned' ? 'border-blue-500' : 'border-gray-400'}">
+        <div class="flex flex-wrap items-start justify-between gap-2">
+          <div class="flex-1">
+            <p class="font-bold text-lg">${escapeHtml(b.title)}</p>
+            <p class="text-sm text-gray-500">📂 ${escapeHtml(b.category)} | 📍 ${escapeHtml(b.area)}</p>
+            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">${escapeHtml(b.description)}</p>
+            <p class="text-xs text-gray-400">💰 الميزانية: ${b.budget} شيكل | 🗓️ الموعد النهائي: ${b.deadline}</p>
+            <p class="text-xs text-gray-400 mt-1">🕐 ${new Date(b.created_at).toLocaleString('ar')}</p>
+          </div>
+          <div class="text-right">
+            <span class="text-xs px-3 py-1 rounded-full ${statusInfo.class}">${statusInfo.label}</span>
+            ${b.status === 'open' ? `<button onclick="viewBidOffers(${b.id}, '${escapeHtml(b.title)}')" class="text-xs text-primary hover:underline block mt-2">💰 عرض العروض (${b.offerCount || 0})</button>` : ''}
+            ${b.status === 'assigned' ? `<span class="text-xs text-green-600 block mt-2">تم تعيين مقاول</span>` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ===== جلب الطلبات المفتوحة (للمزادات) =====
+async function loadAuctions() {
+  if (!isLoggedIn()) {
+    document.getElementById('auctionsContainer').innerHTML = `
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center">
+        <p class="text-gray-400">الرجاء تسجيل الدخول لعرض المزادات</p>
+      </div>`;
+    return;
+  }
+
+  const area = document.getElementById('auctionAreaFilter').value;
+  const category = document.getElementById('auctionCategoryFilter').value;
+  const container = document.getElementById('auctionsContainer');
+
+  container.innerHTML = `<div class="space-y-3">${[1,2,3].map(() => `
+    <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow"><div class="skeleton h-4 w-1/3"></div><div class="skeleton h-3 w-1/2 mt-2"></div></div>
+  `).join('')}</div>`;
+
+  try {
+    let url = `${API_URL}?action=get_bids&status=open`;
+    if (area && area !== 'all') url += `&area=${encodeURIComponent(area)}`;
+    if (category && category !== 'all') url += `&category=${encodeURIComponent(category)}`;
+    const response = await fetchWithTimeout(url);
+    const result = await response.json();
+
+    if (result.success) {
+      renderAuctions(container, result.bids || []);
+    } else {
+      throw new Error(result.error || 'تعذّر جلب الطلبات');
+    }
+  } catch (error) {
+    container.innerHTML = `<div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center"><p class="text-red-500">⚠️ ${error.message}</p><button onclick="loadAuctions()" class="btn-primary mt-4">إعادة المحاولة</button></div>`;
+  }
+}
+
+// ===== عرض المزادات =====
+function renderAuctions(container, bids) {
+  if (!bids || bids.length === 0) {
+    container.innerHTML = `
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center">
+        <div class="text-4xl mb-2">🔨</div>
+        <p class="font-bold">لا توجد طلبات مفتوحة حالياً</p>
+        <p class="text-sm text-gray-400">ترقب الطلبات الجديدة</p>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = bids.map(b => `
+    <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border-r-4 border-green-500">
+      <div class="flex flex-wrap items-start justify-between gap-2">
+        <div class="flex-1">
+          <p class="font-bold text-lg">${escapeHtml(b.title)}</p>
+          <p class="text-sm text-gray-500">👤 ${escapeHtml(b.client_name)} | 📂 ${escapeHtml(b.category)} | 📍 ${escapeHtml(b.area)}</p>
+          <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">${escapeHtml(b.description)}</p>
+          <p class="text-xs text-gray-400">💰 الميزانية: ${b.budget} شيكل | 🗓️ الموعد النهائي: ${b.deadline}</p>
+        </div>
+        <div class="text-right">
+          <button onclick="openOfferModal(${b.id}, '${escapeHtml(b.title)}')" class="btn-accent text-sm px-4 py-2 flex items-center gap-1">
+            <i data-lucide="coins" class="lucide" style="width:1em;height:1em"></i> تقديم عرض
+          </button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ===== نافذة تقديم عرض =====
+function openOfferModal(bidId, bidTitle) {
+  currentBidId = bidId;
+  currentBidTitle = bidTitle;
+  document.getElementById('offerBidTitle').textContent = bidTitle;
+  document.getElementById('offerModal').classList.remove('hidden');
+  document.getElementById('offerPrice').value = '';
+  document.getElementById('offerNote').value = '';
+  document.getElementById('offerMessage').innerHTML = '';
+}
+
+function closeOfferModal() {
+  document.getElementById('offerModal').classList.add('hidden');
+}
+
+// ===== تقديم عرض =====
+async function submitOffer() {
+  if (!requireLogin()) return;
+
+  const price = document.getElementById('offerPrice').value.trim();
+  const note = document.getElementById('offerNote').value.trim();
+  const msgDiv = document.getElementById('offerMessage');
+
+  if (!price) {
+    msgDiv.innerHTML = '<span class="text-red-500">⚠️ السعر مطلوب</span>';
+    return;
+  }
+
+  const provider_name = getCurrentUser();
+  const provider_phone = getCurrentUserPhone();
+
+  msgDiv.innerHTML = '<span class="text-blue-500">⏳ جاري إرسال العرض...</span>';
+
+  try {
+    const params = new URLSearchParams();
+    params.append('action', 'add_offer');
+    params.append('bid_id', currentBidId);
+    params.append('provider_name', provider_name);
+    params.append('provider_phone', provider_phone);
+    params.append('offer_price', price);
+    params.append('offer_note', note);
+
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params.toString()
+    });
+    const result = await response.json();
+
+    if (result.success) {
+      msgDiv.innerHTML = '<span class="text-green-600">✅ تم تقديم العرض بنجاح!</span>';
+      showToast('تم تقديم العرض', 'success');
+      setTimeout(closeOfferModal, 1500);
+      loadAuctions();
+    } else {
+      throw new Error(result.message || 'فشل تقديم العرض');
+    }
+  } catch (error) {
+    msgDiv.innerHTML = `<span class="text-red-500">❌ ${error.message}</span>`;
+    showToast('فشل تقديم العرض', 'error');
+  }
+}
+
+// ===== عرض العروض على طلب (لصاحب الطلب) =====
+async function viewBidOffers(bidId, bidTitle) {
+  // سيتم تنفيذها في صفحة منفصلة أو نافذة
+  showToast(`جاري جلب عروض ${bidTitle}...`, 'info');
+  // يمكن إضافة نافذة منبثقة لعرض العروض مع زر قبول
+}
 // تحديث دالة performSearch لاستخدام IndexedDB
 // ابحث عن دالة performSearch واستبدل استدعاءات localStorage بـ IndexedDB
 
