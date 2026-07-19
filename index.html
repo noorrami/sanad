@@ -422,7 +422,27 @@
       <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md">
         <div class="grid grid-cols-1 gap-4">
           <input type="text" id="addName" placeholder="الاسم الكامل" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
-          <input type="tel" id="addPhone" placeholder="رقم الهاتف (واتساب) مثال: 0599xxxxxx" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+          <!-- بعد التعديل - مع حقل منسدل للدولة -->
+          <div class="flex flex-col sm:flex-row gap-3">
+            <select id="addCountryCode" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white w-full sm:w-32">
+              <option value="970">🇵🇸 +970 (فلسطين)</option>
+              <option value="972">🇮🇱 +972 (إسرائيل)</option>
+              <option value="961">🇱🇧 +961 (لبنان)</option>
+              <option value="962">🇯🇴 +962 (الأردن)</option>
+              <option value="963">🇸🇾 +963 (سوريا)</option>
+              <option value="20">🇪🇬 +20 (مصر)</option>
+              <option value="966">🇸🇦 +966 (السعودية)</option>
+              <option value="971">🇦🇪 +971 (الإمارات)</option>
+              <option value="965">🇰🇼 +965 (الكويت)</option>
+              <option value="974">🇶🇦 +974 (قطر)</option>
+              <option value="968">🇴🇲 +968 (عمان)</option>
+              <option value="973">🇧🇭 +973 (البحرين)</option>
+              <option value="1">🇺🇸 +1 (الولايات المتحدة)</option>
+              <option value="44">🇬🇧 +44 (المملكة المتحدة)</option>
+              <option value="90">🇹🇷 +90 (تركيا)</option>
+            </select>
+            <input type="tel" id="addPhone" placeholder="رقم الهاتف (مثال: 599xxxxxx)" class="flex-1 p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+          </div>
           <input type="text" id="addArea" placeholder="المنطقة (مثال: الشجاعية)" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
           <input type="text" id="addSkill" placeholder="المهارات التي تقدمها (مثال: صيانة شمسية، إلكترونيات)" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
           <input type="text" id="addRequest" placeholder="المهارات التي تبحث عنها (اختياري)" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
@@ -500,8 +520,27 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <input type="text" id="driverName" placeholder="الاسم الكامل" 
                 class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition">
-          <input type="tel" id="driverPhone" placeholder="رقم الهاتف (واتساب)" 
-                class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition">
+          <!-- بعد التعديل - مع حقل منسدل للدولة -->
+          <div class="flex flex-col sm:flex-row gap-3">
+            <select id="addCountryCode" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white w-full sm:w-32">
+              <option value="970">🇵🇸 +970 (فلسطين)</option>
+              <option value="972">🇮🇱 +972 (إسرائيل)</option>
+              <option value="961">🇱🇧 +961 (لبنان)</option>
+              <option value="962">🇯🇴 +962 (الأردن)</option>
+              <option value="963">🇸🇾 +963 (سوريا)</option>
+              <option value="20">🇪🇬 +20 (مصر)</option>
+              <option value="966">🇸🇦 +966 (السعودية)</option>
+              <option value="971">🇦🇪 +971 (الإمارات)</option>
+              <option value="965">🇰🇼 +965 (الكويت)</option>
+              <option value="974">🇶🇦 +974 (قطر)</option>
+              <option value="968">🇴🇲 +968 (عمان)</option>
+              <option value="973">🇧🇭 +973 (البحرين)</option>
+              <option value="1">🇺🇸 +1 (الولايات المتحدة)</option>
+              <option value="44">🇬🇧 +44 (المملكة المتحدة)</option>
+              <option value="90">🇹🇷 +90 (تركيا)</option>
+            </select>
+            <input type="tel" id="addPhone" placeholder="رقم الهاتف (مثال: 599xxxxxx)" class="flex-1 p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
+          </div>
           <input type="text" id="driverArea" placeholder="المنطقة" 
                 class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition">
           <input type="text" id="driverVehicle" placeholder="نوع المركبة (سيارة، دراجة، إلخ)" 
@@ -740,7 +779,7 @@
 /* ========================================================
    الإعدادات
    ======================================================== */
-const API_URL = "https://script.google.com/macros/s/AKfycbyJzBItavr1UqIFdr--kjVhXA6netSAY40Ah2gZOCCyJ5bXW1u2SwJyLdQGmZxD-ab1/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwCL3yqlW-GOIrX4_WAIXMjUQyArcO-7CYPRRVeyR7j90fG1MNhwiy0zKEv9iSEWA1T/exec";
 const FETCH_TIMEOUT_MS = 20000;
 const CACHE_KEY_PREFIX = "sanad_cache_";
 
@@ -909,8 +948,8 @@ function renderResults(container, data) {
     const phone = p.phone || '';
     const area = p.area || 'غير محدد';
     const skill = p.skill_offer || 'لم يحدد';
-    const cleanPhone = String(phone).replace(/\D/g, '').replace(/^0/, '');
-    const whatsappLink = `https://wa.me/970${cleanPhone}`;
+    const cleanPhone = String(phone).replace(/\D/g, ''); // نزيل كل ما ليس رقماً
+    const whatsappLink = `https://wa.me/${cleanPhone}`; // الرقم محفوظ مع المقدمة (مثلاً 970599xxxxxx)
     const typeLabel = p.type === 'driver' ? '🚗 سائق' : '🛠️ خبير';
 
     return `
@@ -1164,9 +1203,9 @@ function renderDriverResults(container, data) {
         const phone = p.phone || '';
         const area = p.area || 'غير محدد';
         const skill = p.skill_offer || 'لم يحدد';
-        const cleanPhone = String(phone).replace(/\D/g, '').replace(/^0/, '');
-        const whatsappLink = `https://wa.me/970${cleanPhone}`;
-        
+        // مثال من renderResults
+        const cleanPhone = String(phone).replace(/\D/g, ''); // نزيل كل ما ليس رقماً
+        const whatsappLink = `https://wa.me/${cleanPhone}`; // الرقم محفوظ مع المقدمة (مثلاً 970599xxxxxx)
         // استخراج نوع المركبة من skill_offer
         const vehicleMatch = skill.match(/\(([^)]+)\)/);
         const vehicle = vehicleMatch ? vehicleMatch[1] : 'غير محدد';
@@ -1224,14 +1263,19 @@ function resetDriverSearch() {
    إضافة خدمة جديدة
    ======================================================== */
 function validatePalestinianPhone(phone) {
+  // يسمح الآن بأي رقم يبدأ برمز دولة صحيح (مثل 970, 972, إلخ)
   const digits = phone.replace(/\D/g, '');
-  return /^(0)?5[0-9]{8}$/.test(digits);
+  // يمكنك تخصيص التحقق حسب الحاجة، مثلاً التأكد من الطول
+  return digits.length >= 10 && digits.length <= 15;
 }
 
 async function addService() {
   if (!requireLogin()) return;
   const name = document.getElementById('addName').value.trim();
-  const phone = document.getElementById('addPhone').value.trim();
+  const countryCode = document.getElementById('addCountryCode').value.trim(); // جديد
+  const phoneInput = document.getElementById('addPhone').value.trim();
+  // دمج المقدمة مع الرقم (مع إزالة أي أصفار زائدة في البداية)
+  const phone = countryCode + phoneInput.replace(/^0+/, '');
   const area = document.getElementById('addArea').value.trim();
   const skill = document.getElementById('addSkill').value.trim();
   const request = document.getElementById('addRequest').value.trim();
@@ -1299,7 +1343,9 @@ async function addDriver() {
   if (!requireLogin()) return;
   
   const name = document.getElementById('driverName').value.trim();
-  const phone = document.getElementById('driverPhone').value.trim();
+   const countryCode = document.getElementById('driverCountryCode').value.trim();
+  const phoneInput = document.getElementById('driverPhone').value.trim();
+  const phone = countryCode + phoneInput.replace(/^0+/, '');
   const area = document.getElementById('driverArea').value.trim();
   const vehicle = document.getElementById('driverVehicle').value.trim();
   const msgDiv = document.getElementById('driverMessage');
