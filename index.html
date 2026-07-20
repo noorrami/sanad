@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
 <title>سند - تبادل المهارات في غزة</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230E5C56'/%3E%3Cpath d='M14 42 L32 20 L50 42' stroke='%23D98E2B' stroke-width='7' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='32' cy='46' r='4.5' fill='%23FAF6EF'/%3E%3C/svg%3E">
 
 <!-- خط Tajawal العربي الاحترافي -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -202,6 +203,36 @@
   html.dark .stat-card { background: linear-gradient(180deg, rgba(127,214,204,.06), transparent); border-color: rgba(127,214,204,.12); }
 
   .nav-link { display: flex; align-items: center; gap: .65rem; }
+  .nav-link.active { background-color: #0E5C56; color: #fff; box-shadow: 0 4px 14px rgba(14,92,86,.25); }
+  html.dark .nav-link.active { background-color: #17847B; }
+
+  /* ===== شعار سند ===== */
+  .logo-badge {
+    width: 2.4rem; height: 2.4rem; border-radius: .85rem; flex-shrink: 0;
+    background: linear-gradient(135deg, #0E5C56, #17847B);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 14px rgba(14,92,86,.35);
+    position: relative; overflow: hidden;
+  }
+  .logo-badge::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.35), transparent 60%);
+  }
+  .logo-badge i { color: #FAF6EF; position: relative; z-index: 1; }
+  .logo-wordmark { font-weight: 800; letter-spacing: .02em; }
+  .logo-pulse { animation: logoPulse 3.2s ease-in-out infinite; }
+  @keyframes logoPulse {
+    0%, 100% { box-shadow: 0 4px 14px rgba(14,92,86,.35); }
+    50% { box-shadow: 0 4px 22px rgba(217,142,43,.45); }
+  }
+
+  /* ===== نجوم التقييم التفاعلية ===== */
+  .star-icon { fill: none; stroke: currentColor; color: #D98E2B; transition: all .15s ease; }
+  .star-icon.filled { fill: #D98E2B; color: #D98E2B; }
+
+  /* ===== تدرّج الترويسة ===== */
+  .header-gradient { background: linear-gradient(90deg, #0E5C56, #12766E 60%, #17847B); }
+  html.dark .header-gradient { background: linear-gradient(90deg, #0A4440, #0E5C56 60%, #0F5952); }
 </style>
 </head>
 <body class="font-cairo bg-sand dark:bg-sandDark text-gray-800 dark:text-gray-200 min-h-screen">
@@ -211,7 +242,10 @@
 <!-- الشريط الجانبي -->
 <div id="sidebar" class="sidebar fixed top-0 right-0 h-full w-64 bg-white dark:bg-gray-800 shadow-lg z-50 p-4 flex flex-col md:translate-x-0 overflow-y-auto">
   <div class="flex justify-between items-center mb-6">
-    <span class="text-2xl font-extrabold text-primary dark:text-primaryLight">سـنـد</span>
+    <div class="flex items-center gap-2.5">
+      <div class="logo-badge logo-pulse"><i data-lucide="handshake" class="lucide" style="width:1.3em;height:1.3em"></i></div>
+      <span class="text-2xl logo-wordmark text-primary dark:text-primaryLight">سـنـد</span>
+    </div>
     <button id="closeSidebar" class="md:hidden text-gray-500 leading-none" aria-label="إغلاق القائمة"><i data-lucide="x" class="lucide" style="width:1.4em;height:1.4em"></i></button>
   </div>
 
@@ -248,8 +282,11 @@
 
 <!-- المحتوى الرئيسي -->
 <div class="md:mr-64">
-  <header class="bg-primary dark:bg-gray-800 text-white p-4 flex items-center justify-between shadow-md sticky top-0 z-40">
-    <h1 class="text-xl font-extrabold">منصة سند</h1>
+  <header class="header-gradient dark:bg-gray-800 text-white p-4 flex items-center justify-between shadow-md sticky top-0 z-40">
+    <div class="flex items-center gap-2.5">
+      <div class="logo-badge"><i data-lucide="handshake" class="lucide" style="width:1.15em;height:1.15em"></i></div>
+      <h1 class="text-xl font-extrabold">منصة سند</h1>
+    </div>
     <div class="flex items-center gap-4">
       <div class="relative">
         <button onclick="toggleNotificationDropdown()" class="hover:scale-110 transition relative p-1" aria-label="الإشعارات">
@@ -809,12 +846,12 @@
     <div class="space-y-4">
       <div class="text-center">
         <p class="text-sm text-gray-500 dark:text-gray-400">تقييم: <span id="reviewProviderName" class="font-bold text-primary"></span></p>
-        <div class="flex justify-center gap-2 my-3 text-3xl" id="starContainer">
-          <span onclick="setRating(1)" class="cursor-pointer hover:scale-110 transition" data-star="1">☆</span>
-          <span onclick="setRating(2)" class="cursor-pointer hover:scale-110 transition" data-star="2">☆</span>
-          <span onclick="setRating(3)" class="cursor-pointer hover:scale-110 transition" data-star="3">☆</span>
-          <span onclick="setRating(4)" class="cursor-pointer hover:scale-110 transition" data-star="4">☆</span>
-          <span onclick="setRating(5)" class="cursor-pointer hover:scale-110 transition" data-star="5">☆</span>
+        <div class="flex justify-center gap-2 my-3" id="starContainer">
+          <span onclick="setRating(1)" class="cursor-pointer hover:scale-110 transition" data-star="1"><i data-lucide="star" class="lucide star-icon" style="width:1.8em;height:1.8em"></i></span>
+          <span onclick="setRating(2)" class="cursor-pointer hover:scale-110 transition" data-star="2"><i data-lucide="star" class="lucide star-icon" style="width:1.8em;height:1.8em"></i></span>
+          <span onclick="setRating(3)" class="cursor-pointer hover:scale-110 transition" data-star="3"><i data-lucide="star" class="lucide star-icon" style="width:1.8em;height:1.8em"></i></span>
+          <span onclick="setRating(4)" class="cursor-pointer hover:scale-110 transition" data-star="4"><i data-lucide="star" class="lucide star-icon" style="width:1.8em;height:1.8em"></i></span>
+          <span onclick="setRating(5)" class="cursor-pointer hover:scale-110 transition" data-star="5"><i data-lucide="star" class="lucide star-icon" style="width:1.8em;height:1.8em"></i></span>
         </div>
         <p class="text-sm font-bold" id="ratingText">اختر تقييمك</p>
         <input type="hidden" id="selectedRating" value="0">
@@ -874,19 +911,28 @@
 /* ========================================================
    الإعدادات
    ======================================================== */
-const API_URL = "https://script.google.com/macros/s/AKfycbyLpYxAHNUe85jFr5MGILZvsQAOq3IwQI1za_WobSO_d3F3cW-wTOvoS-MEpwet1BqY/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzgu8nL7XlOwdtYBO3YirjlM3iAFhAeu-4dcacjlHHrHLbn7b7qLnXRkEAE4eL8dadA/exec";
 const FETCH_TIMEOUT_MS = 20000;
 const CACHE_KEY_PREFIX = "sanad_cache_";
 
 /* ========================================================
    أدوات مساعدة عامة
    ======================================================== */
+const TOAST_ICONS = { success: 'check-circle-2', error: 'x-circle', info: 'info' };
 function showToast(message, type = 'info') {
   const host = document.getElementById('toastHost');
   const el = document.createElement('div');
-  el.className = `toast toast-${type}`;
-  el.textContent = message;
+  el.className = `toast toast-${type} flex items-center justify-center gap-2`;
+  const icon = document.createElement('i');
+  icon.setAttribute('data-lucide', TOAST_ICONS[type] || TOAST_ICONS.info);
+  icon.className = 'lucide';
+  icon.style.cssText = 'width:1.15em;height:1.15em;flex-shrink:0';
+  const text = document.createElement('span');
+  text.textContent = message;
+  el.appendChild(icon);
+  el.appendChild(text);
   host.appendChild(el);
+  if (window.lucide) lucide.createIcons();
   setTimeout(() => el.remove(), 4000);
 }
 
@@ -1056,7 +1102,7 @@ function renderResults(container, data) {
           <p class="text-xs text-gray-400">📍 ${escapeHtml(area)}</p>
           <!-- نظام التقييم الجديد -->
           <div class="flex items-center gap-2 mt-2">
-            <span class="text-sm font-bold" id="rating-${phone}">⭐ 0.0</span>
+            <span class="text-sm font-bold flex items-center gap-1" id="rating-${phone}"><i data-lucide="star" class="lucide star-icon filled" style="width:1em;height:1em"></i><span class="rating-value">0.0</span></span>
             <span class="text-xs text-gray-400" id="rating-count-${phone}">(0 مراجعة)</span>
             <button onclick="openReviewModal('${escapeHtml(name)}', '${phone}')" 
                     class="text-xs text-primary hover:underline">أضف تقييم</button>
@@ -1089,7 +1135,8 @@ async function fetchRating(providerName, providerPhone) {
       if (ratingEl) {
         const avg = result.data?.average || 0;
         const count = result.data?.count || 0;
-        ratingEl.textContent = `⭐ ${avg.toFixed(1)}`;
+        const valEl = ratingEl.querySelector('.rating-value');
+        if (valEl) valEl.textContent = avg.toFixed(1); else ratingEl.textContent = avg.toFixed(1);
         countEl.textContent = `(${count} مراجعة${count !== 1 ? 'ات' : ''})`;
       }
     }
@@ -1103,7 +1150,8 @@ function generateStars(rating) {
   const full = Math.floor(rating);
   const half = rating % 1 >= 0.5 ? 1 : 0;
   const empty = 5 - full - half;
-  return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(empty);
+  const starIcon = (filled) => `<i data-lucide="star" class="lucide star-icon${filled ? ' filled' : ''}" style="width:.95em;height:.95em"></i>`;
+  return starIcon(true).repeat(full) + (half ? starIcon(true) : '') + starIcon(false).repeat(empty);
 }
 
 
@@ -1439,6 +1487,7 @@ async function addService() {
 
 async function addDriver() {
   if (!requireLogin()) return;
+
   const name = document.getElementById('driverName').value.trim();
   const countryCodeSelect = document.getElementById('addCountryCode'); // تأكد من وجود هذا العنصر
   const countryCode = document.getElementById('driverCountryCode').value.trim();
@@ -1830,7 +1879,7 @@ function openReviewModal(providerName, providerPhone) {
   document.getElementById('selectedRating').value = 0;
   selectedRating = 0;
   document.getElementById('ratingText').textContent = 'اختر تقييمك';
-  document.querySelectorAll('#starContainer span').forEach(el => el.textContent = '☆');
+  document.querySelectorAll('#starContainer .star-icon').forEach(el => el.classList.remove('filled'));
   document.getElementById('reviewerName').value = '';
   document.getElementById('reviewComment').value = '';
   document.getElementById('reviewMessage').innerHTML = '';
@@ -1843,10 +1892,10 @@ function closeReviewModal() {
 function setRating(value) {
   selectedRating = value;
   document.getElementById('selectedRating').value = value;
-  document.getElementById('ratingText').textContent = `⭐ ${value} نجوم`;
+  document.getElementById('ratingText').textContent = `${value} من 5 نجوم`;
   document.querySelectorAll('#starContainer span').forEach(el => {
     const starVal = parseInt(el.dataset.star);
-    el.textContent = starVal <= value ? '★' : '☆';
+    el.querySelector('.star-icon').classList.toggle('filled', starVal <= value);
   });
 }
 
@@ -2886,12 +2935,11 @@ function hideBidForm() {
 }
 
 // ===== طرح طلب جديد =====
-// ===== طرح طلب جديد (نسخة نظيفة ومضمونة) =====
 async function submitBid() {
-  console.log('✅ الإصدار النهائي من submitBid - v6');
+  console.log('✅ الإصدار الجديد من submitBid - v4');
   if (!requireLogin()) return;
-  
-  // جلب البيانات من النموذج
+  console.log('📞 رقم الهاتف:', getCurrentUserPhone());
+  console.log('👤 اسم العميل:', getCurrentUser());
   const title = document.getElementById('bidTitle').value.trim();
   const description = document.getElementById('bidDescription').value.trim();
   const category = document.getElementById('bidCategory').value.trim();
@@ -2900,31 +2948,26 @@ async function submitBid() {
   const deadline = document.getElementById('bidDeadline').value.trim();
   const msgDiv = document.getElementById('bidFormMessage');
 
-  // جلب بيانات المستخدم
-  const userPhone = getCurrentUserPhone();
-  const userName = getCurrentUser();
-
-  // التحقق من رقم الهاتف
-  if (!userPhone) {
+  // ✅ استخدم اسماً مختلفاً لتجنب التعارض
+  const clientPhoneNumber = getCurrentUserPhone();
+  const clientName = getCurrentUser();
+  if (!clientPhoneNumber) {
     msgDiv.innerHTML = '<span class="text-red-500">⚠️ رقم هاتفك غير مسجل. يرجى تسجيل الخروج والدخول مرة أخرى.</span>';
     return;
   }
 
-  // التحقق من الحقول
   if (!title || !description || !category || !budget || !area || !deadline) {
     msgDiv.innerHTML = '<span class="text-red-500">⚠️ جميع الحقول مطلوبة</span>';
     return;
   }
 
-  // عرض رسالة التحميل
   msgDiv.innerHTML = '<span class="text-blue-500">⏳ جاري طرح الطلب...</span>';
 
   try {
-    // تجهيز البيانات للإرسال
     const params = new URLSearchParams();
     params.append('action', 'add_bid');
-    params.append('client_name', userName);
-    params.append('client_phone', userPhone);
+    params.append('client_name', clientName);
+    params.append('client_phone', clientPhoneNumber);
     params.append('title', title);
     params.append('description', description);
     params.append('category', category);
@@ -2932,13 +2975,11 @@ async function submitBid() {
     params.append('area', area);
     params.append('deadline', deadline);
 
-    // إرسال الطلب
     const response = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: params.toString()
     });
-    
     const result = await response.json();
 
     if (result.success) {
