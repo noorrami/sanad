@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
 
 <!-- Leaflet.js للخرائط -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
   /* تنسيق الخريطة */
@@ -240,7 +240,7 @@
     <a href="#" onclick="showSection('map')" data-nav="map" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold"><i data-lucide="map-pin" class="lucide"></i> خريطة الخدمات</a>
     <a href="#" onclick="showSection('bookings')" data-nav="bookings" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold"><i data-lucide="calendar" class="lucide"></i> حجوزاتي</a>
     <a href="#" onclick="showSection('bids')" data-nav="bids" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold"><i data-lucide="gavel" class="lucide"></i> طلباتي</a>
-    <a href="#" onclick="showSection('auctions')" data-nav="auctions" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold"><i data-lucide="hammer" class="lucide"></i> المزادات</a>
+    <a href="#" onclick="showSection('auctions')" data-nav="auctions" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold"><i data-lucide="gavel" class="lucide"></i> المناقصات</a>
     <a href="#" onclick="restartTour()" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold text-sm text-gray-400"><i data-lucide="refresh-cw" class="lucide"></i> إعادة الجولة الإرشادية</a>
     <a href="#" id="logoutBtn" onclick="logout()" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-red-600 hover:text-white transition font-semibold hidden"><i data-lucide="log-out" class="lucide"></i> تسجيل خروج</a>
   </nav>
@@ -728,7 +728,7 @@
       </div>
     </section>
 
-    <!-- صفحة طلباتي (المزادات - للمستفيد) -->
+    <!-- صفحة طلباتي  -->
     <section id="section-bids" class="hidden">
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-2xl font-bold flex items-center gap-2"><i data-lucide="gavel" class="lucide"></i> طلباتي</h2>
@@ -769,14 +769,14 @@
 
       <!-- قائمة الطلبات -->
       <div id="bidsContainer" class="space-y-4">
-        <div class="text-center text-gray-400 py-8">قم بتسجيل الدخول لعرض طلباتك</div>
+        <div class="text-center text-gray-400 py-8">اختر..الكل أو مفتوح أو تم التعيين لعرض طلباتك</div>
       </div>
     </section>
 
-    <!-- صفحة المزادات (لعرض الطلبات المفتوحة وتقديم العروض) -->
+    <!-- صفحة المناقصات (لعرض الطلبات المفتوحة وتقديم العروض) -->
     <section id="section-auctions" class="hidden">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="text-2xl font-bold flex items-center gap-2"><i data-lucide="hammer" class="lucide"></i> المزادات - طلبات مفتوحة</h2>
+        <h2 class="text-2xl font-bold flex items-center gap-2"><i data-lucide="gavel" class="lucide"></i> المناقصات - طلبات مفتوحة</h2>
         <span class="text-sm bg-primary/10 text-primary px-3 py-1 rounded-full flex items-center gap-1"><i data-lucide="sparkles" class="lucide" style="width:1em;height:1em"></i> تقديم عروض</span>
       </div>
 
@@ -885,7 +885,7 @@
 /* ========================================================
    الإعدادات
    ======================================================== */
-const API_URL = "https://script.google.com/macros/s/AKfycby_V7SsDl2D06f_8qaDertKmGgcF9VtNqdTWehXFptQIYDf7TewpZ3LAz1Ck4ojTiKx/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwB5UwgdzW3asgb_NLoKMa7SD5z-rPIS2tS25zuuzna5rETNjGTkeHuniyfKmycqSMa/exec";
 const FETCH_TIMEOUT_MS = 20000;
 const CACHE_KEY_PREFIX = "sanad_cache_";
 
@@ -3019,52 +3019,60 @@ function renderMyBids(container, bids) {
       </div>`;
     return;
   }
+const statusMap = {
+        'open': { label: '📋 مفتوح', class: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' },
+        'assigned': { label: '✅ تم التعيين', class: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' },
+        'closed': { label: '🔒 مغلق', class: 'bg-gray-100 text-gray-800 dark:bg-gray-700/30 dark:text-gray-300' }
+    };
 
-  const statusMap = {
-    'open': { label: '📋 مفتوح', class: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' },
-    'assigned': { label: '✅ تم التعيين', class: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' },
-    'closed': { label: '🔒 مغلق', class: 'bg-gray-100 text-gray-800 dark:bg-gray-700/30 dark:text-gray-300' }
-  };
+    container.innerHTML = bids.map(b => {
+        const statusInfo = statusMap[b.status] || statusMap['open'];
+        const isAssigned = b.status === 'assigned';
+        const isOpen = b.status === 'open';
+        const isClosed = b.status === 'closed';
 
-  container.innerHTML = bids.map(b => {
-    const statusInfo = statusMap[b.status] || statusMap['open'];
-    const isAssigned = b.status === 'assigned';
-    const isOpen = b.status === 'open';
-
-    return `
-      <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border-r-4 ${b.status === 'open' ? 'border-green-500' : b.status === 'assigned' ? 'border-blue-500' : 'border-gray-400'}">
-        <div class="flex flex-wrap items-start justify-between gap-2">
-          <div class="flex-1">
-            <p class="font-bold text-lg">${escapeHtml(b.title)}</p>
-            <p class="text-sm text-gray-500">📂 ${escapeHtml(b.category)} | 📍 ${escapeHtml(b.area)}</p>
-            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">${escapeHtml(b.description)}</p>
-            <p class="text-xs text-gray-400">💰 الميزانية: ${b.budget} شيكل | 🗓️ الموعد النهائي: ${b.deadline}</p>
-            <p class="text-xs text-gray-400 mt-1">🕐 ${new Date(b.created_at).toLocaleString('ar')}</p>
-            
-            ${isAssigned ? `
-              <div class="mt-2 p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                <p class="text-sm text-green-700 dark:text-green-300 font-bold">✅ تم تعيين مقدم خدمة لهذا الطلب</p>
-                <button onclick="getAssignedProvider('${b.id}')" class="btn-primary text-sm px-3 py-1 mt-2">
-                  <i data-lucide="message-circle" class="lucide" style="width:1em;height:1em"></i> تواصل مع مقدم الخدمة
-                </button>
-              </div>
-            ` : ''}
-          </div>
-          <div class="text-right">
-            <span class="text-xs px-3 py-1 rounded-full ${statusInfo.class}">${statusInfo.label}</span>
-            ${isOpen ? `
-              <button onclick="viewBidOffers(${b.id}, '${escapeHtml(b.title)}')" 
-                      class="text-xs text-primary hover:underline block mt-2">
-                💰 عرض العروض (${b.offerCount || 0})
-              </button>
-            ` : ''}
-          </div>
-        </div>
-      </div>
-    `;
-  }).join('');
+        return `
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border-r-4 ${b.status === 'open' ? 'border-green-500' : b.status === 'assigned' ? 'border-blue-500' : 'border-gray-400'}">
+                <div class="flex flex-wrap items-start justify-between gap-2">
+                    <div class="flex-1">
+                        <p class="font-bold text-lg">${escapeHtml(b.title)}</p>
+                        <p class="text-sm text-gray-500">📂 ${escapeHtml(b.category)} | 📍 ${escapeHtml(b.area)}</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">${escapeHtml(b.description)}</p>
+                        <p class="text-xs text-gray-400">💰 الميزانية: ${b.budget} شيكل | 🗓️ الموعد النهائي: ${b.deadline}</p>
+                        <p class="text-xs text-gray-400 mt-1">🕐 ${new Date(b.created_at).toLocaleString('ar')}</p>
+                        
+                        ${isAssigned ? `
+                            <div class="mt-2 p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                                <p class="text-sm text-green-700 dark:text-green-300 font-bold">✅ تم تعيين مقدم خدمة لهذا الطلب</p>
+                                <button onclick="getAssignedProvider('${b.id}')" class="btn-primary text-sm px-3 py-1 mt-2">
+                                    <i class="fas fa-whatsapp ml-1"></i> تواصل مع مقدم الخدمة
+                                </button>
+                                <!-- زر إنهاء الطلب -->
+                                <button onclick="closeBid('${b.id}')" class="btn-accent text-sm px-3 py-1 mt-2">
+                                    <i class="fas fa-check-circle ml-1"></i> إنهاء الطلب
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs px-3 py-1 rounded-full ${statusInfo.class}">${statusInfo.label}</span>
+                        ${isOpen ? `
+                            <button onclick="viewBidOffers(${b.id}, '${escapeHtml(b.title)}')" 
+                                    class="text-xs text-primary hover:underline block mt-2">
+                                <i class="fas fa-hand-holding-usd ml-1"></i> عرض العروض (${b.offerCount || 0})
+                            </button>
+                        ` : ''}
+                        ${isClosed ? `
+                            <span class="text-xs text-gray-500 block mt-2">تم إغلاق الطلب</span>
+                        ` : ''}
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
 }
 
+// ===== جلب معلومات مقدم الخدمة المعين =====
 // ===== جلب معلومات مقدم الخدمة المعين =====
 async function getAssignedProvider(bidId) {
   try {
@@ -3074,16 +3082,15 @@ async function getAssignedProvider(bidId) {
 
     if (result.success && result.provider) {
       const provider = result.provider;
-      // ✅ التأكد من أن رقم الهاتف نصي قبل استخدام replace
-      let phone = provider.phone || '';
-      phone = String(phone).replace(/\D/g, ''); // تحويل إلى نص وإزالة كل ما ليس رقماً
+      // ✅ التأكد من أن phone نص قبل استخدام replace
+      const phone = String(provider.phone).replace(/\D/g, '');
       if (phone) {
         window.open(`https://wa.me/970${phone}`, '_blank');
       } else {
-        showToast('رقم هاتف مقدم الخدمة غير متوفر', 'error');
+        showToast('رقم الهاتف غير صحيح', 'error');
       }
     } else {
-      showToast('لم يتم العثور على مقدم خدمة معين', 'error');
+      showToast(result.message || 'لم يتم العثور على مقدم خدمة معين', 'error');
     }
   } catch (error) {
     console.error('خطأ في جلب مقدم الخدمة:', error);
@@ -3331,6 +3338,26 @@ async function acceptOffer(offerId, bidId) {
     console.error('❌ خطأ في قبول العرض:', error);
     showToast(`❌ ${error.message}`, 'error');
   }
+}
+// ===== إنهاء الطلب (تغيير الحالة إلى مغلق) =====
+async function closeBid(bidId) {
+    if (!confirm('هل أنت متأكد من رغبتك في إنهاء هذا الطلب؟ سيتم إغلاقه ولن يمكنك التراجع.')) return;
+
+    try {
+        const url = `${API_URL}?action=close_bid&bid_id=${bidId}&user_phone=${getCurrentUserPhone()}`;
+        const response = await fetch(url);
+        const result = await response.json();
+
+        if (result.success) {
+            showToast('✅ تم إنهاء الطلب بنجاح!', 'success');
+            loadMyBids('all'); // تحديث القائمة
+        } else {
+            throw new Error(result.message || 'فشل إنهاء الطلب');
+        }
+    } catch (error) {
+        console.error('❌ خطأ في إنهاء الطلب:', error);
+        showToast(`❌ ${error.message}`, 'error');
+    }
 }
 </script>
 
