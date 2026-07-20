@@ -874,7 +874,7 @@
 /* ========================================================
    الإعدادات
    ======================================================== */
-const API_URL = "https://script.google.com/macros/s/AKfycbwWa_QilmxRBImWYtFzbFG_KUHKPqczRPssnm0oqM-hFaTUDxX4ZEdnto1y_zLqHHSx/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzqGOrzwZyooZ4Swsd8blawWi98S2Evw3AdL9A3oJqm_-pZff8p_yQtzICGPUHQOPNO/exec";
 const FETCH_TIMEOUT_MS = 20000;
 const CACHE_KEY_PREFIX = "sanad_cache_";
 
@@ -2978,9 +2978,12 @@ async function loadMyBids(status = 'all') {
 
   try {
     const userPhone = getCurrentUserPhone() || '';
+    console.log('📞 رقم هاتف المستخدم (للجلب):', userPhone);
     const url = `${API_URL}?action=get_bids&status=${status}&user_phone=${encodeURIComponent(userPhone)}`;
+    console.log('📤 رابط جلب الطلبات:', url);
     const response = await fetchWithTimeout(url);
     const result = await response.json();
+    console.log('📥 رد الخادم (الطلبات):', result);
 
     if (result.success) {
       renderMyBids(container, result.bids || []);
@@ -2988,12 +2991,14 @@ async function loadMyBids(status = 'all') {
       throw new Error(result.error || 'تعذّر جلب الطلبات');
     }
   } catch (error) {
+    console.error('❌ خطأ في جلب الطلبات:', error);
     container.innerHTML = `<div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center"><p class="text-red-500">⚠️ ${error.message}</p><button onclick="loadMyBids('${status}')" class="btn-primary mt-4">إعادة المحاولة</button></div>`;
   }
 }
 
 // ===== عرض طلباتي =====
 function renderMyBids(container, bids) {
+  console.log('📊 عدد الطلبات المستلمة:', bids ? bids.length : 0);
   if (!bids || bids.length === 0) {
     container.innerHTML = `
       <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center">
