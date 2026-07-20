@@ -565,6 +565,7 @@
             <div class="grid grid-cols-1 gap-4">
               <input type="text" id="loginUsername" placeholder="اسم المستخدم" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white text-center text-lg">
               <input type="password" id="loginPassword" placeholder="كلمة المرور" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white text-center text-lg">
+              <input type="tel" id="signupPhone" placeholder="رقم الهاتف (واتساب)" class="p-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white text-center text-lg">
               <button onclick="login()" class="btn-primary w-full py-3 text-lg flex items-center justify-center gap-2"><i data-lucide="log-in" class="lucide"></i> دخول</button>
               <div id="loginMessage" class="text-center font-bold min-h-[2rem]"></div>
               <p class="text-center text-sm mt-2">
@@ -873,7 +874,7 @@
 /* ========================================================
    الإعدادات
    ======================================================== */
-const API_URL = "https://script.google.com/macros/s/AKfycbwxP_p_3WAAGE_qGPVem6TZvttVRhvPv9USPQrKCiI4tqrIwGaCtl_NIKEeHlkEvU-P/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbx36UOm3BzKcINydvKme4Gg69J-a1zh4mHbkFwiikk42EpW8eRGdhiCwAA7X-9iIlh4/exec";
 const FETCH_TIMEOUT_MS = 20000;
 const CACHE_KEY_PREFIX = "sanad_cache_";
 
@@ -1558,6 +1559,8 @@ async function signup() {
   const password = document.getElementById('signupPassword').value.trim();
   const confirm = document.getElementById('signupConfirm').value.trim();
   const msgDiv = document.getElementById('signupMessage');
+  const phone = document.getElementById('signupPhone')?.value?.trim() || '';
+  localStorage.setItem('sanad_user_phone', phone);
 
   if (!username || !password || !confirm) {
     msgDiv.innerHTML = '<span class="text-red-500">⚠️ جميع الحقول مطلوبة</span>';
@@ -2066,7 +2069,15 @@ function closeNotificationDropdown() {
 
 // جلب رقم هاتف المستخدم الحالي
 function getCurrentUserPhone() {
-  return localStorage.getItem('sanad_user_phone') || '';
+  // حاول جلب الرقم من localStorage، وإذا لم يكن موجودًا، حاول جلبها من بيانات المستخدم المسجل
+  let phone = localStorage.getItem('sanad_user_phone');
+  if (!phone) {
+    // يمكنك هنا محاولة جلب الرقم من جدول المستخدمين إذا كان لديك وصول إليه
+    // أو يمكنك عرض رسالة للمستخدم لتسجيل الدخول مرة أخرى
+    console.warn('⚠️ رقم الهاتف غير موجود في localStorage');
+    phone = ''; // سيبقى فارغًا ولكن سيتم التنبيه
+  }
+  return phone;
 }
 
 // التحقق من الإشعارات بشكل دوري (كل 60 ثانية)
@@ -2879,6 +2890,7 @@ function hideBidForm() {
 async function submitBid() {
   if (!requireLogin()) return;
 
+  // جلب البيانات من النموذج
   const title = document.getElementById('bidTitle').value.trim();
   const description = document.getElementById('bidDescription').value.trim();
   const category = document.getElementById('bidCategory').value.trim();
@@ -2886,6 +2898,14 @@ async function submitBid() {
   const area = document.getElementById('bidArea').value.trim();
   const deadline = document.getElementById('bidDeadline').value.trim();
   const msgDiv = document.getElementById('bidFormMessage');
+  
+  const client_phone = getCurrentUserPhone();
+
+  // التحقق من وجود جميع الحقول مع رسائل واضحة
+  if (!client_phone) {
+    msgDiv.innerHTML = '<span class="text-red-500">⚠️ رقم هاتفك غير مسجل. يرجى تسجيل الخروج والدخول مرة أخرى، أو تحديث ملفك الشخصي.</span>';
+    return;
+  }
 
   if (!title || !description || !category || !budget || !area || !deadline) {
     msgDiv.innerHTML = '<span class="text-red-500">⚠️ جميع الحقول مطلوبة</span>';
@@ -2893,11 +2913,31 @@ async function submitBid() {
   }
 
   const client_name = getCurrentUser();
-  const client_phone = getCurrentUserPhone();
-
+  
+  if (!description) {
+    msgDiv.innerHTML = '<span class="text-red-500">⚠️ وصف الطلب مطلوب</span>';
+    return;
+  }
+  if (!category) {
+    msgDiv.innerHTML = '<span class="text-red-500">⚠️ الفئة مطلوبة</span>';
+    return;
+  }
+  if (!budget || isNaN(budget) || parseFloat(budget) <= 0) {
+    msgDiv.innerHTML = '<span class="text-red-500">⚠️ الميزانية يجب أن تكون رقمًا موجبًا</span>';
+    return;
+  }
+  if (!area) {
+    msgDiv.innerHTML = '<span class="text-red-500">⚠️ المنطقة مطلوبة</span>';
+    return;
+  }
+  if (!deadline) {
+    msgDiv.innerHTML = '<span class="text-red-500">⚠️ الموعد النهائي مطلوب</span>';
+    return;
+  }
   msgDiv.innerHTML = '<span class="text-blue-500">⏳ جاري طرح الطلب...</span>';
 
   try {
+    // بناء البيانات
     const params = new URLSearchParams();
     params.append('action', 'add_bid');
     params.append('client_name', client_name);
@@ -2909,11 +2949,13 @@ async function submitBid() {
     params.append('area', area);
     params.append('deadline', deadline);
 
+    // إرسال الطلب
     const response = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: params.toString()
     });
+
     const result = await response.json();
 
     if (result.success) {
@@ -2925,6 +2967,7 @@ async function submitBid() {
       throw new Error(result.message || 'فشل طرح الطلب');
     }
   } catch (error) {
+    console.error('❌ خطأ في طرح الطلب:', error);
     msgDiv.innerHTML = `<span class="text-red-500">❌ ${error.message}</span>`;
     showToast('فشل طرح الطلب', 'error');
   }
