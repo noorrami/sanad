@@ -29,6 +29,17 @@
   .leaflet-popup-content strong {
     color: #0E5C56;
   }
+  #offersModal {
+    backdrop-filter: blur(4px);
+  }
+  #offersModal > div {
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  #offersModal .btn-primary {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+  }
 </style>
 
 <!-- أيقونات Lucide -->
@@ -874,7 +885,7 @@
 /* ========================================================
    الإعدادات
    ======================================================== */
-const API_URL = "https://script.google.com/macros/s/AKfycbxb26mwJmZieE8uJGOYakePZPtMPDrdjJiSfPC9jmvKPGEzQBC-3jCyYT-J_q8CRfKp/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzv5K6xoSzXvOAwtf9Ifawm0_zimdJlWmoKVKgML4kGEkY-K18ELYBq6zjWFUVoufa9/exec";
 const FETCH_TIMEOUT_MS = 20000;
 const CACHE_KEY_PREFIX = "sanad_cache_";
 
@@ -2997,8 +3008,8 @@ async function loadMyBids(status = 'all') {
 }
 
 // ===== عرض طلباتي =====
+// ===== عرض طلباتي =====
 function renderMyBids(container, bids) {
-  console.log('📊 عدد الطلبات المستلمة:', bids ? bids.length : 0);
   if (!bids || bids.length === 0) {
     container.innerHTML = `
       <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center">
@@ -3017,6 +3028,9 @@ function renderMyBids(container, bids) {
 
   container.innerHTML = bids.map(b => {
     const statusInfo = statusMap[b.status] || statusMap['open'];
+    const isAssigned = b.status === 'assigned';
+    const isOpen = b.status === 'open';
+
     return `
       <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border-r-4 ${b.status === 'open' ? 'border-green-500' : b.status === 'assigned' ? 'border-blue-500' : 'border-gray-400'}">
         <div class="flex flex-wrap items-start justify-between gap-2">
@@ -3026,16 +3040,50 @@ function renderMyBids(container, bids) {
             <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">${escapeHtml(b.description)}</p>
             <p class="text-xs text-gray-400">💰 الميزانية: ${b.budget} شيكل | 🗓️ الموعد النهائي: ${b.deadline}</p>
             <p class="text-xs text-gray-400 mt-1">🕐 ${new Date(b.created_at).toLocaleString('ar')}</p>
+            
+            ${isAssigned ? `
+              <div class="mt-2 p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                <p class="text-sm text-green-700 dark:text-green-300 font-bold">✅ تم تعيين مقدم خدمة لهذا الطلب</p>
+                <!-- زر التواصل مع مقدم الخدمة -->
+                <button onclick="getAssignedProvider('${b.id}')" class="btn-primary text-sm px-3 py-1 mt-2">
+                  💬 تواصل مع مقدم الخدمة
+                </button>
+              </div>
+            ` : ''}
           </div>
           <div class="text-right">
             <span class="text-xs px-3 py-1 rounded-full ${statusInfo.class}">${statusInfo.label}</span>
-            ${b.status === 'open' ? `<button onclick="viewBidOffers(${b.id}, '${escapeHtml(b.title)}')" class="text-xs text-primary hover:underline block mt-2">💰 عرض العروض (${b.offerCount || 0})</button>` : ''}
-            ${b.status === 'assigned' ? `<span class="text-xs text-green-600 block mt-2">تم تعيين مقاول</span>` : ''}
+            ${isOpen ? `
+              <button onclick="viewBidOffers(${b.id}, '${escapeHtml(b.title)}')" 
+                      class="text-xs text-primary hover:underline block mt-2">
+                💰 عرض العروض (${b.offerCount || 0})
+              </button>
+            ` : ''}
           </div>
         </div>
       </div>
     `;
   }).join('');
+}
+
+// ===== جلب معلومات مقدم الخدمة المعين =====
+async function getAssignedProvider(bidId) {
+  try {
+    const url = `${API_URL}?action=get_assigned_provider&bid_id=${bidId}`;
+    const response = await fetch(url);
+    const result = await response.json();
+
+    if (result.success && result.provider) {
+      const provider = result.provider;
+      const phone = provider.phone.replace(/\D/g, '');
+      window.open(`https://wa.me/970${phone}`, '_blank');
+    } else {
+      showToast('لم يتم العثور على مقدم خدمة معين', 'error');
+    }
+  } catch (error) {
+    console.error('خطأ في جلب مقدم الخدمة:', error);
+    showToast('تعذّر جلب معلومات مقدم الخدمة', 'error');
+  }
 }
 
 // ===== جلب الطلبات المفتوحة (للمزادات) =====
@@ -3182,102 +3230,95 @@ async function viewBidOffers(bidId, bidTitle) {
     const response = await fetchWithTimeout(url);
     const result = await response.json();
 
-    if (!result.success) {
-      throw new Error(result.error || 'تعذّر جلب العروض');
+    if (result.success) {
+      showOffersModal(result.offers || [], bidId, bidTitle);
+    } else {
+      throw new Error(result.message || 'تعذّر جلب العروض');
     }
-
-    const offers = result.offers || [];
-    if (offers.length === 0) {
-      showToast('لا توجد عروض مقدمة على هذا الطلب بعد', 'info');
-      return;
-    }
-
-    // عرض العروض في نافذة منبثقة
-    showOffersModal(bidId, bidTitle, offers);
-
   } catch (error) {
     console.error('❌ خطأ في جلب العروض:', error);
     showToast(`❌ ${error.message}`, 'error');
   }
 }
 
-// ===== عرض العروض في نافذة منبثقة =====
-function showOffersModal(bidId, bidTitle, offers) {
-  // إنشاء نافذة منبثقة ديناميكية
+// ===== عرض نافذة العروض المنبثقة =====
+function showOffersModal(offers, bidId, bidTitle) {
+  // إزالة النافذة القديمة إن وجدت
+  const oldModal = document.getElementById('offersModal');
+  if (oldModal) oldModal.remove();
+
   const modal = document.createElement('div');
-  modal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50';
   modal.id = 'offersModal';
+  modal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50';
   modal.onclick = function(e) {
     if (e.target === this) this.remove();
   };
 
-  // ترتيب العروض حسب السعر (الأقل أولاً)
-  const sortedOffers = offers.sort((a, b) => a.offer_price - b.offer_price);
-
-  let offersHTML = sortedOffers.map((offer, index) => {
-    const isLowest = index === 0;
-    const isMyOffer = offer.provider_phone === getCurrentUserPhone();
-    return `
-      <div class="bg-white dark:bg-gray-700 p-4 rounded-xl shadow-sm border-r-4 ${isLowest ? 'border-green-500' : 'border-gray-300'} mb-3">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="font-bold text-lg">${escapeHtml(offer.provider_name)}</p>
-            <p class="text-sm text-gray-500 dark:text-gray-300">💰 ${offer.offer_price} شيكل</p>
-            ${offer.offer_note ? `<p class="text-xs text-gray-400">📝 ${escapeHtml(offer.offer_note)}</p>` : ''}
-            <p class="text-xs text-gray-400">🕐 ${new Date(offer.created_at).toLocaleString('ar')}</p>
-            ${isLowest ? `<span class="text-xs text-green-600 font-bold">⭐ أقل عرض</span>` : ''}
-            ${isMyOffer ? `<span class="text-xs text-blue-600 font-bold">(عرضك)</span>` : ''}
-          </div>
-          ${!isMyOffer ? `<button onclick="acceptOffer(${offer.id}, ${bidId})" class="btn-primary text-sm px-4 py-2">✅ قبول</button>` : ''}
+  let offersHTML = '';
+  if (offers.length === 0) {
+    offersHTML = '<div class="text-center text-gray-500 py-4">لا توجد عروض حتى الآن</div>';
+  } else {
+    offersHTML = offers.map(offer => `
+      <div class="border-b border-gray-200 dark:border-gray-700 py-3 flex flex-wrap items-center justify-between gap-2 ${offer.status === 'accepted' ? 'bg-green-50 dark:bg-green-900/20' : ''}">
+        <div>
+          <p class="font-bold">${escapeHtml(offer.provider_name)}</p>
+          <p class="text-sm">💰 ${offer.offer_price} شيكل</p>
+          ${offer.offer_note ? `<p class="text-xs text-gray-500">📝 ${escapeHtml(offer.offer_note)}</p>` : ''}
+          <p class="text-xs text-gray-400">🕐 ${new Date(offer.created_at).toLocaleString('ar')}</p>
+          <p class="text-xs ${offer.status === 'pending' ? 'text-yellow-600' : offer.status === 'accepted' ? 'text-green-600' : 'text-red-600'}">
+            الحالة: ${offer.status === 'pending' ? '⏳ قيد الانتظار' : offer.status === 'accepted' ? '✅ مقبول' : '❌ مرفوض'}
+          </p>
+        </div>
+        <div>
+          ${offer.status === 'pending' ? `
+            <button onclick="acceptOffer(${offer.id}, ${bidId})" class="btn-primary text-sm px-3 py-1">قبول العرض</button>
+          ` : ''}
+          ${offer.status === 'accepted' ? `
+            <a href="https://wa.me/970${offer.provider_phone.replace(/\D/g, '')}" target="_blank" 
+               class="bg-green-600 text-white px-3 py-1 rounded-full text-sm font-bold hover:bg-green-700 transition inline-block">
+              💬 تواصل
+            </a>
+          ` : ''}
         </div>
       </div>
-    `;
-  }).join('');
+    `).join('');
+  }
 
   modal.innerHTML = `
-    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-lg w-full mx-4 max-h-[80vh] overflow-y-auto" onclick="event.stopPropagation()">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-lg w-full mx-4 shadow-2xl max-h-[80vh] overflow-y-auto" onclick="event.stopPropagation()">
       <div class="flex justify-between items-center mb-4">
         <h3 class="text-xl font-bold flex items-center gap-2">
-          <i data-lucide="gavel" class="lucide"></i> عروض طلب: ${escapeHtml(bidTitle)}
+          <i data-lucide="list-checks" class="lucide"></i> عروض: ${escapeHtml(bidTitle)}
         </h3>
         <button onclick="this.closest('#offersModal').remove()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
       </div>
-      <div class="text-sm text-gray-500 dark:text-gray-400 mb-4">
-        عدد العروض: <span class="font-bold text-primary">${offers.length}</span>
-        ${sortedOffers.length > 1 ? ` | أقل عرض: <span class="font-bold text-green-600">${sortedOffers[0].offer_price} شيكل</span>` : ''}
-      </div>
-      <div class="divide-y divide-gray-200 dark:divide-gray-700">
+      <div class="space-y-2">
         ${offersHTML}
       </div>
       <div class="mt-4 text-center">
-        <button onclick="this.closest('#offersModal').remove()" class="btn-accent px-6 py-2">إغلاق</button>
+        <button onclick="this.closest('#offersModal').remove()" class="text-sm text-gray-400 hover:text-gray-600">إغلاق</button>
       </div>
     </div>
   `;
 
   document.body.appendChild(modal);
-
-  // تهيئة أيقونات Lucide
   if (window.lucide) lucide.createIcons();
 }
 
 // ===== قبول عرض =====
 async function acceptOffer(offerId, bidId) {
-  if (!confirm('هل أنت متأكد من قبول هذا العرض؟ سيتم إغلاق الطلب وتعيين مقدم الخدمة.')) {
-    return;
-  }
+  if (!confirm('هل أنت متأكد من قبول هذا العرض؟')) return;
 
+  const userPhone = getCurrentUserPhone();
   try {
-    const userPhone = getCurrentUserPhone() || '';
     const url = `${API_URL}?action=accept_offer&offer_id=${offerId}&user_phone=${encodeURIComponent(userPhone)}`;
-    const response = await fetchWithTimeout(url);
+    const response = await fetch(url);
     const result = await response.json();
 
     if (result.success) {
       showToast('✅ تم قبول العرض بنجاح!', 'success');
-      // إغلاق النافذة المنبثقة
+      // إغلاق النافذة وتحديث الطلبات
       document.getElementById('offersModal')?.remove();
-      // تحديث قائمة الطلبات
       loadMyBids('all');
     } else {
       throw new Error(result.message || 'فشل قبول العرض');
