@@ -885,7 +885,7 @@
 /* ========================================================
    الإعدادات
    ======================================================== */
-const API_URL = "https://script.google.com/macros/s/AKfycbzv5K6xoSzXvOAwtf9Ifawm0_zimdJlWmoKVKgML4kGEkY-K18ELYBq6zjWFUVoufa9/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycby_V7SsDl2D06f_8qaDertKmGgcF9VtNqdTWehXFptQIYDf7TewpZ3LAz1Ck4ojTiKx/exec";
 const FETCH_TIMEOUT_MS = 20000;
 const CACHE_KEY_PREFIX = "sanad_cache_";
 
@@ -3044,9 +3044,8 @@ function renderMyBids(container, bids) {
             ${isAssigned ? `
               <div class="mt-2 p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
                 <p class="text-sm text-green-700 dark:text-green-300 font-bold">✅ تم تعيين مقدم خدمة لهذا الطلب</p>
-                <!-- زر التواصل مع مقدم الخدمة -->
                 <button onclick="getAssignedProvider('${b.id}')" class="btn-primary text-sm px-3 py-1 mt-2">
-                  💬 تواصل مع مقدم الخدمة
+                  <i data-lucide="message-circle" class="lucide" style="width:1em;height:1em"></i> تواصل مع مقدم الخدمة
                 </button>
               </div>
             ` : ''}
@@ -3075,8 +3074,14 @@ async function getAssignedProvider(bidId) {
 
     if (result.success && result.provider) {
       const provider = result.provider;
-      const phone = provider.phone.replace(/\D/g, '');
-      window.open(`https://wa.me/970${phone}`, '_blank');
+      // ✅ التأكد من أن رقم الهاتف نصي قبل استخدام replace
+      let phone = provider.phone || '';
+      phone = String(phone).replace(/\D/g, ''); // تحويل إلى نص وإزالة كل ما ليس رقماً
+      if (phone) {
+        window.open(`https://wa.me/970${phone}`, '_blank');
+      } else {
+        showToast('رقم هاتف مقدم الخدمة غير متوفر', 'error');
+      }
     } else {
       showToast('لم يتم العثور على مقدم خدمة معين', 'error');
     }
@@ -3085,7 +3090,6 @@ async function getAssignedProvider(bidId) {
     showToast('تعذّر جلب معلومات مقدم الخدمة', 'error');
   }
 }
-
 // ===== جلب الطلبات المفتوحة (للمزادات) =====
 async function loadAuctions() {
   if (!isLoggedIn()) {
