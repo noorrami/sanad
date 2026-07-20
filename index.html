@@ -2889,7 +2889,8 @@ function hideBidForm() {
 // ===== طرح طلب جديد =====
 async function submitBid() {
   if (!requireLogin()) return;
-
+  console.log('📞 رقم الهاتف:', getCurrentUserPhone());
+  console.log('👤 اسم العميل:', getCurrentUser());
   const title = document.getElementById('bidTitle').value.trim();
   const description = document.getElementById('bidDescription').value.trim();
   const category = document.getElementById('bidCategory').value.trim();
@@ -2900,12 +2901,11 @@ async function submitBid() {
 
   // ✅ تعريف client_phone أولاً
   const client_phone = getCurrentUserPhone();
+  const client_name = getCurrentUser();
   if (!client_phone) {
     msgDiv.innerHTML = '<span class="text-red-500">⚠️ رقم هاتفك غير مسجل. يرجى تسجيل الخروج والدخول مرة أخرى، أو تحديث ملفك الشخصي.</span>';
     return;
   }
-
-  const client_name = getCurrentUser();
 
   if (!title || !description || !category || !budget || !area || !deadline) {
     msgDiv.innerHTML = '<span class="text-red-500">⚠️ جميع الحقول مطلوبة</span>';
