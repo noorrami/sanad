@@ -1439,7 +1439,6 @@ async function addService() {
 
 async function addDriver() {
   if (!requireLogin()) return;
-
   const name = document.getElementById('driverName').value.trim();
   const countryCodeSelect = document.getElementById('addCountryCode'); // تأكد من وجود هذا العنصر
   const countryCode = document.getElementById('driverCountryCode').value.trim();
@@ -2892,6 +2891,9 @@ async function submitBid() {
   if (!requireLogin()) return;
   console.log('📞 رقم الهاتف:', getCurrentUserPhone());
   console.log('👤 اسم العميل:', getCurrentUser());
+   // ✅ استخدم اسماً مختلفاً لتجنب التعارض
+  const clientPhoneNumber = getCurrentUserPhone();
+  const clientName = getCurrentUser();
   const title = document.getElementById('bidTitle').value.trim();
   const description = document.getElementById('bidDescription').value.trim();
   const category = document.getElementById('bidCategory').value.trim();
@@ -2900,9 +2902,7 @@ async function submitBid() {
   const deadline = document.getElementById('bidDeadline').value.trim();
   const msgDiv = document.getElementById('bidFormMessage');
 
-  // ✅ استخدم اسماً مختلفاً لتجنب التعارض
-  const clientPhoneNumber = getCurrentUserPhone();
-  const clientName = getCurrentUser();
+ 
   if (!clientPhoneNumber) {
     msgDiv.innerHTML = '<span class="text-red-500">⚠️ رقم هاتفك غير مسجل. يرجى تسجيل الخروج والدخول مرة أخرى.</span>';
     return;
