@@ -874,7 +874,7 @@
 /* ========================================================
    الإعدادات
    ======================================================== */
-const API_URL = "https://script.google.com/macros/s/AKfycbwi6xDrp9sHMbnhJQ-5jDWX_b0r93DSsY2qWae6i-UytnVjwszdSureKRlFA17UME1R/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyEOKPKRpwimdxc7ImGxoX8b-iTCp4YrkyK4rB2EPPXyoOefIfz9qi5lsSBBU1kH65w/exec";
 const FETCH_TIMEOUT_MS = 20000;
 const CACHE_KEY_PREFIX = "sanad_cache_";
 
@@ -2890,7 +2890,6 @@ function hideBidForm() {
 async function submitBid() {
   if (!requireLogin()) return;
 
-  // جلب البيانات من النموذج
   const title = document.getElementById('bidTitle').value.trim();
   const description = document.getElementById('bidDescription').value.trim();
   const category = document.getElementById('bidCategory').value.trim();
@@ -2898,46 +2897,24 @@ async function submitBid() {
   const area = document.getElementById('bidArea').value.trim();
   const deadline = document.getElementById('bidDeadline').value.trim();
   const msgDiv = document.getElementById('bidFormMessage');
-  
-  const client_phone = getCurrentUserPhone();
 
-  // التحقق من وجود جميع الحقول مع رسائل واضحة
+  // ✅ تعريف client_phone أولاً
+  const client_phone = getCurrentUserPhone();
   if (!client_phone) {
     msgDiv.innerHTML = '<span class="text-red-500">⚠️ رقم هاتفك غير مسجل. يرجى تسجيل الخروج والدخول مرة أخرى، أو تحديث ملفك الشخصي.</span>';
     return;
   }
+
+  const client_name = getCurrentUser();
 
   if (!title || !description || !category || !budget || !area || !deadline) {
     msgDiv.innerHTML = '<span class="text-red-500">⚠️ جميع الحقول مطلوبة</span>';
     return;
   }
 
-  const client_name = getCurrentUser();
-  
-  if (!description) {
-    msgDiv.innerHTML = '<span class="text-red-500">⚠️ وصف الطلب مطلوب</span>';
-    return;
-  }
-  if (!category) {
-    msgDiv.innerHTML = '<span class="text-red-500">⚠️ الفئة مطلوبة</span>';
-    return;
-  }
-  if (!budget || isNaN(budget) || parseFloat(budget) <= 0) {
-    msgDiv.innerHTML = '<span class="text-red-500">⚠️ الميزانية يجب أن تكون رقمًا موجبًا</span>';
-    return;
-  }
-  if (!area) {
-    msgDiv.innerHTML = '<span class="text-red-500">⚠️ المنطقة مطلوبة</span>';
-    return;
-  }
-  if (!deadline) {
-    msgDiv.innerHTML = '<span class="text-red-500">⚠️ الموعد النهائي مطلوب</span>';
-    return;
-  }
   msgDiv.innerHTML = '<span class="text-blue-500">⏳ جاري طرح الطلب...</span>';
 
   try {
-    // بناء البيانات
     const params = new URLSearchParams();
     params.append('action', 'add_bid');
     params.append('client_name', client_name);
@@ -2949,13 +2926,11 @@ async function submitBid() {
     params.append('area', area);
     params.append('deadline', deadline);
 
-    // إرسال الطلب
     const response = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: params.toString()
     });
-
     const result = await response.json();
 
     if (result.success) {
