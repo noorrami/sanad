@@ -2891,7 +2891,6 @@ function hideBidForm() {
 // ===== طرح طلب جديد =====
 // ===== طرح طلب جديد =====
 async function submitBid() {
-  console.log('✅ الإصدار الجديد من submitBid - v6 (نهائي)');
   if (!requireLogin()) return;
 
   const title = document.getElementById('bidTitle').value.trim();
@@ -2902,15 +2901,11 @@ async function submitBid() {
   const deadline = document.getElementById('bidDeadline').value.trim();
   const msgDiv = document.getElementById('bidFormMessage');
 
-  // ✅ استخدام أسماء متغيرات فريدة تمامًا
-  const currentUserPhone = getCurrentUserPhone();
-  const currentUserName = getCurrentUser();
+  const userPhone = getCurrentUserPhone();
+  const userName = getCurrentUser();
 
-  console.log('📞 رقم الهاتف (من localStorage):', currentUserPhone);
-  console.log('👤 اسم المستخدم:', currentUserName);
-
-  if (!currentUserPhone) {
-    msgDiv.innerHTML = '<span class="text-red-500">⚠️ رقم هاتفك غير مسجل. يرجى تسجيل الخروج والدخول مرة أخرى.</span>';
+  if (!userPhone) {
+    msgDiv.innerHTML = '<span class="text-red-500">⚠️ يرجى تسجيل الخروج والدخول مرة أخرى لتحديث رقم هاتفك.</span>';
     return;
   }
 
@@ -2924,8 +2919,8 @@ async function submitBid() {
   try {
     const params = new URLSearchParams();
     params.append('action', 'add_bid');
-    params.append('client_name', currentUserName);
-    params.append('client_phone', currentUserPhone);
+    params.append('client_name', userName);
+    params.append('client_phone', userPhone);
     params.append('title', title);
     params.append('description', description);
     params.append('category', category);
@@ -2933,22 +2928,13 @@ async function submitBid() {
     params.append('area', area);
     params.append('deadline', deadline);
 
-    console.log('📤 إرسال الطلب إلى:', API_URL);
-    console.log('📤 البيانات:', params.toString());
-
     const response = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: params.toString()
     });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`الخادم أعاد الحالة ${response.status}: ${errorText}`);
-    }
-
     const result = await response.json();
-    console.log('📥 رد الخادم:', result);
 
     if (result.success) {
       msgDiv.innerHTML = '<span class="text-green-600">✅ تم طرح الطلب بنجاح!</span>';
@@ -2959,7 +2945,7 @@ async function submitBid() {
       throw new Error(result.message || 'فشل طرح الطلب');
     }
   } catch (error) {
-    console.error('❌ خطأ في طرح الطلب:', error);
+    console.error('❌ خطأ:', error);
     msgDiv.innerHTML = `<span class="text-red-500">❌ ${error.message}</span>`;
     showToast('فشل طرح الطلب', 'error');
   }
