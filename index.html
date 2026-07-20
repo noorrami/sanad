@@ -1442,7 +1442,7 @@ async function addDriver() {
 
   const name = document.getElementById('driverName').value.trim();
   const countryCodeSelect = document.getElementById('addCountryCode'); // تأكد من وجود هذا العنصر
-  const countryCode = countryCodeSelect ? countryCodeSelect.value.trim() : '970';
+  const countryCode = document.getElementById('driverCountryCode').value.trim();
   const phoneInput = document.getElementById('driverPhone').value.trim();
   const phone = countryCode + phoneInput.replace(/^0+/, '');
   const area = document.getElementById('driverArea').value.trim();
@@ -2888,7 +2888,7 @@ function hideBidForm() {
 
 // ===== طرح طلب جديد =====
 async function submitBid() {
-  console.log('✅ الإصدار الجديد من submitBid - v3');
+  console.log('✅ الإصدار الجديد من submitBid - v4');
   if (!requireLogin()) return;
   console.log('📞 رقم الهاتف:', getCurrentUserPhone());
   console.log('👤 اسم العميل:', getCurrentUser());
@@ -2900,10 +2900,10 @@ async function submitBid() {
   const deadline = document.getElementById('bidDeadline').value.trim();
   const msgDiv = document.getElementById('bidFormMessage');
 
-  // ✅ تعريف client_phone أولاً
-  const client_phone = getCurrentUserPhone();   // <-- هذا السطر يجب أن يكون قبل أي استخدام
-  const client_name = getCurrentUser();
-  if (!client_phone) {
+  // ✅ استخدم اسماً مختلفاً لتجنب التعارض
+  const clientPhoneNumber = getCurrentUserPhone();
+  const clientName = getCurrentUser();
+  if (!clientPhoneNumber) {
     msgDiv.innerHTML = '<span class="text-red-500">⚠️ رقم هاتفك غير مسجل. يرجى تسجيل الخروج والدخول مرة أخرى.</span>';
     return;
   }
@@ -2918,8 +2918,8 @@ async function submitBid() {
   try {
     const params = new URLSearchParams();
     params.append('action', 'add_bid');
-    params.append('client_name', client_name);
-    params.append('client_phone', client_phone);
+    params.append('client_name', clientName);
+    params.append('client_phone', clientPhoneNumber);
     params.append('title', title);
     params.append('description', description);
     params.append('category', category);
