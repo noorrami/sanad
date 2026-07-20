@@ -874,7 +874,7 @@
 /* ========================================================
    الإعدادات
    ======================================================== */
-const API_URL = "https://script.google.com/macros/s/AKfycbyEOKPKRpwimdxc7ImGxoX8b-iTCp4YrkyK4rB2EPPXyoOefIfz9qi5lsSBBU1kH65w/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyLpYxAHNUe85jFr5MGILZvsQAOq3IwQI1za_WobSO_d3F3cW-wTOvoS-MEpwet1BqY/exec";
 const FETCH_TIMEOUT_MS = 20000;
 const CACHE_KEY_PREFIX = "sanad_cache_";
 
@@ -2888,6 +2888,7 @@ function hideBidForm() {
 
 // ===== طرح طلب جديد =====
 async function submitBid() {
+  console.log('✅ الإصدار الجديد من submitBid - v3');
   if (!requireLogin()) return;
   console.log('📞 رقم الهاتف:', getCurrentUserPhone());
   console.log('👤 اسم العميل:', getCurrentUser());
@@ -2900,10 +2901,10 @@ async function submitBid() {
   const msgDiv = document.getElementById('bidFormMessage');
 
   // ✅ تعريف client_phone أولاً
-  const client_phone = getCurrentUserPhone();
+  const client_phone = getCurrentUserPhone();   // <-- هذا السطر يجب أن يكون قبل أي استخدام
   const client_name = getCurrentUser();
   if (!client_phone) {
-    msgDiv.innerHTML = '<span class="text-red-500">⚠️ رقم هاتفك غير مسجل. يرجى تسجيل الخروج والدخول مرة أخرى، أو تحديث ملفك الشخصي.</span>';
+    msgDiv.innerHTML = '<span class="text-red-500">⚠️ رقم هاتفك غير مسجل. يرجى تسجيل الخروج والدخول مرة أخرى.</span>';
     return;
   }
 
