@@ -874,7 +874,7 @@
 /* ========================================================
    الإعدادات
    ======================================================== */
-const API_URL = "https://script.google.com/macros/s/AKfycbxwaL5G-pMLnNIgiaedimsvFUlWuYlyUBFAHGZt-3yrblsI38vybMRvorDW9r_eovnC/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwyBYDTuKPTr8dHA5sxF9mXBmqNKqTE6lB5MnnMYv8Ho-Es-TdFr6KMiQMwhyUZYlGu/exec";
 const FETCH_TIMEOUT_MS = 20000;
 const CACHE_KEY_PREFIX = "sanad_cache_";
 
@@ -1531,9 +1531,12 @@ async function login() {
     if (result.success) {
       localStorage.setItem('sanad_user', username);
       localStorage.setItem('sanad_logged_in', 'true');
-      // نحفظ رقم الهاتف القادم من الخادم إن وُجد، وإلا نُبقي على القيمة المخزّنة سابقاً
-      const loggedInPhone = result.phone || result.user?.phone || getCurrentUserPhone();
-      localStorage.setItem('sanad_user_phone', loggedInPhone || '');
+      
+      // ✅ تخزين رقم الهاتف من الخادم
+      const loggedInPhone = result.phone || '';
+      localStorage.setItem('sanad_user_phone', loggedInPhone);
+      console.log('📞 تم تخزين رقم الهاتف:', loggedInPhone);
+
       msgDiv.innerHTML = '<span class="text-green-600">✅ تم تسجيل الدخول بنجاح!</span>';
       showToast(`مرحباً ${username}`, 'success');
       updateUserDisplay();
@@ -2886,12 +2889,11 @@ function hideBidForm() {
 }
 
 // ===== طرح طلب جديد =====
-// ===== طرح طلب جديد (نسخة نظيفة ومضمونة) =====
+// ===== طرح طلب جديد =====
 async function submitBid() {
-  console.log('✅ الإصدار الجديد من submitBid - v5');
+  console.log('✅ الإصدار الجديد من submitBid - v6 (نهائي)');
   if (!requireLogin()) return;
-  
-  // قراءة الحقول
+
   const title = document.getElementById('bidTitle').value.trim();
   const description = document.getElementById('bidDescription').value.trim();
   const category = document.getElementById('bidCategory').value.trim();
@@ -2900,11 +2902,14 @@ async function submitBid() {
   const deadline = document.getElementById('bidDeadline').value.trim();
   const msgDiv = document.getElementById('bidFormMessage');
 
-  // ✅ تعريف المتغيرات أولاً
-  const clientPhone = getCurrentUserPhone();
-  const clientName = getCurrentUser();
-  
-  if (!clientPhone) {
+  // ✅ استخدام أسماء متغيرات فريدة تمامًا
+  const currentUserPhone = getCurrentUserPhone();
+  const currentUserName = getCurrentUser();
+
+  console.log('📞 رقم الهاتف (من localStorage):', currentUserPhone);
+  console.log('👤 اسم المستخدم:', currentUserName);
+
+  if (!currentUserPhone) {
     msgDiv.innerHTML = '<span class="text-red-500">⚠️ رقم هاتفك غير مسجل. يرجى تسجيل الخروج والدخول مرة أخرى.</span>';
     return;
   }
@@ -2919,8 +2924,8 @@ async function submitBid() {
   try {
     const params = new URLSearchParams();
     params.append('action', 'add_bid');
-    params.append('client_name', clientName);
-    params.append('client_phone', clientPhone);
+    params.append('client_name', currentUserName);
+    params.append('client_phone', currentUserPhone);
     params.append('title', title);
     params.append('description', description);
     params.append('category', category);
@@ -2928,12 +2933,22 @@ async function submitBid() {
     params.append('area', area);
     params.append('deadline', deadline);
 
+    console.log('📤 إرسال الطلب إلى:', API_URL);
+    console.log('📤 البيانات:', params.toString());
+
     const response = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: params.toString()
     });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`الخادم أعاد الحالة ${response.status}: ${errorText}`);
+    }
+
     const result = await response.json();
+    console.log('📥 رد الخادم:', result);
 
     if (result.success) {
       msgDiv.innerHTML = '<span class="text-green-600">✅ تم طرح الطلب بنجاح!</span>';
