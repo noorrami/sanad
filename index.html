@@ -2886,14 +2886,12 @@ function hideBidForm() {
 }
 
 // ===== طرح طلب جديد =====
+// ===== طرح طلب جديد (نسخة نظيفة ومضمونة) =====
 async function submitBid() {
-  console.log('✅ الإصدار الجديد من submitBid - v4');
+  console.log('✅ الإصدار النهائي من submitBid - v6');
   if (!requireLogin()) return;
-  console.log('📞 رقم الهاتف:', getCurrentUserPhone());
-  console.log('👤 اسم العميل:', getCurrentUser());
-   // ✅ استخدم اسماً مختلفاً لتجنب التعارض
-  const clientPhoneNumber = getCurrentUserPhone();
-  const clientName = getCurrentUser();
+  
+  // جلب البيانات من النموذج
   const title = document.getElementById('bidTitle').value.trim();
   const description = document.getElementById('bidDescription').value.trim();
   const category = document.getElementById('bidCategory').value.trim();
@@ -2902,24 +2900,31 @@ async function submitBid() {
   const deadline = document.getElementById('bidDeadline').value.trim();
   const msgDiv = document.getElementById('bidFormMessage');
 
- 
-  if (!clientPhoneNumber) {
+  // جلب بيانات المستخدم
+  const userPhone = getCurrentUserPhone();
+  const userName = getCurrentUser();
+
+  // التحقق من رقم الهاتف
+  if (!userPhone) {
     msgDiv.innerHTML = '<span class="text-red-500">⚠️ رقم هاتفك غير مسجل. يرجى تسجيل الخروج والدخول مرة أخرى.</span>';
     return;
   }
 
+  // التحقق من الحقول
   if (!title || !description || !category || !budget || !area || !deadline) {
     msgDiv.innerHTML = '<span class="text-red-500">⚠️ جميع الحقول مطلوبة</span>';
     return;
   }
 
+  // عرض رسالة التحميل
   msgDiv.innerHTML = '<span class="text-blue-500">⏳ جاري طرح الطلب...</span>';
 
   try {
+    // تجهيز البيانات للإرسال
     const params = new URLSearchParams();
     params.append('action', 'add_bid');
-    params.append('client_name', clientName);
-    params.append('client_phone', clientPhoneNumber);
+    params.append('client_name', userName);
+    params.append('client_phone', userPhone);
     params.append('title', title);
     params.append('description', description);
     params.append('category', category);
@@ -2927,11 +2932,13 @@ async function submitBid() {
     params.append('area', area);
     params.append('deadline', deadline);
 
+    // إرسال الطلب
     const response = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: params.toString()
     });
+    
     const result = await response.json();
 
     if (result.success) {
