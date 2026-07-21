@@ -4,9 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
 <title>سند - تبادل المهارات في غزة</title>
-
 <link rel="icon" type="image/png" href="logo.png" class="h-8 w-8 rounded-full"/>
-<link rel="icon" type="image/png" href="favicon.png" />
 <!-- خط Tajawal العربي الاحترافي -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -219,18 +217,209 @@
   }
   html.dark .stat-card { background: linear-gradient(180deg, rgba(127,214,204,.06), transparent); border-color: rgba(127,214,204,.12); }
 
-  .nav-link { display: flex; align-items: center; gap: .65rem; }
+  /* ===== تنسيق الروابط في الشريط الجانبي ===== */
+  /* تنسيق الروابط في الشريط الجانبي - إصدار محسّن */
+.nav-link {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.65rem !important;
+  flex-wrap: nowrap !important;
+  white-space: nowrap !important;
+  width: 100% !important;
+  padding: 0.6rem 1rem !important;
+  border-radius: 0.75rem !important;
+  transition: all 0.15s ease !important;
+}
+
+/* منع تصغير الأيقونة */
+.nav-link .lucide {
+  flex-shrink: 0 !important;
+  width: 1.15em !important;
+  height: 1.15em !important;
+}
+
+/* إزالة أي حواف أو هوامش إضافية */
+.nav-link .lucide + span {
+  flex-shrink: 0 !important;
+}
+/* إعادة تعريف تنسيق الروابط بشكل صريح */
+.sidebar nav a {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.65rem !important;
+  white-space: nowrap !important;
+}
+
+.sidebar nav a i {
+  flex-shrink: 0 !important;
+}
+
+  html.dark .nav-link:hover {
+    background-color: #17847B;
+  }
+  /* ===== صفحة السبلاش ===== */
+  @keyframes pulse-slow {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.9; }
+  }
+
+  @keyframes float-slow {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    50% { transform: translate(20px, -20px) rotate(10deg); }
+  }
+
+  @keyframes float-slower {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    50% { transform: translate(-30px, 30px) rotate(-15deg); }
+  }
+
+  @keyframes pulse-ring {
+    0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.3; }
+    50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.1; }
+    100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.3; }
+  }
+
+  @keyframes fade-in-up {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes loading-bar {
+    0% { width: 0%; }
+    100% { width: 100%; }
+  }
+
+  .animate-pulse-slow {
+    animation: pulse-slow 1.8s ease-in-out infinite;
+  }
+
+  .animate-float-slow {
+    animation: float-slow 6s ease-in-out infinite;
+  }
+
+  .animate-float-slower {
+    animation: float-slower 8s ease-in-out infinite;
+  }
+
+  .animate-pulse-ring {
+    animation: pulse-ring 3s ease-in-out infinite;
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 1s ease both;
+    animation-delay: 0.3s;
+  }
+
+  .animate-loading-bar {
+    animation: loading-bar 1.5s ease-in-out forwards;
+    animation-delay: 0.2s;
+  }
+
+  /* إخفاء السبلاش بعد 2 ثانية */
+  #splashScreen {
+    transition: opacity 0.7s ease-in-out;
+  }
+  #splashScreen.fade-out {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* ===== شعار سند (مع احتياطي أيقونة عند غياب الصورة) ===== */
+  .logo-box {
+    position: relative; flex-shrink: 0; border-radius: .85rem; overflow: hidden;
+    background: linear-gradient(135deg, #0E5C56, #17847B);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 14px rgba(14,92,86,.35);
+  }
+  .logo-box img { width: 100%; height: 100%; object-fit: cover; }
+  .logo-box .logo-fallback { display: none; color: #FAF6EF; width: 100%; height: 100%; align-items: center; justify-content: center; }
+  .logo-box .logo-fallback.show { display: flex; }
+  .logo-pulse { animation: logoPulse 3.2s ease-in-out infinite; }
+  @keyframes logoPulse {
+    0%, 100% { box-shadow: 0 4px 14px rgba(14,92,86,.35); }
+    50% { box-shadow: 0 4px 22px rgba(217,142,43,.45); }
+  }
+
+  /* ===== نجوم التقييم التفاعلية ===== */
+  .star-icon { fill: none; stroke: currentColor; color: #D98E2B; transition: all .15s ease; }
+  .star-icon.filled { fill: #D98E2B; color: #D98E2B; }
+
+  /* ===== مؤشر التحميل الدوّار ===== */
+  .spin { animation: spin 0.9s linear infinite; }
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+  /* ===== قسم "كيف تعمل المنصة" ===== */
+  .how-card { transition: transform .25s ease, box-shadow .25s ease; }
+  .how-card:hover { transform: translateY(-6px); box-shadow: 0 16px 30px rgba(14,92,86,.15); }
+  .how-card .how-icon {
+    width: 3.2rem; height: 3.2rem; border-radius: 1rem;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, rgba(14,92,86,.1), rgba(217,142,43,.12));
+  }
+  html.dark .how-card .how-icon { background: linear-gradient(135deg, rgba(127,214,204,.15), rgba(217,142,43,.15)); }
+
+  /* ===== شرائح الفئات السريعة في البطل ===== */
+  .cat-chip { transition: transform .15s ease, box-shadow .15s ease; }
+  .cat-chip:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 10px 20px rgba(14,92,86,.18); }
+
+  /* ===== تفاعل بطاقات الإحصائيات ===== */
+  .stat-card { transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+  .stat-card:hover { transform: translateY(-4px); box-shadow: 0 14px 26px rgba(14,92,86,.14); border-color: rgba(217,142,43,.35); }
+
+  /* ===== ترويسة متدرجة ===== */
+  .header-gradient { background: linear-gradient(90deg, #0E5C56, #12766E 60%, #17847B); }
+  html.dark .header-gradient { background: linear-gradient(90deg, #0A4440, #0E5C56 60%, #0F5952); }
+
+  /* ===== ثقة/مزايا المنصة ===== */
+  .trust-card { transition: transform .2s ease, box-shadow .2s ease; border: 1px solid rgba(14,92,86,.08); }
+  .trust-card:hover { transform: translateY(-4px); box-shadow: 0 14px 28px rgba(14,92,86,.12); }
+  html.dark .trust-card { border-color: rgba(127,214,204,.12); }
 </style>
 </head>
 <body class="font-cairo bg-sand dark:bg-sandDark text-gray-800 dark:text-gray-200 min-h-screen">
+  <!-- ====== صفحة السبلاش ====== -->
+  <div id="splashScreen" class="fixed inset-0 z-[999] flex items-center justify-center bg-gradient-to-br from-primaryDark to-primaryLight dark:from-sandDark dark:to-primaryDark transition-opacity duration-700 ease-in-out">
+    <div class="text-center">
+      <!-- شعار أو اسم المنصة -->
+      <div class="flex items-center justify-center gap-3 mb-4">
+        <div class="logo-box logo-pulse mx-auto" style="width:4.5rem;height:4.5rem;border-radius:1.4rem">
+          <img src="logo.png" alt="شعار سند" onerror="this.style.display='none'; this.nextElementSibling.classList.add('show')" />
+          <div class="logo-fallback"><i data-lucide="handshake" class="lucide" style="width:2.2rem;height:2.2rem"></i></div>
+        </div>
+        <span class="text-5xl font-extrabold text-white tracking-wider animate-pulse-slow drop-shadow-lg">
+          سند
+        </span>
+      </div>
+      
+      <!-- شعار نصي فرعي -->
+      <p class="text-white/80 text-lg font-light tracking-widest animate-fade-in-up">
+        تبادل المهارات في غزة
+      </p>
+      
+      <!-- دوائر خلفية متحركة -->
+      <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute -top-20 -right-20 w-64 h-64 bg-white/10 rounded-full animate-float-slow"></div>
+        <div class="absolute -bottom-20 -left-20 w-80 h-80 bg-white/5 rounded-full animate-float-slower"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-white/5 rounded-full animate-pulse-ring"></div>
+      </div>
+      
+      <!-- شريط تحميل متحرك (اختياري) -->
+      <div class="mt-8 w-48 h-1 bg-white/20 rounded-full overflow-hidden mx-auto">
+        <div class="h-full bg-accent rounded-full animate-loading-bar"></div>
+      </div>
+    </div>
+  </div>
 
 <div id="toastHost"></div>
 
 <!-- الشريط الجانبي -->
 <div id="sidebar" class="sidebar fixed top-0 right-0 h-full w-64 bg-white dark:bg-gray-800 shadow-lg z-50 p-4 flex flex-col md:translate-x-0 overflow-y-auto">
   <div class="flex justify-between items-center mb-6">
-    <div class="flex items-center gap-2">
-      <img src="logo.png" alt="شعار سند" class="h-8 w-8 rounded-full" onerror="this.style.display='none'" />
+    <div class="flex items-center gap-2.5">
+      <div class="logo-box logo-pulse" style="width:2.4rem;height:2.4rem;border-radius:.85rem">
+        <img src="logo.png" alt="شعار سند" onerror="this.style.display='none'; this.nextElementSibling.classList.add('show')" />
+        <div class="logo-fallback"><i data-lucide="handshake" class="lucide" style="width:1.2em;height:1.2em"></i></div>
+      </div>
       <span class="text-2xl font-extrabold text-primary dark:text-primaryLight">سـنـد</span>
     </div>
     <button id="closeSidebar" class="md:hidden text-gray-500 leading-none" aria-label="إغلاق القائمة"><i data-lucide="x" class="lucide" style="width:1.4em;height:1.4em"></i></button>
@@ -251,7 +440,6 @@
     <a href="#" onclick="showSection('bookings')" data-nav="bookings" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold"><i data-lucide="calendar" class="lucide"></i> حجوزاتي</a>
     <a href="#" onclick="showSection('bids')" data-nav="bids" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold"><i data-lucide="gavel" class="lucide"></i> طلباتي</a>
     <a href="#" onclick="showSection('auctions')" data-nav="auctions" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold"><i data-lucide="gavel" class="lucide"></i> المناقصات</a>
-    <a href="#" onclick="restartTour()" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-primary hover:text-white transition font-semibold text-sm text-gray-400"><i data-lucide="refresh-cw" class="lucide"></i> إعادة الجولة الإرشادية</a>
     <a href="#" id="logoutBtn" onclick="logout()" class="nav-link block py-2.5 px-4 rounded-xl hover:bg-red-600 hover:text-white transition font-semibold hidden"><i data-lucide="log-out" class="lucide"></i> تسجيل خروج</a>
   </nav>
 
@@ -269,9 +457,12 @@
 
 <!-- المحتوى الرئيسي -->
 <div class="md:mr-64">
-  <header class="bg-primary dark:bg-gray-800 text-white p-4 flex items-center justify-between shadow-md sticky top-0 z-40">
-    <div class="flex items-center gap-2">
-      <img src="logo.png" alt="شعار سند" class="h-8 w-8 rounded-full" />
+  <header class="header-gradient dark:bg-gray-800 text-white p-4 flex items-center justify-between shadow-md sticky top-0 z-40">
+    <div class="flex items-center gap-2.5">
+      <div class="logo-box" style="width:2.3rem;height:2.3rem;border-radius:.75rem">
+        <img src="logo.png" alt="شعار سند" onerror="this.style.display='none'; this.nextElementSibling.classList.add('show')" />
+        <div class="logo-fallback"><i data-lucide="handshake" class="lucide" style="width:1.1em;height:1.1em"></i></div>
+      </div>
       <h1 class="text-xl font-extrabold">منصة سند</h1>
     </div>
     <div class="flex items-center gap-4">
@@ -304,8 +495,12 @@
     
     <!-- الصفحة الرئيسية -->
     <section id="section-home" class="fade-in hidden">
-      <section class="relative bg-gradient-to-br from-primary/90 to-primaryDark/90 text-white py-20 px-4">
+      <section class="relative bg-gradient-to-br from-primary/90 to-primaryDark/90 text-white py-20 px-4 overflow-hidden">
         <div class="max-w-4xl mx-auto text-center relative z-10">
+          <div class="logo-box logo-pulse mx-auto mb-5" style="width:4.2rem;height:4.2rem;border-radius:1.25rem">
+            <img src="logo.png" alt="شعار سند" onerror="this.style.display='none'; this.nextElementSibling.classList.add('show')" />
+            <div class="logo-fallback"><i data-lucide="handshake" class="lucide" style="width:2rem;height:2rem"></i></div>
+          </div>
           <h1 class="text-4xl sm:text-5xl font-extrabold mb-4 animate-fadeInDown">
             منصة <span class="text-accent">سند</span>
           </h1>
@@ -325,16 +520,47 @@
               <i data-lucide="wrench" class="lucide"></i> قدم خدمتك
             </a>
           </div>
+          <div class="flex flex-wrap justify-center gap-2 mt-8">
+            <button onclick="showSection('search')" class="cat-chip bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/25 rounded-full px-4 py-2 text-sm font-semibold flex items-center gap-1.5"><i data-lucide="zap" class="lucide" style="width:1em;height:1em"></i> كهرباء</button>
+            <button onclick="showSection('search')" class="cat-chip bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/25 rounded-full px-4 py-2 text-sm font-semibold flex items-center gap-1.5"><i data-lucide="wrench" class="lucide" style="width:1em;height:1em"></i> سباكة</button>
+            <button onclick="showSection('search')" class="cat-chip bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/25 rounded-full px-4 py-2 text-sm font-semibold flex items-center gap-1.5"><i data-lucide="hammer" class="lucide" style="width:1em;height:1em"></i> نجارة</button>
+            <button onclick="showSection('search')" class="cat-chip bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/25 rounded-full px-4 py-2 text-sm font-semibold flex items-center gap-1.5"><i data-lucide="scissors" class="lucide" style="width:1em;height:1em"></i> خياطة</button>
+            <button onclick="showSection('driver')" class="cat-chip bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/25 rounded-full px-4 py-2 text-sm font-semibold flex items-center gap-1.5"><i data-lucide="car" class="lucide" style="width:1em;height:1em"></i> توصيل</button>
+          </div>
         </div>
-        <div class="absolute inset-0 opacity-10">
-          <svg class="w-full h-full" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="100" cy="100" r="200" fill="white" />
-            <circle cx="700" cy="600" r="300" fill="white" />
-            <circle cx="400" cy="400" r="150" fill="white" />
-          </svg>
+        <div class="absolute inset-0 opacity-10 pointer-events-none">
+          <div class="absolute -top-16 -right-16 w-72 h-72 bg-white rounded-full animate-float-slow"></div>
+          <div class="absolute -bottom-20 -left-20 w-96 h-96 bg-white rounded-full animate-float-slower"></div>
+          <div class="absolute top-1/3 left-1/4 w-40 h-40 bg-white rounded-full animate-pulse-slow"></div>
         </div>
       </section>
 
+      <!-- كيف تعمل المنصة -->
+      <section class="bg-sand dark:bg-sandDark py-14 px-4">
+        <div class="max-w-5xl mx-auto">
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-center mb-2">كيف تعمل المنصة؟</h2>
+          <p class="text-center text-gray-500 dark:text-gray-400 mb-10">ثلاث خطوات بسيطة تفصلك عن المساعدة</p>
+          <div class="grid sm:grid-cols-3 gap-6">
+            <div class="how-card bg-white dark:bg-gray-800 rounded-2xl p-6 text-center shadow">
+              <div class="how-icon mx-auto mb-4"><i data-lucide="search" class="lucide text-primary dark:text-primaryLight" style="width:1.5em;height:1.5em"></i></div>
+              <h3 class="font-bold text-lg mb-2">١. ابحث</h3>
+              <p class="text-sm text-gray-500 dark:text-gray-400">تصفّح الخبراء وأصحاب المهارات القريبين منك حسب المنطقة والفئة</p>
+            </div>
+            <div class="how-card bg-white dark:bg-gray-800 rounded-2xl p-6 text-center shadow">
+              <div class="how-icon mx-auto mb-4"><i data-lucide="message-circle" class="lucide text-primary dark:text-primaryLight" style="width:1.5em;height:1.5em"></i></div>
+              <h3 class="font-bold text-lg mb-2">٢. تواصل</h3>
+              <p class="text-sm text-gray-500 dark:text-gray-400">تواصل مباشرة عبر واتساب أو اطرح طلبك ليقدّم أصحاب الخبرة عروضهم</p>
+            </div>
+            <div class="how-card bg-white dark:bg-gray-800 rounded-2xl p-6 text-center shadow">
+              <div class="how-icon mx-auto mb-4"><i data-lucide="hand-heart" class="lucide text-primary dark:text-primaryLight" style="width:1.5em;height:1.5em"></i></div>
+              <h3 class="font-bold text-lg mb-2">٣. تعاون</h3>
+              <p class="text-sm text-gray-500 dark:text-gray-400">أنجز العمل، وقيّم التجربة لمساعدة بقية أفراد المجتمع</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- إحصائيات المنصة -->
       <section class="bg-white dark:bg-gray-800 py-10 shadow-inner">
         <div class="max-w-5xl mx-auto px-2">
           <div class="stats-scroller" id="statsScroller">
@@ -365,6 +591,48 @@
             </div>
           </div>
           <div class="stats-dots" id="statsDots"></div>
+        </div>
+      </section>
+
+      <!-- لماذا سند -->
+      <section class="bg-sand dark:bg-sandDark py-14 px-4">
+        <div class="max-w-5xl mx-auto">
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-center mb-2">لماذا سند؟</h2>
+          <p class="text-center text-gray-500 dark:text-gray-400 mb-10">منصة بُنيت لخدمة مجتمعنا في غزة</p>
+          <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div class="trust-card bg-white dark:bg-gray-800 rounded-2xl p-5 text-center">
+              <i data-lucide="gift" class="lucide text-primary dark:text-primaryLight mb-3" style="width:1.8em;height:1.8em"></i>
+              <h3 class="font-bold mb-1">مجانية بالكامل</h3>
+              <p class="text-xs text-gray-500 dark:text-gray-400">لا رسوم على التسجيل أو التواصل</p>
+            </div>
+            <div class="trust-card bg-white dark:bg-gray-800 rounded-2xl p-5 text-center">
+              <i data-lucide="map-pin" class="lucide text-primary dark:text-primaryLight mb-3" style="width:1.8em;height:1.8em"></i>
+              <h3 class="font-bold mb-1">قرب الحي</h3>
+              <p class="text-xs text-gray-500 dark:text-gray-400">تواصل مع جيرانك في نفس منطقتك</p>
+            </div>
+            <div class="trust-card bg-white dark:bg-gray-800 rounded-2xl p-5 text-center">
+              <i data-lucide="shield-check" class="lucide text-primary dark:text-primaryLight mb-3" style="width:1.8em;height:1.8em"></i>
+              <h3 class="font-bold mb-1">تقييمات موثوقة</h3>
+              <p class="text-xs text-gray-500 dark:text-gray-400">نظام تقييم يعكس تجربة حقيقية</p>
+            </div>
+            <div class="trust-card bg-white dark:bg-gray-800 rounded-2xl p-5 text-center">
+              <i data-lucide="users-round" class="lucide text-primary dark:text-primaryLight mb-3" style="width:1.8em;height:1.8em"></i>
+              <h3 class="font-bold mb-1">مجتمعية</h3>
+              <p class="text-xs text-gray-500 dark:text-gray-400">بناها أبناء غزة لخدمة أبناء غزة</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- دعوة للانضمام -->
+      <section class="bg-gradient-to-l from-accent to-accentDark text-white py-12 px-4">
+        <div class="max-w-3xl mx-auto text-center">
+          <i data-lucide="sparkles" class="lucide mx-auto mb-3" style="width:2em;height:2em"></i>
+          <h2 class="text-2xl sm:text-3xl font-extrabold mb-3">هل لديك مهارة يمكنك تقديمها؟</h2>
+          <p class="mb-6 opacity-90">انضم إلى شبكة الخبراء في سند وابدأ بمساعدة جيرانك اليوم</p>
+          <a href="#" onclick="showSection('add')" class="inline-flex items-center gap-2 bg-white text-accentDark px-8 py-3.5 rounded-full font-bold shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
+            <i data-lucide="wrench" class="lucide"></i> سجّل كمقدم خدمة
+          </a>
         </div>
       </section>
     </section>
@@ -774,9 +1042,9 @@
       <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md mb-4">
         <div class="flex flex-wrap gap-2">
           <button onclick="loadMyBids('all')" class="chip active" data-status="all">الكل</button>
-          <button onclick="loadMyBids('open')" class="chip" data-status="open">📋 مفتوح</button>
-          <button onclick="loadMyBids('assigned')" class="chip" data-status="assigned">✅ تم التعيين</button>
-          <button onclick="loadMyBids('closed')" class="chip" data-status="closed">🔒 مغلق</button>
+          <button onclick="loadMyBids('open')" class="chip" data-status="open"><i data-lucide="clipboard-list" class="lucide"></i> مفتوح</button>
+          <button onclick="loadMyBids('assigned')" class="chip" data-status="assigned"><i data-lucide="check-circle-2" class="lucide"></i> تم التعيين</button>
+          <button onclick="loadMyBids('closed')" class="chip" data-status="closed"><i data-lucide="lock" class="lucide"></i> مغلق</button>
         </div>
       </div>
 
@@ -797,12 +1065,12 @@
       <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md mb-4">
         <div class="flex flex-wrap gap-3">
           <select id="auctionAreaFilter" class="p-2 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
-            <option value="all">📍 كل المناطق</option>
+            <option value="all"><i data-lucide="map-pin" class="lucide"></i> كل المناطق</option>
             <option>الشجاعية</option><option>تل الهوا</option><option>جباليا</option>
             <option>خان يونس</option><option>رفح</option><option>بيت لاهيا</option><option>غزة</option>
           </select>
           <select id="auctionCategoryFilter" class="p-2 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 dark:text-white">
-            <option value="all">📂 كل الفئات</option>
+            <option value="all"><i data-lucide="folder" class="lucide"></i> كل الفئات</option>
             <option>كهرباء</option><option>بناء</option><option>صيانة</option>
             <option>خياطة</option><option>نجارة</option><option>توصيل</option>
           </select>
@@ -833,12 +1101,12 @@
     <div class="space-y-4">
       <div class="text-center">
         <p class="text-sm text-gray-500 dark:text-gray-400">تقييم: <span id="reviewProviderName" class="font-bold text-primary"></span></p>
-        <div class="flex justify-center gap-2 my-3 text-3xl" id="starContainer">
-          <span onclick="setRating(1)" class="cursor-pointer hover:scale-110 transition" data-star="1">☆</span>
-          <span onclick="setRating(2)" class="cursor-pointer hover:scale-110 transition" data-star="2">☆</span>
-          <span onclick="setRating(3)" class="cursor-pointer hover:scale-110 transition" data-star="3">☆</span>
-          <span onclick="setRating(4)" class="cursor-pointer hover:scale-110 transition" data-star="4">☆</span>
-          <span onclick="setRating(5)" class="cursor-pointer hover:scale-110 transition" data-star="5">☆</span>
+        <div class="flex justify-center gap-2 my-3" id="starContainer">
+          <span onclick="setRating(1)" class="cursor-pointer hover:scale-110 transition" data-star="1"><i data-lucide="star" class="lucide star-icon" style="width:1.8em;height:1.8em"></i></span>
+          <span onclick="setRating(2)" class="cursor-pointer hover:scale-110 transition" data-star="2"><i data-lucide="star" class="lucide star-icon" style="width:1.8em;height:1.8em"></i></span>
+          <span onclick="setRating(3)" class="cursor-pointer hover:scale-110 transition" data-star="3"><i data-lucide="star" class="lucide star-icon" style="width:1.8em;height:1.8em"></i></span>
+          <span onclick="setRating(4)" class="cursor-pointer hover:scale-110 transition" data-star="4"><i data-lucide="star" class="lucide star-icon" style="width:1.8em;height:1.8em"></i></span>
+          <span onclick="setRating(5)" class="cursor-pointer hover:scale-110 transition" data-star="5"><i data-lucide="star" class="lucide star-icon" style="width:1.8em;height:1.8em"></i></span>
         </div>
         <p class="text-sm font-bold" id="ratingText">اختر تقييمك</p>
         <input type="hidden" id="selectedRating" value="0">
@@ -851,27 +1119,6 @@
       </div>
       <button onclick="submitReview()" class="btn-primary w-full flex items-center justify-center gap-2"><i data-lucide="send" class="lucide"></i> إرسال التقييم</button>
       <div id="reviewMessage" class="text-center font-bold min-h-[1.5rem]"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ====== نافذة الترحيب ====== -->
-<div id="welcomeModal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 hidden">
-  <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl transform transition-all duration-300 scale-95" id="welcomeContent">
-    <div class="text-center">
-      <div class="text-6xl mb-4">👋</div>
-      <h2 class="text-2xl font-bold mb-2">مرحباً بك في <span class="text-primary">سند</span></h2>
-      <p class="text-gray-600 dark:text-gray-300 mb-6">
-        منصة تبادل المهارات بين جيرانك في غزة. ابدأ باستكشاف الخدمات أو قدم مهارتك.
-      </p>
-      <div class="flex flex-col gap-3">
-        <button onclick="closeWelcome()" class="btn-primary w-full flex items-center justify-center gap-2"><i data-lucide="rocket" class="lucide"></i> ابدأ الآن</button>
-        <button onclick="startTour()" class="text-sm text-primary hover:underline">خذني في جولة</button>
-      </div>
-      <div class="mt-4 text-xs text-gray-400">
-        <input type="checkbox" id="dontShowAgain" class="ml-2">
-        <label for="dontShowAgain">لا تظهر مرة أخرى</label>
-      </div>
     </div>
   </div>
 </div>
@@ -898,19 +1145,28 @@
 /* ========================================================
    الإعدادات
    ======================================================== */
-const API_URL = "https://script.google.com/macros/s/AKfycbwZT88aBLmucfC1w3P4Ht55PEC4e8RrJSLgYget5kZ4e4PfcahGfZLtzg5kh2ZTWeF5/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwB5UwgdzW3asgb_NLoKMa7SD5z-rPIS2tS25zuuzna5rETNjGTkeHuniyfKmycqSMa/exec";
 const FETCH_TIMEOUT_MS = 20000;
 const CACHE_KEY_PREFIX = "sanad_cache_";
 
 /* ========================================================
    أدوات مساعدة عامة
    ======================================================== */
+const TOAST_ICONS = { success: 'check-circle-2', error: 'x-circle', info: 'info' };
 function showToast(message, type = 'info') {
   const host = document.getElementById('toastHost');
   const el = document.createElement('div');
-  el.className = `toast toast-${type}`;
-  el.textContent = message;
+  el.className = `toast toast-${type} flex items-center justify-center gap-2`;
+  const icon = document.createElement('i');
+  icon.setAttribute('data-lucide', TOAST_ICONS[type] || TOAST_ICONS.info);
+  icon.className = 'lucide';
+  icon.style.cssText = 'width:1.15em;height:1.15em;flex-shrink:0';
+  const text = document.createElement('span');
+  text.textContent = message;
+  el.appendChild(icon);
+  el.appendChild(text);
   host.appendChild(el);
+  if (window.lucide) lucide.createIcons();
   setTimeout(() => el.remove(), 4000);
 }
 
@@ -930,6 +1186,17 @@ async function fetchWithTimeout(url, ms = FETCH_TIMEOUT_MS) {
 
 function escapeHtml(str) {
   return String(str ?? '').replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+}
+
+// ===== تحويل رسائل الأخطاء التقنية (القادمة أحياناً من الخادم) إلى رسالة عربية واضحة للمستخدم =====
+function friendlyErrorMessage(msg) {
+  if (!msg) return 'حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى';
+  const technicalPattern = /ReferenceError|TypeError|SyntaxError|is not defined|Cannot access|Cannot read|before initialization|at\s+\w+\s*\(|Exception/i;
+  if (technicalPattern.test(String(msg))) {
+    console.error('خطأ تقني من الخادم:', msg);
+    return 'حدث خطأ فني أثناء تنفيذ العملية على الخادم، يرجى المحاولة لاحقاً';
+  }
+  return String(msg);
 }
 
 /* ========================================================
@@ -1046,7 +1313,7 @@ function renderResults(container, data) {
   if (!data || !Array.isArray(data) || data.length === 0) {
     container.innerHTML = `
       <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center fade-in">
-        <div class="text-4xl mb-2">😓</div>
+        <div class="text-4xl mb-2"><i data-lucide="frown" class="lucide"></i></div>
         <p class="font-bold">لا يوجد خبراء بهذه المهارة في منطقتك حالياً</p>
         <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">سجّل مهارتك لتكون أول من يساعد الجيران</p>
         <button onclick="showSection('add')" class="btn-accent mt-4">سجّل مهارتك</button>
@@ -1057,7 +1324,7 @@ function renderResults(container, data) {
   // تصفية البيانات غير المكتملة
   const validData = data.filter(p => p.name && p.skill_offer);
   if (validData.length === 0) {
-    container.innerHTML = `<div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg text-center">⚠️ توجد بيانات لكنها غير مكتملة.</div>`;
+    container.innerHTML = `<div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg text-center"><i data-lucide="alert-triangle" class="lucide"></i> توجد بيانات لكنها غير مكتملة.</div>`;
     return;
   }
 
@@ -1069,7 +1336,7 @@ function renderResults(container, data) {
     const skill = p.skill_offer || 'لم يحدد';
     const cleanPhone = String(phone).replace(/\D/g, ''); // نزيل كل ما ليس رقماً
     const whatsappLink = `https://wa.me/${cleanPhone}`; // الرقم محفوظ مع المقدمة (مثلاً 970599xxxxxx)
-    const typeLabel = p.type === 'driver' ? '🚗 سائق' : '🛠️ خبير';
+    const typeLabel = p.type === 'driver' ? '<i data-lucide="car" class="lucide"></i> سائق' : '<i data-lucide="wrench" class="lucide"></i> خبير';
 
     return `
       <div class="card-hover fade-in bg-white dark:bg-gray-700 p-4 rounded-xl shadow flex flex-wrap items-center justify-between gap-3 border-r-4 border-accent" 
@@ -1077,17 +1344,17 @@ function renderResults(container, data) {
         <div>
           <p class="font-bold text-lg">${escapeHtml(name)}</p>
           <p class="text-sm text-gray-500 dark:text-gray-300">${typeLabel} ${escapeHtml(skill)}</p>
-          <p class="text-xs text-gray-400">📍 ${escapeHtml(area)}</p>
+          <p class="text-xs text-gray-400"><i data-lucide="map-pin" class="lucide"></i> ${escapeHtml(area)}</p>
           <!-- نظام التقييم الجديد -->
           <div class="flex items-center gap-2 mt-2">
-            <span class="text-sm font-bold" id="rating-${phone}">⭐ 0.0</span>
+            <span class="text-sm font-bold flex items-center gap-1" id="rating-${phone}"><i data-lucide="star" class="lucide star-icon filled" style="width:1em;height:1em"></i><span class="rating-value">0.0</span></span>
             <span class="text-xs text-gray-400" id="rating-count-${phone}">(0 مراجعة)</span>
             <button onclick="openReviewModal('${escapeHtml(name)}', '${phone}')" 
                     class="text-xs text-primary hover:underline">أضف تقييم</button>
           </div>
         </div>
         <div class="flex items-center gap-2">
-          ${cleanPhone ? `<a href="${whatsappLink}" target="_blank" rel="noopener" class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-green-700 transition">💬 واتساب</a>` : ''}
+          ${cleanPhone ? `<a href="${whatsappLink}" target="_blank" rel="noopener" class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-green-700 transition"><i data-lucide="message-circle" class="lucide"></i> واتساب</a>` : ''}
         </div>
       </div>`;
   }).join('')}</div>`;
@@ -1113,7 +1380,7 @@ async function fetchRating(providerName, providerPhone) {
       if (ratingEl) {
         const avg = result.data?.average || 0;
         const count = result.data?.count || 0;
-        ratingEl.textContent = `⭐ ${avg.toFixed(1)}`;
+        const valEl = ratingEl.querySelector('.rating-value'); if (valEl) valEl.textContent = avg.toFixed(1); else ratingEl.textContent = avg.toFixed(1);
         countEl.textContent = `(${count} مراجعة${count !== 1 ? 'ات' : ''})`;
       }
     }
@@ -1127,7 +1394,8 @@ function generateStars(rating) {
   const full = Math.floor(rating);
   const half = rating % 1 >= 0.5 ? 1 : 0;
   const empty = 5 - full - half;
-  return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(empty);
+  const starIcon = (filled) => `<i data-lucide="star" class="lucide star-icon${filled ? ' filled' : ''}" style="width:.95em;height:.95em"></i>`;
+  return starIcon(true).repeat(full) + (half ? starIcon(true) : '') + starIcon(false).repeat(empty);
 }
 
 
@@ -1178,9 +1446,9 @@ async function performSearch() {
     } else {
       container.innerHTML = `
         <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center">
-          <div class="text-3xl mb-2">⚠️</div>
+          <div class="text-3xl mb-2"><i data-lucide="alert-triangle" class="lucide"></i></div>
           <p class="font-bold">تعذّر الاتصال بالخادم</p>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">${escapeHtml(error.message)}</p>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">${escapeHtml(friendlyErrorMessage(error.message))}</p>
           <button onclick="performSearch()" class="btn-primary mt-4">إعادة المحاولة</button>
         </div>`;
     }
@@ -1205,7 +1473,7 @@ async function searchDriversDirect() {
   if (!query) {
     container.innerHTML = `
       <div class="bg-yellow-50 dark:bg-yellow-900/30 p-6 rounded-2xl text-center border-r-4 border-accent">
-        <div class="text-3xl mb-2">🔍</div>
+        <div class="text-3xl mb-2"><i data-lucide="search" class="lucide"></i></div>
         <p class="font-bold">الرجاء كتابة ما تبحث عنه</p>
         <p class="text-sm text-gray-500 dark:text-gray-400">مثال: اسم السائق، المنطقة، أو نوع المركبة</p>
       </div>`;
@@ -1224,7 +1492,7 @@ async function searchDriversDirect() {
     } else {
       container.innerHTML = `
         <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow text-center">
-          <div class="text-4xl mb-2">📡</div>
+          <div class="text-4xl mb-2"><i data-lucide="wifi" class="lucide"></i></div>
           <p class="font-bold">لا يوجد اتصال بالإنترنت</p>
           <p class="text-sm text-gray-500 dark:text-gray-400">تحقق من اتصالك وحاول مرة أخرى</p>
         </div>`;
@@ -1250,7 +1518,7 @@ async function searchDriversDirect() {
       
       // إظهار عدد النتائج
       const count = result.data?.length || 0;
-      showToast(`✅ تم العثور على ${count} سائق${count !== 1 ? 'ين' : ''}`, 'success');
+      showToast(`<i data-lucide="check-circle-2" class="lucide"></i> تم العثور على ${count} سائق${count !== 1 ? 'ين' : ''}`, 'success');
     } else {
       throw new Error(result.error || 'خطأ غير معروف من الخادم');
     }
@@ -1263,9 +1531,9 @@ async function searchDriversDirect() {
     } else {
       container.innerHTML = `
         <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow text-center">
-          <div class="text-4xl mb-2">⚠️</div>
+          <div class="text-4xl mb-2"><i data-lucide="alert-triangle" class="lucide"></i></div>
           <p class="font-bold text-red-600 dark:text-red-400">تعذّر الاتصال بالخادم</p>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">${escapeHtml(error.message)}</p>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">${escapeHtml(friendlyErrorMessage(error.message))}</p>
           <button onclick="searchDriversDirect()" class="btn-primary mt-4">إعادة المحاولة</button>
         </div>`;
     }
@@ -1295,10 +1563,10 @@ function renderDriverResults(container, data) {
   if (!data || !Array.isArray(data) || data.length === 0) {
     container.innerHTML = `
       <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg text-center border-2 border-dashed border-gray-200 dark:border-gray-700">
-        <div class="text-6xl mb-3">🚗</div>
+        <div class="text-6xl mb-3"><i data-lucide="car" class="lucide"></i></div>
         <p class="font-bold text-lg">لا يوجد سائقين مطابقين للبحث</p>
         <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">جرب البحث بكلمات مختلفة أو أضف سائقاً جديداً</p>
-        <button onclick="document.getElementById('driverName').focus()" class="btn-accent mt-4">➕ إضافة سائق</button>
+        <button onclick="document.getElementById('driverName').focus()" class="btn-accent mt-4"><i data-lucide="plus" class="lucide"></i> إضافة سائق</button>
       </div>`;
     return;
   }
@@ -1308,7 +1576,7 @@ function renderDriverResults(container, data) {
   if (validData.length === 0) {
     container.innerHTML = `
       <div class="bg-yellow-50 dark:bg-yellow-900/30 p-6 rounded-2xl text-center">
-        <p class="font-bold text-yellow-700 dark:text-yellow-400">⚠️ توجد بيانات لكنها غير مكتملة</p>
+        <p class="font-bold text-yellow-700 dark:text-yellow-400"><i data-lucide="alert-triangle" class="lucide"></i> توجد بيانات لكنها غير مكتملة</p>
         <p class="text-sm text-gray-500">يُرجى التحقق من صحة البيانات في جدول السائقين</p>
       </div>`;
     return;
@@ -1330,7 +1598,7 @@ function renderDriverResults(container, data) {
         const vehicle = vehicleMatch ? vehicleMatch[1] : 'غير محدد';
         
         // أيقونة عشوائية للتنوع
-        const icons = ['🚗', '🚙', '🚐', '🛵', '🚲'];
+        const icons = ['<i data-lucide="car" class="lucide"></i>', '<i data-lucide="car" class="lucide"></i>', '<i data-lucide="truck" class="lucide"></i>', '<i data-lucide="bike" class="lucide"></i>', '<i data-lucide="bike" class="lucide"></i>'];
         const icon = icons[index % icons.length];
         
         return `
@@ -1340,17 +1608,17 @@ function renderDriverResults(container, data) {
               <div>
                 <p class="font-bold text-lg">${escapeHtml(name)}</p>
                 <p class="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
-                  <span>🛠️ ${escapeHtml(skill)}</span>
+                  <span><i data-lucide="wrench" class="lucide"></i> ${escapeHtml(skill)}</span>
                   <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
-                  <span>📍 ${escapeHtml(area)}</span>
+                  <span><i data-lucide="map-pin" class="lucide"></i> ${escapeHtml(area)}</span>
                 </p>
-                <p class="text-xs text-gray-400 mt-1">🚗 نوع المركبة: ${escapeHtml(vehicle)}</p>
+                <p class="text-xs text-gray-400 mt-1"><i data-lucide="car" class="lucide"></i> نوع المركبة: ${escapeHtml(vehicle)}</p>
               </div>
             </div>
             <div class="flex items-center gap-2">
-              ${cleanPhone ? `<a href="${whatsappLink}" target="_blank" rel="noopener" class="bg-green-600 text-white px-5 py-2.5 rounded-full text-sm font-bold hover:bg-green-700 transition transform hover:scale-105 shadow-md hover:shadow-lg flex items-center gap-2"><span>💬</span> واتساب</a>` : ''}
+              ${cleanPhone ? `<a href="${whatsappLink}" target="_blank" rel="noopener" class="bg-green-600 text-white px-5 py-2.5 rounded-full text-sm font-bold hover:bg-green-700 transition transform hover:scale-105 shadow-md hover:shadow-lg flex items-center gap-2"><span><i data-lucide="message-circle" class="lucide"></i></span> واتساب</a>` : ''}
               <!-- زر التقييم -->
-              <button onclick="openReviewModal('${escapeHtml(name)}', '${escapeHtml(phone)}')" class="bg-yellow-500 text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-yellow-600 transition">⭐ تقييم</button>
+              <button onclick="openReviewModal('${escapeHtml(name)}', '${escapeHtml(phone)}')" class="bg-yellow-500 text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-yellow-600 transition">تقييم</button>
               <span class="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">سائق</span>
             </div>
           </div>
@@ -1371,7 +1639,7 @@ function resetDriverSearch() {
   document.getElementById('driverAreaSelect').value = 'all';
   document.getElementById('driverResults').innerHTML = `
     <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow text-center text-gray-500 dark:text-gray-400">
-      <div class="text-5xl mb-3">🚗</div>
+      <div class="text-5xl mb-3"><i data-lucide="car" class="lucide"></i></div>
       <p class="font-semibold">ابحث عن سائق</p>
       <p class="text-sm">اكتب اسم السائق، المنطقة، أو نوع المركبة في الأعلى</p>
     </div>`;
@@ -1400,22 +1668,22 @@ async function addService() {
 
   // التحقق من صحة الحقول
   if (!name || !phone || !area || !skill) {
-    msgDiv.innerHTML = '<span class="text-red-500">⚠️ جميع الحقول الأساسية مطلوبة</span>';
+    msgDiv.innerHTML = '<span class="text-red-500"><i data-lucide="alert-triangle" class="lucide"></i> جميع الحقول الأساسية مطلوبة</span>';
     return;
   }
   if (!validatePalestinianPhone(phone)) {
-    msgDiv.innerHTML = '<span class="text-red-500">⚠️ الرجاء إدخال رقم هاتف صحيح</span>';
+    msgDiv.innerHTML = '<span class="text-red-500"><i data-lucide="alert-triangle" class="lucide"></i> الرجاء إدخال رقم هاتف صحيح</span>';
     return;
   }
 
   btn.disabled = true;
-  btn.textContent = '⏳ جاري التسجيل...';
+  btn.textContent = 'جاري التسجيل...';
   msgDiv.innerHTML = '';
 
   if (!navigator.onLine) {
-    msgDiv.innerHTML = '<span class="text-red-500">⚠️ لا يوجد اتصال بالإنترنت</span>';
+    msgDiv.innerHTML = '<span class="text-red-500"><i data-lucide="alert-triangle" class="lucide"></i> لا يوجد اتصال بالإنترنت</span>';
     btn.disabled = false;
-    btn.textContent = '✅ إضافة إلى المنصة';
+    btn.textContent = 'إضافة إلى المنصة';
     return;
   }
 
@@ -1444,7 +1712,7 @@ async function addService() {
     console.log('📥 رد الخادم:', result);
 
     if (result.success) {
-      msgDiv.innerHTML = '<span class="text-green-600">✅ تم التسجيل بنجاح! سيتمكن جيرانك الآن من التواصل معك</span>';
+      msgDiv.innerHTML = '<span class="text-green-600"><i data-lucide="check-circle-2" class="lucide"></i> تم التسجيل بنجاح! سيتمكن جيرانك الآن من التواصل معك</span>';
       showToast('تم تسجيل مهارتك بنجاح', 'success');
       ['addName', 'addPhone', 'addArea', 'addSkill', 'addRequest'].forEach(id => document.getElementById(id).value = '');
     } else {
@@ -1453,11 +1721,11 @@ async function addService() {
     }
   } catch (error) {
     console.error('❌ خطأ في الإضافة:', error);
-    msgDiv.innerHTML = `<span class="text-red-500">❌ ${escapeHtml(error.message)}</span>`;
+    msgDiv.innerHTML = `<span class="text-red-500"><i data-lucide="x-circle" class="lucide"></i> ${escapeHtml(friendlyErrorMessage(error.message))}</span>`;
     showToast('تعذّر إتمام التسجيل', 'error');
   } finally {
     btn.disabled = false;
-    btn.textContent = '✅ إضافة إلى المنصة';
+    btn.textContent = 'إضافة إلى المنصة';
   }
 }
 
@@ -1473,17 +1741,17 @@ async function addDriver() {
   const msgDiv = document.getElementById('driverMessage');
 
   if (!name || !phone || !area || !vehicle) {
-    msgDiv.innerHTML = '<span class="text-red-500">⚠️ جميع الحقول مطلوبة</span>';
+    msgDiv.innerHTML = '<span class="text-red-500"><i data-lucide="alert-triangle" class="lucide"></i> جميع الحقول مطلوبة</span>';
     return;
   }
   if (!validatePalestinianPhone(phone)) {
-    msgDiv.innerHTML = '<span class="text-red-500">⚠️ رقم هاتف غير صحيح</span>';
+    msgDiv.innerHTML = '<span class="text-red-500"><i data-lucide="alert-triangle" class="lucide"></i> رقم هاتف غير صحيح</span>';
     return;
   }
 
   const addBtn = document.querySelector('#section-driver .btn-primary');
   if (addBtn) addBtn.disabled = true;
-  msgDiv.innerHTML = '<span class="text-blue-500">⏳ جاري إضافة السائق...</span>';
+  msgDiv.innerHTML = '<span class="text-blue-500"><i data-lucide="loader-circle" class="lucide spin"></i> جاري إضافة السائق...</span>';
 
   try {
     const formData = new URLSearchParams();
@@ -1509,7 +1777,7 @@ async function addDriver() {
     const result = await response.json();
 
     if (result.success) {
-      msgDiv.innerHTML = '<span class="text-green-600">✅ تم إضافة السائق بنجاح!</span>';
+      msgDiv.innerHTML = '<span class="text-green-600"><i data-lucide="check-circle-2" class="lucide"></i> تم إضافة السائق بنجاح!</span>';
       showToast('تم إضافة السائق بنجاح', 'success');
       ['driverName', 'driverPhone', 'driverArea', 'driverVehicle'].forEach(id => document.getElementById(id).value = '');
       setTimeout(() => {
@@ -1523,7 +1791,7 @@ async function addDriver() {
     }
   } catch (error) {
     console.error('❌ خطأ في إضافة السائق:', error);
-    msgDiv.innerHTML = `<span class="text-red-500">❌ ${escapeHtml(error.message)}</span>`;
+    msgDiv.innerHTML = `<span class="text-red-500"><i data-lucide="x-circle" class="lucide"></i> ${escapeHtml(friendlyErrorMessage(error.message))}</span>`;
     showToast('تعذّر إتمام الإضافة', 'error');
   } finally {
     if (addBtn) addBtn.disabled = false;
@@ -1539,13 +1807,13 @@ async function login() {
   const msgDiv = document.getElementById('loginMessage');
 
   if (!username || !password) {
-    msgDiv.innerHTML = '<span class="text-red-500">⚠️ الرجاء إدخال اسم المستخدم وكلمة المرور</span>';
+    msgDiv.innerHTML = '<span class="text-red-500"><i data-lucide="alert-triangle" class="lucide"></i> الرجاء إدخال اسم المستخدم وكلمة المرور</span>';
     return;
   }
 
   const loginBtn = document.querySelector('#loginForm .btn-primary');
   if (loginBtn) loginBtn.disabled = true;
-  msgDiv.innerHTML = '<span class="text-blue-500">⏳ جاري التحقق...</span>';
+  msgDiv.innerHTML = '<span class="text-blue-500"><i data-lucide="loader-circle" class="lucide spin"></i> جاري التحقق...</span>';
 
   try {
     const url = `${API_URL}?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
@@ -1561,19 +1829,19 @@ async function login() {
       localStorage.setItem('sanad_user_phone', loggedInPhone);
       console.log('📞 تم تخزين رقم الهاتف:', loggedInPhone);
 
-      msgDiv.innerHTML = '<span class="text-green-600">✅ تم تسجيل الدخول بنجاح!</span>';
+      msgDiv.innerHTML = '<span class="text-green-600"><i data-lucide="check-circle-2" class="lucide"></i> تم تسجيل الدخول بنجاح!</span>';
       showToast(`مرحباً ${username}`, 'success');
       updateUserDisplay();
       document.getElementById('loginUsername').value = '';
       document.getElementById('loginPassword').value = '';
       showSection('home');
     } else {
-      msgDiv.innerHTML = `<span class="text-red-500">❌ ${result.message}</span>`;
+      msgDiv.innerHTML = `<span class="text-red-500"><i data-lucide="x-circle" class="lucide"></i> ${result.message}</span>`;
       showToast('فشل تسجيل الدخول، تحقق من بياناتك', 'error');
     }
   } catch (error) {
     console.error('خطأ في تسجيل الدخول:', error);
-    msgDiv.innerHTML = `<span class="text-red-500">❌ حدث خطأ في الاتصال: ${error.message}</span>`;
+    msgDiv.innerHTML = `<span class="text-red-500"><i data-lucide="x-circle" class="lucide"></i> حدث خطأ في الاتصال: ${friendlyErrorMessage(error.message)}</span>`;
     showToast('تعذّر الاتصال بالخادم', 'error');
   } finally {
     if (loginBtn) loginBtn.disabled = false;
@@ -1589,25 +1857,25 @@ async function signup() {
   localStorage.setItem('sanad_user_phone', phone);
 
   if (!username || !password || !confirm) {
-    msgDiv.innerHTML = '<span class="text-red-500">⚠️ جميع الحقول مطلوبة</span>';
+    msgDiv.innerHTML = '<span class="text-red-500"><i data-lucide="alert-triangle" class="lucide"></i> جميع الحقول مطلوبة</span>';
     return;
   }
   if (username.length < 3) {
-    msgDiv.innerHTML = '<span class="text-red-500">⚠️ اسم المستخدم يجب أن يكون 3 أحرف على الأقل</span>';
+    msgDiv.innerHTML = '<span class="text-red-500"><i data-lucide="alert-triangle" class="lucide"></i> اسم المستخدم يجب أن يكون 3 أحرف على الأقل</span>';
     return;
   }
   if (password.length < 4) {
-    msgDiv.innerHTML = '<span class="text-red-500">⚠️ كلمة المرور يجب أن تكون 4 أحرف على الأقل</span>';
+    msgDiv.innerHTML = '<span class="text-red-500"><i data-lucide="alert-triangle" class="lucide"></i> كلمة المرور يجب أن تكون 4 أحرف على الأقل</span>';
     return;
   }
   if (password !== confirm) {
-    msgDiv.innerHTML = '<span class="text-red-500">⚠️ كلمتا المرور غير متطابقتين</span>';
+    msgDiv.innerHTML = '<span class="text-red-500"><i data-lucide="alert-triangle" class="lucide"></i> كلمتا المرور غير متطابقتين</span>';
     return;
   }
 
   const signupBtn = document.querySelector('#signupForm .btn-accent');
   if (signupBtn) signupBtn.disabled = true;
-  msgDiv.innerHTML = '<span class="text-blue-500">⏳ جاري إنشاء الحساب...</span>';
+  msgDiv.innerHTML = '<span class="text-blue-500"><i data-lucide="loader-circle" class="lucide spin"></i> جاري إنشاء الحساب...</span>';
 
   try {
     const url = `${API_URL}?action=signup&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
@@ -1615,7 +1883,7 @@ async function signup() {
     const result = await response.json();
 
     if (result.success) {
-      msgDiv.innerHTML = `<span class="text-green-600">✅ ${result.message}</span>`;
+      msgDiv.innerHTML = `<span class="text-green-600"><i data-lucide="check-circle-2" class="lucide"></i> ${result.message}</span>`;
       showToast('تم إنشاء الحساب بنجاح!', 'success');
       const phone = document.getElementById('signupPhone')?.value?.trim() || '';
       localStorage.setItem('sanad_user_phone', phone);
@@ -1629,12 +1897,12 @@ async function signup() {
         showToast('يمكنك الآن تسجيل الدخول', 'info');
       }, 2000);
     } else {
-      msgDiv.innerHTML = `<span class="text-red-500">❌ ${result.message}</span>`;
+      msgDiv.innerHTML = `<span class="text-red-500"><i data-lucide="x-circle" class="lucide"></i> ${result.message}</span>`;
       showToast(result.message, 'error');
     }
   } catch (error) {
     console.error('خطأ في التسجيل:', error);
-    msgDiv.innerHTML = `<span class="text-red-500">❌ حدث خطأ في الاتصال: ${error.message}</span>`;
+    msgDiv.innerHTML = `<span class="text-red-500"><i data-lucide="x-circle" class="lucide"></i> حدث خطأ في الاتصال: ${friendlyErrorMessage(error.message)}</span>`;
     showToast('تعذّر الاتصال بالخادم', 'error');
   } finally {
     if (signupBtn) signupBtn.disabled = false;
@@ -1644,7 +1912,7 @@ async function signup() {
 function logout() {
   localStorage.removeItem('sanad_user');
   localStorage.removeItem('sanad_logged_in');
-  document.getElementById('loginMessage').innerHTML = '<span class="text-blue-600">👋 تم تسجيل الخروج</span>';
+  document.getElementById('loginMessage').innerHTML = '<span class="text-blue-600"><i data-lucide="hand" class="lucide"></i> تم تسجيل الخروج</span>';
   showToast('تم تسجيل الخروج', 'info');
   updateUserDisplay();
   showSection('login');
@@ -1728,10 +1996,17 @@ function setStatValues(stats) {
   document.getElementById('statServices').textContent = stats.services ?? '—';
   document.getElementById('statDrivers').textContent = stats.drivers ?? '—';
   document.getElementById('statReviews').textContent = stats.reviews ?? '—';
-  document.getElementById('statAvgRating').textContent =
-    (stats.avgRating !== undefined && stats.avgRating !== null) ? `⭐ ${Number(stats.avgRating).toFixed(1)}` : '—';
-}
 
+  const avg = stats.avgRating;
+  const reviewCount = stats.reviews || 0;
+  const ratingEl = document.getElementById('statAvgRating');
+  
+  if (reviewCount > 0 && avg !== undefined && avg !== null) {
+    ratingEl.textContent = Number(avg).toFixed(1);
+  } else {
+    ratingEl.textContent = '—';
+  }
+}
 /* ========================================================
    لوحة الإحصائيات (٥ مقاييس) — مع جلب حقيقي من الخادم
    ======================================================== */
@@ -1746,7 +2021,7 @@ function setStatValues(stats) {
   const avg = stats.avgRating;
   const reviewCount = stats.reviews || 0;
   document.getElementById('statAvgRating').textContent = 
-    (reviewCount > 0 && avg !== undefined && avg !== null) ? `⭐ ${Number(avg).toFixed(1)}` : '—';
+    (reviewCount > 0 && avg !== undefined && avg !== null) ? ` ${Number(avg).toFixed(1)}` : '—';
 }
 
 async function fetchStats() {
@@ -1836,6 +2111,18 @@ initStatsCarousel();
 /* ===== تهيئة أيقونات Lucide بعد بناء الصفحة ===== */
 if (window.lucide) lucide.createIcons();
 
+/* ===== تحديث تلقائي للأيقونات عند أي تغيير ديناميكي في الصفحة ===== */
+(function initIconAutoRefresh() {
+  if (!window.lucide) return;
+  let pending = false;
+  const observer = new MutationObserver(() => {
+    if (pending) return;
+    pending = true;
+    requestAnimationFrame(() => { lucide.createIcons(); pending = false; });
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+})();
+
 /* ===== إظهار/إخفاء زر مسح البحث أثناء الكتابة ===== */
 const searchInputEl = document.getElementById('searchInput');
 if (searchInputEl) {
@@ -1857,7 +2144,7 @@ function openReviewModal(providerName, providerPhone) {
   document.getElementById('selectedRating').value = 0;
   selectedRating = 0;
   document.getElementById('ratingText').textContent = 'اختر تقييمك';
-  document.querySelectorAll('#starContainer span').forEach(el => el.textContent = '☆');
+  document.querySelectorAll('#starContainer .star-icon').forEach(el => el.classList.remove('filled'));
   document.getElementById('reviewerName').value = '';
   document.getElementById('reviewComment').value = '';
   document.getElementById('reviewMessage').innerHTML = '';
@@ -1870,10 +2157,10 @@ function closeReviewModal() {
 function setRating(value) {
   selectedRating = value;
   document.getElementById('selectedRating').value = value;
-  document.getElementById('ratingText').textContent = `⭐ ${value} نجوم`;
+  document.getElementById('ratingText').textContent = `${value} من 5 نجوم`;
   document.querySelectorAll('#starContainer span').forEach(el => {
     const starVal = parseInt(el.dataset.star);
-    el.textContent = starVal <= value ? '★' : '☆';
+    el.querySelector('.star-icon').classList.toggle('filled', starVal <= value);
   });
 }
 
@@ -1884,11 +2171,11 @@ async function submitReview() {
   const msgDiv = document.getElementById('reviewMessage');
 
   if (rating === 0) {
-    msgDiv.innerHTML = '<span class="text-red-500">⚠️ الرجاء اختيار عدد النجوم</span>';
+    msgDiv.innerHTML = '<span class="text-red-500"><i data-lucide="alert-triangle" class="lucide"></i> الرجاء اختيار عدد النجوم</span>';
     return;
   }
 
-  msgDiv.innerHTML = '<span class="text-blue-500">⏳ جاري إرسال التقييم...</span>';
+  msgDiv.innerHTML = '<span class="text-blue-500"><i data-lucide="loader-circle" class="lucide spin"></i> جاري إرسال التقييم...</span>';
 
   try {
     const formData = new URLSearchParams();
@@ -1912,7 +2199,7 @@ async function submitReview() {
     const result = await response.json();
 
     if (result.success) {
-      msgDiv.innerHTML = '<span class="text-green-600">✅ تم إرسال التقييم بنجاح! شكراً لك</span>';
+      msgDiv.innerHTML = '<span class="text-green-600"><i data-lucide="check-circle-2" class="lucide"></i> تم إرسال التقييم بنجاح! شكراً لك</span>';
       showToast('تم إرسال التقييم بنجاح!', 'success');
       setTimeout(() => closeReviewModal(), 1500);
       // تحديث التقييم المعروض (يمكنك استدعاء دالة لجلب التقييمات الجديدة)
@@ -1922,7 +2209,7 @@ async function submitReview() {
     }
   } catch (error) {
     console.error('خطأ في إرسال التقييم:', error);
-    msgDiv.innerHTML = `<span class="text-red-500">❌ ${escapeHtml(error.message)}</span>`;
+    msgDiv.innerHTML = `<span class="text-red-500"><i data-lucide="x-circle" class="lucide"></i> ${escapeHtml(friendlyErrorMessage(error.message))}</span>`;
     showToast('تعذّر إرسال التقييم', 'error');
   }
 }
@@ -1974,7 +2261,7 @@ function updateNotificationUI(notifications, unreadCount) {
   }
 
   if (!notifications || notifications.length === 0) {
-    list.innerHTML = `<div class="p-4 text-center text-gray-500 dark:text-gray-400 text-sm">📭 لا توجد إشعارات جديدة</div>`;
+    list.innerHTML = `<div class="p-4 text-center text-gray-500 dark:text-gray-400 text-sm"><i data-lucide="inbox" class="lucide"></i> لا توجد إشعارات جديدة</div>`;
     return;
   }
 
@@ -1986,7 +2273,7 @@ function updateNotificationUI(notifications, unreadCount) {
       <div class="${bgClass} ${borderClass} p-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition cursor-pointer ${!isRead ? 'font-bold' : ''}"
            onclick="handleNotificationClick('${n.id}', '${n.link || '#'}')">
         <div class="flex items-start gap-2">
-          <span class="text-lg">${n.type === 'new_service' ? '🛠️' : n.type === 'new_driver' ? '🚗' : n.type === 'new_review' ? '⭐' : '📢'}</span>
+          <span class="text-lg">${n.type === 'new_service' ? '<i data-lucide="wrench" class="lucide"></i>' : n.type === 'new_driver' ? '<i data-lucide="car" class="lucide"></i>' : n.type === 'new_review' ? '<i data-lucide="star" class="lucide star-icon filled"></i>' : '<i data-lucide="megaphone" class="lucide"></i>'}</span>
           <div class="flex-1">
             <p class="text-sm">${n.title}</p>
             <p class="text-xs text-gray-500 dark:text-gray-400">${n.message}</p>
@@ -2116,261 +2403,6 @@ function startNotificationPolling() {
   }, 60000);
 }
 
-// استدعاء عند تحميل الصفحة
-document.addEventListener('DOMContentLoaded', function() {
-  startNotificationPolling();
-});
-
-/* ========================================================
-   دوال التنبيهات التفاعلي (Interactive Onboarding)
-   ======================================================== */
-
-// متغيرات الجولة الإرشادية
-let tourSteps = [];
-let currentTourStep = 0;
-let tourOverlay = null;
-
-// التحقق مما إذا كان المستخدم قد شاهد الترحيب من قبل
-function shouldShowWelcome() {
-  const dontShow = localStorage.getItem('sanad_dont_show_welcome') === 'true';
-  const hasSeen = localStorage.getItem('sanad_has_seen_welcome') === 'true';
-  return !dontShow && !hasSeen;
-}
-
-// عرض نافذة الترحيب
-function showWelcomeModal() {
-  if (!shouldShowWelcome()) return;
-  document.getElementById('welcomeModal').classList.remove('hidden');
-  // تأثير دخول أنيق
-  setTimeout(() => {
-    document.getElementById('welcomeContent').classList.remove('scale-95');
-    document.getElementById('welcomeContent').classList.add('scale-100');
-  }, 50);
-}
-
-// إغلاق نافذة الترحيب
-function closeWelcome() {
-  const dontShow = document.getElementById('dontShowAgain').checked;
-  if (dontShow) {
-    localStorage.setItem('sanad_dont_show_welcome', 'true');
-  }
-  localStorage.setItem('sanad_has_seen_welcome', 'true');
-  document.getElementById('welcomeModal').classList.add('hidden');
-  document.getElementById('welcomeContent').classList.add('scale-95');
-  document.getElementById('welcomeContent').classList.remove('scale-100');
-}
-
-// بدء الجولة الإرشادية
-function startTour() {
-  closeWelcome();
-  
-  // تعريف خطوات الجولة
-  tourSteps = [
-    {
-      element: '#section-home',
-      title: '🏠 الصفحة الرئيسية',
-      description: 'هذه هي الصفحة الرئيسية لمنصة سند. يمكنك من هنا الوصول إلى جميع أقسام المنصة.',
-      position: 'bottom'
-    },
-    {
-      element: '#section-search',
-      title: '🔍 البحث عن خبير',
-      description: 'ابحث عن خبراء في مختلف المهارات مثل الصيانة، الخياطة، الكهرباء، وغيرها.',
-      position: 'bottom'
-    },
-    {
-      element: '#section-add',
-      title: '🛠️ تقديم خدمة',
-      description: 'سجل مهارتك ليتمكن جيرانك من التواصل معك والاستفادة من خبراتك.',
-      position: 'bottom'
-    },
-    {
-      element: '.btn-accent', // زر إضافة خدمة
-      title: '📝 إضافة خدمة جديدة',
-      description: 'انقر هنا لإضافة خدمتك أو مهارتك الجديدة إلى المنصة.',
-      position: 'top'
-    },
-    {
-      element: '#section-driver',
-      title: '🚗 خدمة ديلفري',
-      description: 'ابحث عن سائقين في منطقتك لتوصيل الطلبات، أو سجل نفسك كسائق.',
-      position: 'bottom'
-    }
-  ];
-  
-  currentTourStep = 0;
-  showTourStep();
-}
-
-// عرض خطوة الجولة
-function showTourStep() {
-  if (currentTourStep >= tourSteps.length) {
-    endTour();
-    return;
-  }
-
-  const step = tourSteps[currentTourStep];
-  const element = document.querySelector(step.element);
-  
-  if (!element) {
-    currentTourStep++;
-    showTourStep();
-    return;
-  }
-
-  // إزالة أي تظليل سابق
-  removeTourHighlights();
-  
-  // إظهار التظليل
-  element.classList.add('tour-highlight');
-  element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  
-  // إنشاء أو تحديث فقاعة التوجيه
-  showTourBubble(element, step);
-}
-
-// عرض فقاعة التوجيه
-function showTourBubble(element, step) {
-  // إزالة الفقاعة السابقة
-  const oldBubble = document.getElementById('tourBubble');
-  if (oldBubble) oldBubble.remove();
-
-  const rect = element.getBoundingClientRect();
-  const bubble = document.createElement('div');
-  bubble.id = 'tourBubble';
-  bubble.className = 'fixed z-50 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-5 max-w-sm w-full border-2 border-primary';
-  
-  // تحديد موقع الفقاعة
-  const position = step.position || 'bottom';
-  let top, left;
-  
-  switch (position) {
-    case 'top':
-      top = rect.top - 120;
-      left = rect.left + rect.width / 2 - 160;
-      break;
-    case 'bottom':
-    default:
-      top = rect.bottom + 20;
-      left = rect.left + rect.width / 2 - 160;
-      break;
-  }
-  
-  // التأكد من أن الفقاعة داخل الشاشة
-  if (top < 10) top = 10;
-  if (left < 10) left = 10;
-  if (left + 320 > window.innerWidth) left = window.innerWidth - 330;
-  
-  bubble.style.top = top + 'px';
-  bubble.style.left = left + 'px';
-  
-  bubble.innerHTML = `
-    <div class="flex items-start gap-3">
-      <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold flex-shrink-0">
-        ${currentTourStep + 1}
-      </div>
-      <div class="flex-1">
-        <h4 class="font-bold text-lg">${step.title}</h4>
-        <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">${step.description}</p>
-        <div class="flex items-center justify-between mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
-          <div class="flex gap-1">
-            ${tourSteps.map((_, i) => `
-              <span class="w-2 h-2 rounded-full ${i === currentTourStep ? 'bg-primary' : 'bg-gray-300 dark:bg-gray-600'}"></span>
-            `).join('')}
-          </div>
-          <div class="flex gap-2">
-            <button onclick="skipTour()" class="text-xs text-gray-400 hover:text-gray-600">تخطي</button>
-            <button onclick="nextTourStep()" class="btn-primary text-sm px-4 py-1.5">
-              ${currentTourStep === tourSteps.length - 1 ? '✅ إنهاء' : 'التالي →'}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
-  
-  document.body.appendChild(bubble);
-  
-  // سهم指向 العنصر
-  const arrow = document.createElement('div');
-  arrow.className = 'absolute w-3 h-3 bg-white dark:bg-gray-800 transform rotate-45 border-t-2 border-l-2 border-primary';
-  if (position === 'bottom') {
-    arrow.style.top = '-7px';
-    arrow.style.left = '20px';
-    arrow.style.borderRight = 'none';
-    arrow.style.borderBottom = 'none';
-  } else {
-    arrow.style.bottom = '-7px';
-    arrow.style.left = '20px';
-    arrow.style.borderLeft = 'none';
-    arrow.style.borderTop = 'none';
-    arrow.style.borderRight = '2px solid #0E5C56';
-    arrow.style.borderBottom = '2px solid #0E5C56';
-  }
-  bubble.appendChild(arrow);
-}
-
-// الانتقال إلى الخطوة التالية
-function nextTourStep() {
-  removeTourHighlights();
-  document.getElementById('tourBubble')?.remove();
-  currentTourStep++;
-  showTourStep();
-}
-
-// تخطي الجولة
-function skipTour() {
-  endTour();
-  showToast('تم تخطي الجولة، يمكنك العودة إليها من خلال الإعدادات', 'info');
-}
-
-// إنهاء الجولة
-function endTour() {
-  removeTourHighlights();
-  document.getElementById('tourBubble')?.remove();
-  localStorage.setItem('sanad_has_seen_tour', 'true');
-  showToast('🎉 تمت الجولة بنجاح! استمتع باستخدام سند', 'success');
-}
-
-// إزالة التظليل
-function removeTourHighlights() {
-  document.querySelectorAll('.tour-highlight').forEach(el => {
-    el.classList.remove('tour-highlight');
-  });
-}
-
-// إضافة CSS للتظليل
-function addTourStyles() {
-  const style = document.createElement('style');
-  style.textContent = `
-    .tour-highlight {
-      position: relative;
-      z-index: 100;
-      box-shadow: 0 0 0 4px #D98E2B, 0 0 0 8px rgba(217, 142, 43, 0.3);
-      border-radius: 12px;
-      transition: all 0.3s ease;
-      animation: tourPulse 1.5s ease-in-out infinite;
-    }
-    @keyframes tourPulse {
-      0%, 100% { box-shadow: 0 0 0 4px #D98E2B, 0 0 0 8px rgba(217, 142, 43, 0.3); }
-      50% { box-shadow: 0 0 0 6px #D98E2B, 0 0 0 12px rgba(217, 142, 43, 0.1); }
-    }
-  `;
-  document.head.appendChild(style);
-}
-
-// تهيئة النظام عند تحميل الصفحة
-function initOnboarding() {
-  addTourStyles();
-  
-  // عرض نافذة الترحيب بعد ثانيتين من تحميل الصفحة
-  setTimeout(() => {
-    if (isLoggedIn() && shouldShowWelcome()) {
-      showWelcomeModal();
-    }
-  }, 2000);
-}
-
 // استدعاء التهيئة عند تحميل الصفحة
 document.addEventListener('DOMContentLoaded', function() {
   // ... الكود الموجود ...
@@ -2380,14 +2412,6 @@ document.addEventListener('DOMContentLoaded', function() {
   initOnboarding();
 });
 
-// زر لإعادة تشغيل الجولة (يمكن وضعه في الإعدادات لاحقاً)
-function restartTour() {
-  localStorage.removeItem('sanad_has_seen_tour');
-  localStorage.removeItem('sanad_has_seen_welcome');
-  localStorage.removeItem('sanad_dont_show_welcome');
-  showToast('🔄 تم إعادة تعيين الجولة، سيتم عرضها عند تحديث الصفحة', 'info');
-  location.reload();
-}
 
 /* ========================================================
    تحسينات الأداء: IndexedDB للتخزين المؤقت
@@ -2571,12 +2595,12 @@ function renderMapMarkers(locations) {
     const popupContent = `
       <div class="text-right">
         <strong>${escapeHtml(location.name)}</strong><br>
-        <span class="text-sm">🛠️ ${escapeHtml(location.skill_offer)}</span><br>
-        <span class="text-sm text-gray-500">📍 ${escapeHtml(location.area)}</span><br>
-        <span class="text-xs ${location.type === 'driver' ? 'text-blue-600' : 'text-primary'}">${location.type === 'driver' ? '🚗 سائق' : '🛠️ خبير'}</span><br>
+        <span class="text-sm"><i data-lucide="wrench" class="lucide"></i> ${escapeHtml(location.skill_offer)}</span><br>
+        <span class="text-sm text-gray-500"><i data-lucide="map-pin" class="lucide"></i> ${escapeHtml(location.area)}</span><br>
+        <span class="text-xs ${location.type === 'driver' ? 'text-blue-600' : 'text-primary'}">${location.type === 'driver' ? '<i data-lucide="car" class="lucide"></i> سائق' : '<i data-lucide="wrench" class="lucide"></i> خبير'}</span><br>
         <button onclick="openReviewModal('${escapeHtml(location.name)}', '${escapeHtml(location.phone)}')" 
-                class="text-xs text-primary hover:underline mt-1">⭐ تقييم</button>
-        ${location.phone ? `<a href="https://wa.me/970${location.phone.replace(/\D/g,'')}" target="_blank" class="block text-xs text-green-600 hover:underline mt-1">💬 تواصل عبر واتساب</a>` : ''}
+                class="text-xs text-primary hover:underline mt-1"><i data-lucide="star" class="lucide star-icon filled"></i> تقييم</button>
+        ${location.phone ? `<a href="https://wa.me/970${location.phone.replace(/\D/g,'')}" target="_blank" class="block text-xs text-green-600 hover:underline mt-1"><i data-lucide="message-circle" class="lucide"></i> تواصل عبر واتساب</a>` : ''}
       </div>
     `;
 
@@ -2612,11 +2636,11 @@ function renderLocationsList(locations) {
     <div class="bg-white dark:bg-gray-800 p-3 rounded-xl shadow-sm flex items-center justify-between hover:shadow-md transition cursor-pointer" onclick="focusOnLocation(${l.lat}, ${l.lng})">
       <div>
         <p class="font-bold text-sm">${escapeHtml(l.name)}</p>
-        <p class="text-xs text-gray-500">🛠️ ${escapeHtml(l.skill_offer)}</p>
-        <p class="text-xs text-gray-400">📍 ${escapeHtml(l.area)}</p>
+        <p class="text-xs text-gray-500"><i data-lucide="wrench" class="lucide"></i> ${escapeHtml(l.skill_offer)}</p>
+        <p class="text-xs text-gray-400"><i data-lucide="map-pin" class="lucide"></i> ${escapeHtml(l.area)}</p>
       </div>
       <span class="text-xs ${l.type === 'driver' ? 'text-blue-600' : 'text-primary'} bg-primary/10 px-2 py-1 rounded-full">
-        ${l.type === 'driver' ? '🚗 سائق' : '🛠️ خبير'}
+        ${l.type === 'driver' ? '<i data-lucide="car" class="lucide"></i> سائق' : '<i data-lucide="wrench" class="lucide"></i> خبير'}
       </span>
     </div>
   `).join('');
@@ -2702,17 +2726,17 @@ async function submitBooking() {
   const msgDiv = document.getElementById('bookingFormMessage');
 
   if (!service_name || !provider_phone || !client_name || !client_phone || !booking_date || !booking_time) {
-    msgDiv.innerHTML = '<span class="text-red-500">⚠️ جميع الحقول الأساسية مطلوبة</span>';
+    msgDiv.innerHTML = '<span class="text-red-500"><i data-lucide="alert-triangle" class="lucide"></i> جميع الحقول الأساسية مطلوبة</span>';
     return;
   }
 
   // التحقق من رقم الهاتف
   if (!validatePalestinianPhone(client_phone)) {
-    msgDiv.innerHTML = '<span class="text-red-500">⚠️ رقم هاتف غير صحيح</span>';
+    msgDiv.innerHTML = '<span class="text-red-500"><i data-lucide="alert-triangle" class="lucide"></i> رقم هاتف غير صحيح</span>';
     return;
   }
 
-  msgDiv.innerHTML = '<span class="text-blue-500">⏳ جاري إرسال الطلب...</span>';
+  msgDiv.innerHTML = '<span class="text-blue-500"><i data-lucide="loader-circle" class="lucide spin"></i> جاري إرسال الطلب...</span>';
 
   try {
     const params = new URLSearchParams();
@@ -2734,7 +2758,7 @@ async function submitBooking() {
 
     const result = await response.json();
     if (result.success) {
-      msgDiv.innerHTML = '<span class="text-green-600">✅ تم حجز الموعد بنجاح!</span>';
+      msgDiv.innerHTML = '<span class="text-green-600"><i data-lucide="check-circle-2" class="lucide"></i> تم حجز الموعد بنجاح!</span>';
       showToast('تم حجز الموعد بنجاح', 'success');
       hideBookingForm();
       // تحديث قائمة الحجوزات
@@ -2743,7 +2767,7 @@ async function submitBooking() {
       throw new Error(result.message || 'فشل الحجز');
     }
   } catch (error) {
-    msgDiv.innerHTML = `<span class="text-red-500">❌ ${error.message}</span>`;
+    msgDiv.innerHTML = `<span class="text-red-500"><i data-lucide="x-circle" class="lucide"></i> ${friendlyErrorMessage(error.message)}</span>`;
     showToast('تعذّر إتمام الحجز', 'error');
   }
 }
@@ -2795,7 +2819,7 @@ async function loadBookings(status = 'all') {
   } catch (error) {
     container.innerHTML = `
       <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center">
-        <p class="text-red-500">⚠️ ${error.message}</p>
+        <p class="text-red-500"><i data-lucide="alert-triangle" class="lucide"></i> ${friendlyErrorMessage(error.message)}</p>
         <button onclick="loadBookings('${status}')" class="btn-primary mt-4">إعادة المحاولة</button>
       </div>`;
   }
@@ -2806,7 +2830,7 @@ function renderBookings(container, bookings) {
   if (!bookings || bookings.length === 0) {
     container.innerHTML = `
       <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center">
-        <div class="text-4xl mb-2">📭</div>
+        <div class="text-4xl mb-2"><i data-lucide="inbox" class="lucide"></i></div>
         <p class="font-bold">لا توجد حجوزات</p>
         <p class="text-sm text-gray-400">يمكنك حجز موعد جديد من خلال زر "حجز جديد"</p>
       </div>`;
@@ -2814,10 +2838,10 @@ function renderBookings(container, bookings) {
   }
 
   const statusMap = {
-    'pending': { label: '⏳ قيد الانتظار', class: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300' },
-    'confirmed': { label: '✅ مؤكد', class: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' },
-    'completed': { label: '✔️ مكتمل', class: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' },
-    'cancelled': { label: '❌ ملغي', class: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300' }
+    'pending': { label: '<i data-lucide="loader-circle" class="lucide spin"></i> قيد الانتظار', class: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300' },
+    'confirmed': { label: '<i data-lucide="check-circle-2" class="lucide"></i> مؤكد', class: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' },
+    'completed': { label: '<i data-lucide="check" class="lucide"></i> مكتمل', class: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' },
+    'cancelled': { label: '<i data-lucide="x-circle" class="lucide"></i> ملغي', class: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300' }
   };
 
   container.innerHTML = bookings.map(b => {
@@ -2829,19 +2853,19 @@ function renderBookings(container, bookings) {
     let actionButtons = '';
     if (isProvider && b.status === 'pending') {
       actionButtons = `
-        <button onclick="updateBookingStatus(${b.id}, 'confirmed')" class="text-xs text-green-600 hover:underline">✅ تأكيد</button>
-        <button onclick="updateBookingStatus(${b.id}, 'cancelled')" class="text-xs text-red-600 hover:underline">❌ إلغاء</button>
+        <button onclick="updateBookingStatus(${b.id}, 'confirmed')" class="text-xs text-green-600 hover:underline"><i data-lucide="check-circle-2" class="lucide"></i> تأكيد</button>
+        <button onclick="updateBookingStatus(${b.id}, 'cancelled')" class="text-xs text-red-600 hover:underline"><i data-lucide="x-circle" class="lucide"></i> إلغاء</button>
       `;
     } else if (isProvider && b.status === 'confirmed') {
       actionButtons = `
-        <button onclick="updateBookingStatus(${b.id}, 'completed')" class="text-xs text-blue-600 hover:underline">✔️ إكمال</button>
-        <button onclick="updateBookingStatus(${b.id}, 'cancelled')" class="text-xs text-red-600 hover:underline">❌ إلغاء</button>
+        <button onclick="updateBookingStatus(${b.id}, 'completed')" class="text-xs text-blue-600 hover:underline"><i data-lucide="check" class="lucide"></i> إكمال</button>
+        <button onclick="updateBookingStatus(${b.id}, 'cancelled')" class="text-xs text-red-600 hover:underline"><i data-lucide="x-circle" class="lucide"></i> إلغاء</button>
       `;
     }
     // ✅ العميل: يرى زر إلغاء فقط
     else if (isClient && (b.status === 'pending' || b.status === 'confirmed')) {
       actionButtons = `
-        <button onclick="updateBookingStatus(${b.id}, 'cancelled')" class="text-xs text-red-600 hover:underline">❌ إلغاء الحجز</button>
+        <button onclick="updateBookingStatus(${b.id}, 'cancelled')" class="text-xs text-red-600 hover:underline"><i data-lucide="x-circle" class="lucide"></i> إلغاء الحجز</button>
       `;
     }
 
@@ -2850,10 +2874,10 @@ function renderBookings(container, bookings) {
         <div class="flex flex-wrap items-start justify-between gap-2">
           <div>
             <p class="font-bold text-lg">${escapeHtml(b.service_name)}</p>
-            <p class="text-sm text-gray-500">${isProvider ? '👤 ' + escapeHtml(b.client_name) : '👤 أنت (عميل)'}</p>
-            <p class="text-sm text-gray-500">🛠️ ${escapeHtml(b.service_type || 'خدمة')}</p>
-            <p class="text-sm text-gray-400">📅 ${b.booking_date} ${b.booking_time}</p>
-            ${b.notes ? `<p class="text-xs text-gray-400 mt-1">📝 ${escapeHtml(b.notes)}</p>` : ''}
+            <p class="text-sm text-gray-500">${isProvider ? '<i data-lucide="user-round" class="lucide"></i> ' + escapeHtml(b.client_name) : '<i data-lucide="user-round" class="lucide"></i> أنت (عميل)'}</p>
+            <p class="text-sm text-gray-500"><i data-lucide="wrench" class="lucide"></i> ${escapeHtml(b.service_type || 'خدمة')}</p>
+            <p class="text-sm text-gray-400"><i data-lucide="calendar" class="lucide"></i> ${b.booking_date} ${b.booking_time}</p>
+            ${b.notes ? `<p class="text-xs text-gray-400 mt-1"><i data-lucide="file-pen-line" class="lucide"></i> ${escapeHtml(b.notes)}</p>` : ''}
           </div>
           <div class="text-right">
             <span class="text-xs px-3 py-1 rounded-full ${statusInfo.class}">${statusInfo.label}</span>
@@ -2885,7 +2909,7 @@ async function updateBookingStatus(id, status) {
       throw new Error(result.message || 'فشل التحديث');
     }
   } catch (error) {
-    showToast(error.message, 'error');
+    showToast(friendlyErrorMessage(error.message), 'error');
   }
 }
 
@@ -2929,16 +2953,16 @@ async function submitBid() {
   const userName = getCurrentUser();
 
   if (!userPhone) {
-    msgDiv.innerHTML = '<span class="text-red-500">⚠️ يرجى تسجيل الخروج والدخول مرة أخرى لتحديث رقم هاتفك.</span>';
+    msgDiv.innerHTML = '<span class="text-red-500"><i data-lucide="alert-triangle" class="lucide"></i> يرجى تسجيل الخروج والدخول مرة أخرى لتحديث رقم هاتفك.</span>';
     return;
   }
 
   if (!title || !description || !category || !budget || !area || !deadline) {
-    msgDiv.innerHTML = '<span class="text-red-500">⚠️ جميع الحقول مطلوبة</span>';
+    msgDiv.innerHTML = '<span class="text-red-500"><i data-lucide="alert-triangle" class="lucide"></i> جميع الحقول مطلوبة</span>';
     return;
   }
 
-  msgDiv.innerHTML = '<span class="text-blue-500">⏳ جاري طرح الطلب...</span>';
+  msgDiv.innerHTML = '<span class="text-blue-500"><i data-lucide="loader-circle" class="lucide spin"></i> جاري طرح الطلب...</span>';
 
   try {
     const params = new URLSearchParams();
@@ -2961,7 +2985,7 @@ async function submitBid() {
     const result = await response.json();
 
     if (result.success) {
-      msgDiv.innerHTML = '<span class="text-green-600">✅ تم طرح الطلب بنجاح!</span>';
+      msgDiv.innerHTML = '<span class="text-green-600"><i data-lucide="check-circle-2" class="lucide"></i> تم طرح الطلب بنجاح!</span>';
       showToast('تم طرح طلبك', 'success');
       hideBidForm();
       loadMyBids('all');
@@ -2970,7 +2994,7 @@ async function submitBid() {
     }
   } catch (error) {
     console.error('❌ خطأ:', error);
-    msgDiv.innerHTML = `<span class="text-red-500">❌ ${error.message}</span>`;
+    msgDiv.innerHTML = `<span class="text-red-500"><i data-lucide="x-circle" class="lucide"></i> ${friendlyErrorMessage(error.message)}</span>`;
     showToast('فشل طرح الطلب', 'error');
   }
 }
@@ -3016,7 +3040,7 @@ async function loadMyBids(status = 'all') {
     }
   } catch (error) {
     console.error('❌ خطأ في جلب الطلبات:', error);
-    container.innerHTML = `<div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center"><p class="text-red-500">⚠️ ${error.message}</p><button onclick="loadMyBids('${status}')" class="btn-primary mt-4">إعادة المحاولة</button></div>`;
+    container.innerHTML = `<div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center"><p class="text-red-500"><i data-lucide="alert-triangle" class="lucide"></i> ${friendlyErrorMessage(error.message)}</p><button onclick="loadMyBids('${status}')" class="btn-primary mt-4">إعادة المحاولة</button></div>`;
   }
 }
 
@@ -3026,16 +3050,16 @@ function renderMyBids(container, bids) {
   if (!bids || bids.length === 0) {
     container.innerHTML = `
       <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center">
-        <div class="text-4xl mb-2">📋</div>
+        <div class="text-4xl mb-2"><i data-lucide="clipboard-list" class="lucide"></i></div>
         <p class="font-bold">لا توجد طلبات</p>
         <p class="text-sm text-gray-400">يمكنك طرح طلب جديد من خلال زر "طلب جديد"</p>
       </div>`;
     return;
   }
 const statusMap = {
-        'open': { label: '📋 مفتوح', class: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' },
-        'assigned': { label: '✅ تم التعيين', class: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' },
-        'closed': { label: '🔒 مغلق', class: 'bg-gray-100 text-gray-800 dark:bg-gray-700/30 dark:text-gray-300' }
+        'open': { label: '<i data-lucide="clipboard-list" class="lucide"></i> مفتوح', class: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' },
+        'assigned': { label: '<i data-lucide="check-circle-2" class="lucide"></i> تم التعيين', class: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' },
+        'closed': { label: '<i data-lucide="lock" class="lucide"></i> مغلق', class: 'bg-gray-100 text-gray-800 dark:bg-gray-700/30 dark:text-gray-300' }
     };
 
     container.innerHTML = bids.map(b => {
@@ -3049,14 +3073,14 @@ const statusMap = {
                 <div class="flex flex-wrap items-start justify-between gap-2">
                     <div class="flex-1">
                         <p class="font-bold text-lg">${escapeHtml(b.title)}</p>
-                        <p class="text-sm text-gray-500">📂 ${escapeHtml(b.category)} | 📍 ${escapeHtml(b.area)}</p>
+                        <p class="text-sm text-gray-500"><i data-lucide="folder" class="lucide"></i> ${escapeHtml(b.category)} | <i data-lucide="map-pin" class="lucide"></i> ${escapeHtml(b.area)}</p>
                         <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">${escapeHtml(b.description)}</p>
-                        <p class="text-xs text-gray-400">💰 الميزانية: ${b.budget} شيكل | 🗓️ الموعد النهائي: ${b.deadline}</p>
-                        <p class="text-xs text-gray-400 mt-1">🕐 ${new Date(b.created_at).toLocaleString('ar')}</p>
+                        <p class="text-xs text-gray-400"><i data-lucide="coins" class="lucide"></i> الميزانية: ${b.budget} شيكل | <i data-lucide="calendar" class="lucide"></i> الموعد النهائي: ${b.deadline}</p>
+                        <p class="text-xs text-gray-400 mt-1"><i data-lucide="clock" class="lucide"></i> ${new Date(b.created_at).toLocaleString('ar')}</p>
                         
                         ${isAssigned ? `
                             <div class="mt-2 p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                                <p class="text-sm text-green-700 dark:text-green-300 font-bold">✅ تم تعيين مقدم خدمة لهذا الطلب</p>
+                                <p class="text-sm text-green-700 dark:text-green-300 font-bold"><i data-lucide="check-circle-2" class="lucide"></i> تم تعيين مقدم خدمة لهذا الطلب</p>
                                 <button onclick="getAssignedProvider('${b.id}')" class="btn-primary text-sm px-3 py-1 mt-2">
                                     <i class="fas fa-whatsapp ml-1"></i> تواصل مع مقدم الخدمة
                                 </button>
@@ -3141,7 +3165,7 @@ async function loadAuctions() {
       throw new Error(result.error || 'تعذّر جلب الطلبات');
     }
   } catch (error) {
-    container.innerHTML = `<div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center"><p class="text-red-500">⚠️ ${error.message}</p><button onclick="loadAuctions()" class="btn-primary mt-4">إعادة المحاولة</button></div>`;
+    container.innerHTML = `<div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center"><p class="text-red-500"><i data-lucide="alert-triangle" class="lucide"></i> ${friendlyErrorMessage(error.message)}</p><button onclick="loadAuctions()" class="btn-primary mt-4">إعادة المحاولة</button></div>`;
   }
 }
 
@@ -3150,7 +3174,7 @@ function renderAuctions(container, bids) {
   if (!bids || bids.length === 0) {
     container.innerHTML = `
       <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center">
-        <div class="text-4xl mb-2">🔨</div>
+        <div class="text-4xl mb-2"><i data-lucide="hammer" class="lucide"></i></div>
         <p class="font-bold">لا توجد طلبات مفتوحة حالياً</p>
         <p class="text-sm text-gray-400">ترقب الطلبات الجديدة</p>
       </div>`;
@@ -3162,9 +3186,9 @@ function renderAuctions(container, bids) {
       <div class="flex flex-wrap items-start justify-between gap-2">
         <div class="flex-1">
           <p class="font-bold text-lg">${escapeHtml(b.title)}</p>
-          <p class="text-sm text-gray-500">👤 ${escapeHtml(b.client_name)} | 📂 ${escapeHtml(b.category)} | 📍 ${escapeHtml(b.area)}</p>
+          <p class="text-sm text-gray-500"><i data-lucide="user-round" class="lucide"></i> ${escapeHtml(b.client_name)} | <i data-lucide="folder" class="lucide"></i> ${escapeHtml(b.category)} | <i data-lucide="map-pin" class="lucide"></i> ${escapeHtml(b.area)}</p>
           <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">${escapeHtml(b.description)}</p>
-          <p class="text-xs text-gray-400">💰 الميزانية: ${b.budget} شيكل | 🗓️ الموعد النهائي: ${b.deadline}</p>
+          <p class="text-xs text-gray-400"><i data-lucide="coins" class="lucide"></i> الميزانية: ${b.budget} شيكل | <i data-lucide="calendar" class="lucide"></i> الموعد النهائي: ${b.deadline}</p>
         </div>
         <div class="text-right">
           <button onclick="openOfferModal(${b.id}, '${escapeHtml(b.title)}')" class="btn-accent text-sm px-4 py-2 flex items-center gap-1">
@@ -3200,14 +3224,14 @@ async function submitOffer() {
   const msgDiv = document.getElementById('offerMessage');
 
   if (!price) {
-    msgDiv.innerHTML = '<span class="text-red-500">⚠️ السعر مطلوب</span>';
+    msgDiv.innerHTML = '<span class="text-red-500"><i data-lucide="alert-triangle" class="lucide"></i> السعر مطلوب</span>';
     return;
   }
 
   const provider_name = getCurrentUser();
   const provider_phone = getCurrentUserPhone();
 
-  msgDiv.innerHTML = '<span class="text-blue-500">⏳ جاري إرسال العرض...</span>';
+  msgDiv.innerHTML = '<span class="text-blue-500"><i data-lucide="loader-circle" class="lucide spin"></i> جاري إرسال العرض...</span>';
 
   try {
     const params = new URLSearchParams();
@@ -3226,7 +3250,7 @@ async function submitOffer() {
     const result = await response.json();
 
     if (result.success) {
-      msgDiv.innerHTML = '<span class="text-green-600">✅ تم تقديم العرض بنجاح!</span>';
+      msgDiv.innerHTML = '<span class="text-green-600"><i data-lucide="check-circle-2" class="lucide"></i> تم تقديم العرض بنجاح!</span>';
       showToast('تم تقديم العرض', 'success');
       setTimeout(closeOfferModal, 1500);
       loadAuctions();
@@ -3234,7 +3258,7 @@ async function submitOffer() {
       throw new Error(result.message || 'فشل تقديم العرض');
     }
   } catch (error) {
-    msgDiv.innerHTML = `<span class="text-red-500">❌ ${error.message}</span>`;
+    msgDiv.innerHTML = `<span class="text-red-500"><i data-lucide="x-circle" class="lucide"></i> ${friendlyErrorMessage(error.message)}</span>`;
     showToast('فشل تقديم العرض', 'error');
   }
 }
@@ -3247,7 +3271,7 @@ async function viewBidOffers(bidId, bidTitle) {
     return;
   }
 
-  showToast(`⏳ جاري جلب عروض "${bidTitle}"...`, 'info');
+  showToast(`جاري جلب عروض "${bidTitle}"...`, 'info');
 
   try {
     const url = `${API_URL}?action=get_offers&bid_id=${bidId}`;
@@ -3261,7 +3285,7 @@ async function viewBidOffers(bidId, bidTitle) {
     }
   } catch (error) {
     console.error('❌ خطأ في جلب العروض:', error);
-    showToast(`❌ ${error.message}`, 'error');
+    showToast(`<i data-lucide="x-circle" class="lucide"></i> ${friendlyErrorMessage(error.message)}`, 'error');
   }
 }
 
@@ -3286,11 +3310,11 @@ function showOffersModal(offers, bidId, bidTitle) {
       <div class="border-b border-gray-200 dark:border-gray-700 py-3 flex flex-wrap items-center justify-between gap-2 ${offer.status === 'accepted' ? 'bg-green-50 dark:bg-green-900/20' : ''}">
         <div>
           <p class="font-bold">${escapeHtml(offer.provider_name)}</p>
-          <p class="text-sm">💰 ${offer.offer_price} شيكل</p>
-          ${offer.offer_note ? `<p class="text-xs text-gray-500">📝 ${escapeHtml(offer.offer_note)}</p>` : ''}
-          <p class="text-xs text-gray-400">🕐 ${new Date(offer.created_at).toLocaleString('ar')}</p>
+          <p class="text-sm"><i data-lucide="coins" class="lucide"></i> ${offer.offer_price} شيكل</p>
+          ${offer.offer_note ? `<p class="text-xs text-gray-500"><i data-lucide="file-pen-line" class="lucide"></i> ${escapeHtml(offer.offer_note)}</p>` : ''}
+          <p class="text-xs text-gray-400"><i data-lucide="clock" class="lucide"></i> ${new Date(offer.created_at).toLocaleString('ar')}</p>
           <p class="text-xs ${offer.status === 'pending' ? 'text-yellow-600' : offer.status === 'accepted' ? 'text-green-600' : 'text-red-600'}">
-            الحالة: ${offer.status === 'pending' ? '⏳ قيد الانتظار' : offer.status === 'accepted' ? '✅ مقبول' : '❌ مرفوض'}
+            الحالة: ${offer.status === 'pending' ? '<i data-lucide="loader-circle" class="lucide spin"></i> قيد الانتظار' : offer.status === 'accepted' ? '<i data-lucide="check-circle-2" class="lucide"></i> مقبول' : '<i data-lucide="x-circle" class="lucide"></i> مرفوض'}
           </p>
         </div>
         <div>
@@ -3300,7 +3324,7 @@ function showOffersModal(offers, bidId, bidTitle) {
           ${offer.status === 'accepted' ? `
             <a href="https://wa.me/970${offer.provider_phone.replace(/\D/g, '')}" target="_blank" 
                class="bg-green-600 text-white px-3 py-1 rounded-full text-sm font-bold hover:bg-green-700 transition inline-block">
-              💬 تواصل
+              <i data-lucide="message-circle" class="lucide"></i> تواصل
             </a>
           ` : ''}
         </div>
@@ -3340,7 +3364,7 @@ async function acceptOffer(offerId, bidId) {
     const result = await response.json();
 
     if (result.success) {
-      showToast('✅ تم قبول العرض بنجاح!', 'success');
+      showToast('<i data-lucide="check-circle-2" class="lucide"></i> تم قبول العرض بنجاح!', 'success');
       // إغلاق النافذة وتحديث الطلبات
       document.getElementById('offersModal')?.remove();
       loadMyBids('all');
@@ -3349,7 +3373,7 @@ async function acceptOffer(offerId, bidId) {
     }
   } catch (error) {
     console.error('❌ خطأ في قبول العرض:', error);
-    showToast(`❌ ${error.message}`, 'error');
+    showToast(`<i data-lucide="x-circle" class="lucide"></i> ${friendlyErrorMessage(error.message)}`, 'error');
   }
 }
 // ===== إنهاء الطلب (تغيير الحالة إلى مغلق) =====
@@ -3362,16 +3386,44 @@ async function closeBid(bidId) {
         const result = await response.json();
 
         if (result.success) {
-            showToast('✅ تم إنهاء الطلب بنجاح!', 'success');
+            showToast('<i data-lucide="check-circle-2" class="lucide"></i> تم إنهاء الطلب بنجاح!', 'success');
             loadMyBids('all'); // تحديث القائمة
         } else {
             throw new Error(result.message || 'فشل إنهاء الطلب');
         }
     } catch (error) {
         console.error('❌ خطأ في إنهاء الطلب:', error);
-        showToast(`❌ ${error.message}`, 'error');
+        showToast(`<i data-lucide="x-circle" class="lucide"></i> ${friendlyErrorMessage(error.message)}`, 'error');
     }
 }
+// ===== إخفاء صفحة السبلاش بعد 2 ثانية =====
+// ===== إخفاء صفحة السبلاش بعد 2 ثانية مع تشغيل صوت =====
+document.addEventListener('DOMContentLoaded', function() {
+  const splash = document.getElementById('splashScreen');
+  if (splash) {
+    // ✅ تشغيل الصوت
+    try {
+      const audio = new Audio('splash-sound.mp3');
+      audio.volume = 0.5; // ضبط مستوى الصوت (0.0 إلى 1.0)
+      audio.play().catch(function(e) {
+        console.log('⚠️ تعذر تشغيل الصوت تلقائياً (قد يكون المتصفح يمنع التشغيل التلقائي):', e);
+      });
+    } catch (error) {
+      console.log('⚠️ خطأ في تحميل ملف الصوت:', error);
+    }
+    
+    // إظهار السبلاش
+    splash.classList.remove('fade-out');
+    
+    // بعد 2 ثانية، إخفاء السبلاش
+    setTimeout(function() {
+      splash.classList.add('fade-out');
+      setTimeout(function() {
+        splash.style.display = 'none';
+      }, 700);
+    }, 2000);
+  }
+});
 </script>
 
 </body>
